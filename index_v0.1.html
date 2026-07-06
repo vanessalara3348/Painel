@@ -275,8 +275,8 @@
                         <i class="fa-solid fa-bars text-xl"></i>
                     </button>
                     <div>
-                        <h2 id="page-title" class="text-lg font-bold text-sistran-heading">Apresentação dos Resultados</h2>
-                        <p id="page-subtitle" class="text-xs text-sistran-body font-medium hidden md:block">Gerenciamento Integrado de Segurança Viária (PSV-SP 2025-2035)</p>
+                        <h2 class="text-sm font-bold text-sistran-yellow leading-tight">PLANO DE SEGURANÇA VIÁRIA DO ESTADO DE SÃO PAULO - PSV-SP (2025-2035)</h2>
+                        <p class="text-xs text-sistran-heading font-medium hidden md:block"><span class="font-extrabold">SIMO</span> SISTEMA INTEGRADO DE MONITORAMENTO</p>
                     </div>
                 </div>
 
@@ -1659,8 +1659,9 @@
                 'publico': 'Gerenciamento Integrado de Segurança Viária (PSV-SP 2025-2035)'
             };
 
-            if (pageTitle) pageTitle.textContent = titles[tabId] || 'Portal de Gestão SIMO';
-            if (pageSubtitle) pageSubtitle.textContent = subtitles[tabId] || 'Gerenciamento Integrado de Segurança Viária';
+            // Cabeçalho agora é estático - não atualiza mais
+            // if (pageTitle) pageTitle.textContent = titles[tabId] || 'Portal de Gestão SIMO';
+            // if (pageSubtitle) pageSubtitle.textContent = subtitles[tabId] || 'Gerenciamento Integrado de Segurança Viária';
 
             // Atualização dinâmica de trilha de navegação (Breadcrumbs)
             let activeSub = null;
