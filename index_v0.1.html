@@ -324,68 +324,88 @@
                         <!-- SUB-ABA 1: INTRODUÇÃO -->
                         <div id="sub-tab-introducao" class="sub-tab-content active space-y-6">
 
-                            <!-- Título da Introdução com ícone -->
-                            <div class="space-y-2">
-                                <h2 class="text-2xl font-bold text-sistran-heading flex items-center gap-2.5">
-                                    <i data-lucide="home" class="w-6 h-6 text-sistran-gold"></i>
-                                    Introdução
-                                </h2>
-                                <p class="text-sm text-sistran-body leading-relaxed max-w-4xl">
-                                    <!-- Espaço reservado para texto introdutório de 4 linhas -->
-                                    &nbsp;<br>&nbsp;<br>&nbsp;<br>&nbsp;
-                                </p>
-                            </div>
+                            <!-- Caixa envolvente (mesmo padrão da aba Impacto) -->
+                            <div class="bg-white border border-sistran-border rounded-md p-6 shadow-subtle">
 
-                            <!-- Cards Resumo Consolidado com conteúdo integrado do Monitoramento -->
-                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                                <!-- Card IMPACTO - borda #C68B00, fundo rgba 40% -->
-                                <div class="rounded-md p-5 shadow-subtle hover:shadow-md transition" style="background-color: rgba(198, 139, 0, 0.4); border: 2px solid #C68B00;">
-                                    <p class="text-sm font-extrabold text-sistran-heading uppercase tracking-wider mb-4 flex items-center gap-1.5"><i data-lucide="trending-down" class="w-5 h-5"></i>Impacto</p>
-                                    <h3 class="text-4xl font-extrabold text-sistran-heading text-center my-4" id="card-impacto-valor">-5.1%</h3>
-                                    <p class="text-xs text-sistran-heading text-center flex items-center justify-center gap-1">
-                                        <span class="font-semibold">&darr; 312 óbitos</span> em relação a 2024
+                                <!-- Título da Introdução com ícone em fundo circular preto -->
+                                <div class="space-y-2 mb-6">
+                                    <h2 class="text-2xl font-bold text-sistran-heading flex items-center gap-2.5">
+                                        <span class="w-8 h-8 bg-sistran-ink rounded-full flex items-center justify-center flex-shrink-0">
+                                            <i data-lucide="home" class="w-5 h-5 text-sistran-yellow"></i>
+                                        </span>
+                                        Introdução
+                                    </h2>
+                                    <p class="text-sm text-sistran-body leading-relaxed max-w-4xl">
+                                        <!-- Espaço reservado para texto introdutório de 4 linhas -->
+                                        &nbsp;<br>&nbsp;<br>&nbsp;<br>&nbsp;
                                     </p>
-                                    <div class="mt-4">
-                                        <h4 class="font-bold text-sistran-heading text-xs mb-1">O que o Plano está alcançando?</h4>
-                                        <p class="text-[11px] text-sistran-ink leading-relaxed">
-                                            Mede os efeitos globais do plano. A meta principal é reduzir em 50% as mortes no trânsito até 2030, alinhando São Paulo às diretrizes internacionais da ONU e ao PNATRANS.
-                                        </p>
-                                    </div>
                                 </div>
-                                <!-- Card DESEMPENHO - borda #FECF03, fundo rgba 40% -->
-                                <div class="rounded-md p-5 shadow-subtle hover:shadow-md transition" style="background-color: rgba(254, 207, 3, 0.4); border: 2px solid #FECF03;">
-                                    <p class="text-sm font-extrabold text-sistran-heading uppercase tracking-wider mb-4 flex items-center gap-1.5"><i data-lucide="activity" class="w-5 h-5"></i>Desempenho</p>
-                                    <div class="text-center my-4">
-                                        <h3 class="text-4xl font-extrabold text-sistran-heading inline">58.1%</h3>
-                                        <span class="text-xs font-semibold text-sistran-ink bg-white/50 px-1.5 py-0.5 rounded ml-2">Regular</span>
-                                    </div>
-                                    <p class="text-xs text-sistran-heading text-center">Média ponderada dos 8 eixos do plano</p>
-                                    <div class="mt-4">
-                                        <h4 class="font-bold text-sistran-heading text-xs mb-1">Estamos na direção certa?</h4>
-                                        <p class="text-[11px] text-sistran-ink leading-relaxed">
-                                            Avalia mudanças intermediárias vinculadas aos 8 eixos estratégicos, incluindo a qualidade da gestão estadual, velocidade das vias, fiscalização de infrações e resposta a acidentes.
+
+                                <!-- Cards Resumo Consolidado com conteúdo integrado do Monitoramento -->
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    <!-- Card IMPACTO - borda #C68B00, fundo rgba 30% -->
+                                    <div class="rounded-md p-5 shadow-subtle hover:shadow-md transition" style="background-color: rgba(198, 139, 0, 0.3); border: 2px solid #C68B00;">
+                                        <p class="text-sm font-extrabold text-sistran-heading uppercase tracking-wider mb-4 flex items-center gap-1.5"><i data-lucide="trending-down" class="w-5 h-5"></i>Impacto</p>
+                                        <h3 class="text-4xl font-extrabold text-sistran-heading text-center my-4" id="card-impacto-valor">-5.1%</h3>
+                                        <p class="text-xs text-sistran-heading text-center mb-4">
+                                            <span class="font-semibold">&darr; 312 óbitos</span> em relação a 2024
                                         </p>
-                                    </div>
-                                </div>
-                                
-                                <!-- Card IMPLEMENTAÇÃO - borda #FFF1C9, fundo rgba 40% -->
-                                <div class="rounded-md p-5 shadow-subtle hover:shadow-md transition flex flex-col h-full" style="background-color: rgba(255, 241, 201, 0.4); border: 2px solid #FFF1C9;">
-                                    <p class="text-sm font-extrabold text-sistran-heading uppercase tracking-wider mb-4 flex items-center gap-1.5"><i data-lucide="check-square" class="w-5 h-5"></i>Implementação</p>
-                                    <h3 class="text-4xl font-extrabold text-sistran-heading text-center my-4" id="card-imp-ratio">1 / 15</h3>
-                                    <div class="flex items-center justify-center gap-3 mb-2">
-                                        <div class="w-14 h-14 flex-shrink-0">
-                                            <canvas id="cardStatusDonutChart"></canvas>
-                                        </div>
-                                        <div class="text-[9px] text-sistran-heading leading-tight space-y-0.5 font-semibold">
-                                            <div><span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 mr-0.5"></span> Concluintes (10%)</div>
-                                            <div><span class="inline-block w-1.5 h-1.5 rounded-full bg-amber-400 mr-0.5"></span> Em Curso (50%)</div>
-                                            <div><span class="inline-block w-1.5 h-1.5 rounded-full bg-rose-500 mr-0.5"></span> Pendentes (40%)</div>
+                                        <div class="mt-4 text-left">
+                                            <h4 class="font-bold text-sistran-heading text-xs mb-1">O que o Plano está alcançando?</h4>
+                                            <p class="text-[11px] text-sistran-ink leading-relaxed">
+                                                Mede os efeitos globais do plano. A meta principal é reduzir em 50% as mortes no trânsito até 2030, alinhando São Paulo às diretrizes internacionais da ONU e ao PNATRANS.
+                                            </p>
                                         </div>
                                     </div>
-                                    <div class="mt-4">
-                                        <h4 class="font-bold text-sistran-heading text-xs mb-1">As ações foram executadas?</h4>
-                                        <p class="text-[11px] text-sistran-ink leading-relaxed">
-                                            Verifica de forma estrita se os produtos e ações acordados na matriz do PSV-SP foram entregues dentro dos prazos pactuados para cada órgão e secretaria parceira.
+                                    <!-- Card DESEMPENHO - borda #FECF03, fundo rgba 30% -->
+                                    <div class="rounded-md p-5 shadow-subtle hover:shadow-md transition" style="background-color: rgba(254, 207, 3, 0.3); border: 2px solid #FECF03;">
+                                        <p class="text-sm font-extrabold text-sistran-heading uppercase tracking-wider mb-4 flex items-center gap-1.5"><i data-lucide="activity" class="w-5 h-5"></i>Desempenho</p>
+                                        <div class="text-center my-4">
+                                            <h3 class="text-4xl font-extrabold text-sistran-heading">58.1%</h3>
+                                            <span class="text-xs font-semibold text-sistran-ink bg-white/50 px-1.5 py-0.5 rounded mt-1 inline-block">Regular</span>
+                                        </div>
+                                        <p class="text-xs text-sistran-heading text-center mb-4">Média ponderada dos 8 eixos do plano</p>
+                                        <div class="mt-4 text-left">
+                                            <h4 class="font-bold text-sistran-heading text-xs mb-1">Estamos na direção certa?</h4>
+                                            <p class="text-[11px] text-sistran-ink leading-relaxed">
+                                                Avalia mudanças intermediárias vinculadas aos 8 eixos estratégicos, incluindo a qualidade da gestão estadual, velocidade das vias, fiscalização de infrações e resposta a acidentes.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Card IMPLEMENTAÇÃO - borda #FFF1C9, fundo rgba 30% -->
+                                    <div class="rounded-md p-5 shadow-subtle hover:shadow-md transition flex flex-col h-full" style="background-color: rgba(255, 241, 201, 0.3); border: 2px solid #FFF1C9;">
+                                        <p class="text-sm font-extrabold text-sistran-heading uppercase tracking-wider mb-4 flex items-center gap-1.5"><i data-lucide="check-square" class="w-5 h-5"></i>Implementação</p>
+                                        <h3 class="text-4xl font-extrabold text-sistran-heading text-center my-4" id="card-imp-ratio">1 / 15</h3>
+                                        <div class="flex items-center justify-center gap-3 mb-4">
+                                            <div class="w-14 h-14 flex-shrink-0">
+                                                <canvas id="cardStatusDonutChart"></canvas>
+                                            </div>
+                                            <div class="text-[9px] text-sistran-heading leading-tight space-y-0.5 font-semibold">
+                                                <div><span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 mr-0.5"></span> Concluintes (10%)</div>
+                                                <div><span class="inline-block w-1.5 h-1.5 rounded-full bg-amber-400 mr-0.5"></span> Em Curso (50%)</div>
+                                                <div><span class="inline-block w-1.5 h-1.5 rounded-full bg-rose-500 mr-0.5"></span> Pendentes (40%)</div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 text-left">
+                                            <h4 class="font-bold text-sistran-heading text-xs mb-1">As ações foram executadas?</h4>
+                                            <p class="text-[11px] text-sistran-ink leading-relaxed">
+                                                Verifica de forma estrita se os produtos e ações acordados na matriz do PSV-SP foram entregues dentro dos prazos pactuados para cada órgão e secretaria parceira.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- Caixa Notas e Fontes - alinhada à direita -->
+                                <div class="mt-4 flex justify-end">
+                                    <div class="bg-sistran-surface-muted border border-sistran-border rounded-md p-4 max-w-sm w-full sm:w-auto">
+                                        <p class="text-xs font-bold text-sistran-heading mb-1 flex items-center gap-1.5">
+                                            <i data-lucide="info" class="w-3.5 h-3.5 text-sistran-gold"></i>
+                                            Notas e Fontes
+                                        </p>
+                                        <p class="text-[11px] text-sistran-body leading-relaxed">
+                                            Fontes: Infosiga SP / IBGE / Base consolidada CETRAN-SP. Dados sujeitos a atualização conforme ciclo de monitoramento vigente.
                                         </p>
                                     </div>
                                 </div>
