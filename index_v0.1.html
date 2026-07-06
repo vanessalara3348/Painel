@@ -526,16 +526,19 @@
                                             <i data-lucide="help-circle" class="w-6 h-6 text-sistran-gold group-hover:scale-110 transition-transform"></i>
                                             <span class="text-xs font-semibold text-sistran-heading">Perguntas Frequentes</span>
                                         </a>
-                                        <a href="#" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-md transition-all text-center group">
+                                        <button onclick="togglePublicacoes()" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-md transition-all text-center group">
                                             <i data-lucide="file-text" class="w-6 h-6 text-sistran-gold group-hover:scale-110 transition-transform"></i>
                                             <span class="text-xs font-semibold text-sistran-heading">Publicações</span>
-                                        </a>
+                                        </button>
                                         <a href="#" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-md transition-all text-center group">
                                             <i data-lucide="github" class="w-6 h-6 text-sistran-gold group-hover:scale-110 transition-transform"></i>
                                             <span class="text-xs font-semibold text-sistran-heading">Github</span>
                                         </a>
                                     </div>
                                 </div>
+
+                                <!-- Seção Publicações (oculta por padrão, aparece ao clicar no botão Publicações) -->
+                                <div id="secao-publicacoes" class="hidden space-y-6">
 
                                 <!-- Planos de Ação Anuais -->
                                 <div id="sec-planos-acao" class="scroll-mt-28">
@@ -598,6 +601,8 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                </div><!-- fecha secao-publicacoes -->
 
                             </div>
                         </div>
@@ -2773,6 +2778,16 @@
 
         function mockDownload(filename) {
             showToast(`Iniciando download do arquivo: ${filename}`);
+        }
+
+        function togglePublicacoes() {
+            const secao = document.getElementById('secao-publicacoes');
+            if (secao) {
+                secao.classList.toggle('hidden');
+                if (!secao.classList.contains('hidden')) {
+                    secao.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
         }
 
         function showToast(message) {
