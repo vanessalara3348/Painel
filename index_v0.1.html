@@ -177,9 +177,80 @@
         body .text-lg { font-size: 18px; line-height: 1.55; font-weight: 600; }
         body .text-xl { font-size: 24px; line-height: 1.5; font-weight: 600; }
         body .text-2xl { font-size: 24px; line-height: 1.5; font-weight: 600; }
+
+        /* ===== Design System: Card hover state (lift + shadow) ===== */
+        .ds-card {
+            background: var(--ss-surface);
+            border: 1px solid var(--ss-border);
+            border-radius: var(--ss-radius-md);
+            box-shadow: var(--ss-shadow-card);
+            transition: box-shadow 0.2s ease, transform 0.2s ease;
+        }
+        .ds-card:hover {
+            box-shadow: var(--ss-shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        /* ===== Design System: Botão primário (pill, yellow) ===== */
+        .ds-btn-primary {
+            background-color: var(--ss-yellow);
+            color: var(--ss-ink);
+            font-weight: 700;
+            border-radius: var(--ss-radius-pill);
+            padding: 10px 24px;
+            font-size: 14px;
+            transition: background-color 0.15s ease;
+            border: none;
+            cursor: pointer;
+        }
+        .ds-btn-primary:hover {
+            background-color: var(--ss-yellow-hover);
+        }
+
+        /* ===== Design System: Botão outline (pill, gold border) ===== */
+        .ds-btn-outline {
+            background-color: var(--ss-surface);
+            color: var(--ss-ink);
+            font-weight: 700;
+            border-radius: var(--ss-radius-pill);
+            padding: 10px 24px;
+            font-size: 14px;
+            border: 1.5px solid var(--ss-gold);
+            transition: background-color 0.15s ease;
+            cursor: pointer;
+        }
+        .ds-btn-outline:hover {
+            background-color: var(--ss-gold-surface);
+        }
+
+        /* ===== Design System: Links (gold, hover underline) ===== */
+        a:not([class]) {
+            color: var(--ss-gold);
+            text-decoration: none;
+            transition: text-decoration 0.15s ease;
+        }
+        a:not([class]):hover {
+            text-decoration: underline;
+        }
+
+        /* ===== Design System: Focus state ===== */
+        button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible {
+            outline: 3px solid var(--ss-gold-surface);
+            outline-offset: 2px;
+        }
+
+        /* ===== Design System: Eyebrow labels ===== */
+        .ds-eyebrow {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            line-height: 1.5;
+            color: var(--ss-gold);
+        }
     </style>
 </head>
-<body class="bg-sistran-surface-muted antialiased custom-scrollbar h-screen overflow-hidden">
+<body class="bg-white antialiased custom-scrollbar h-screen overflow-hidden">
 
     <div class="flex h-screen overflow-hidden">
 
@@ -362,7 +433,7 @@
                                 <!-- Cards Resumo Consolidado com alinhamento vertical uniforme -->
                                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                     <!-- Card IMPACTO -->
-                                    <div class="bg-amber-50 border border-amber-200 rounded-md p-5 shadow-subtle hover:shadow-md transition flex flex-col">
+                                    <div class="bg-amber-50 border border-amber-200 rounded-md p-5 shadow-subtle hover:shadow-hover hover:-translate-y-0.5 transition duration-card flex flex-col">
                                         <p class="text-sm font-extrabold text-sistran-heading uppercase tracking-wider mb-4 flex items-center gap-1.5"><i data-lucide="trending-down" class="w-5 h-5"></i>Impacto</p>
                                         <div class="flex-1 flex flex-col items-center justify-center min-h-[120px]">
                                             <h3 class="text-4xl font-extrabold text-sistran-heading" id="card-impacto-valor">-5.1%</h3>
@@ -378,7 +449,7 @@
                                         </div>
                                     </div>
                                     <!-- Card DESEMPENHO -->
-                                    <div class="bg-amber-50 border border-amber-200 rounded-md p-5 shadow-subtle hover:shadow-md transition flex flex-col">
+                                    <div class="bg-amber-50 border border-amber-200 rounded-md p-5 shadow-subtle hover:shadow-hover hover:-translate-y-0.5 transition duration-card flex flex-col">
                                         <p class="text-sm font-extrabold text-sistran-heading uppercase tracking-wider mb-4 flex items-center gap-1.5"><i data-lucide="activity" class="w-5 h-5"></i>Desempenho</p>
                                         <div class="flex-1 flex flex-col items-center justify-center min-h-[120px]">
                                             <h3 class="text-4xl font-extrabold text-sistran-heading">58.1%</h3>
@@ -394,7 +465,7 @@
                                     </div>
                                     
                                     <!-- Card IMPLEMENTAÇÃO -->
-                                    <div class="bg-amber-50 border border-amber-200 rounded-md p-5 shadow-subtle hover:shadow-md transition flex flex-col">
+                                    <div class="bg-amber-50 border border-amber-200 rounded-md p-5 shadow-subtle hover:shadow-hover hover:-translate-y-0.5 transition duration-card flex flex-col">
                                         <p class="text-sm font-extrabold text-sistran-heading uppercase tracking-wider mb-4 flex items-center gap-1.5"><i data-lucide="check-square" class="w-5 h-5"></i>Implementação</p>
                                         <div class="flex-1 flex flex-col items-center justify-center min-h-[120px]">
                                             <h3 class="text-4xl font-extrabold text-sistran-heading" id="card-imp-ratio">1 / 15</h3>
@@ -528,27 +599,27 @@
                                     </h3>
                                     <!-- Botões estilo Infosiga - grade de cards com ícone e label -->
                                     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
-                                        <a href="#" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-md transition-all text-center group">
+                                        <a href="#" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all text-center group">
                                             <i data-lucide="database" class="w-6 h-6 text-sistran-gold group-hover:scale-110 transition-transform"></i>
                                             <span class="text-xs font-semibold text-sistran-heading">Dados Abertos</span>
                                         </a>
-                                        <a href="#" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-md transition-all text-center group">
+                                        <a href="#" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all text-center group">
                                             <i data-lucide="scale" class="w-6 h-6 text-sistran-gold group-hover:scale-110 transition-transform"></i>
                                             <span class="text-xs font-semibold text-sistran-heading">Normas e Regulações</span>
                                         </a>
-                                        <a href="#" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-md transition-all text-center group">
+                                        <a href="#" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all text-center group">
                                             <i data-lucide="book-open" class="w-6 h-6 text-sistran-gold group-hover:scale-110 transition-transform"></i>
                                             <span class="text-xs font-semibold text-sistran-heading">Glossário</span>
                                         </a>
-                                        <a href="#" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-md transition-all text-center group">
+                                        <a href="#" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all text-center group">
                                             <i data-lucide="help-circle" class="w-6 h-6 text-sistran-gold group-hover:scale-110 transition-transform"></i>
                                             <span class="text-xs font-semibold text-sistran-heading">Perguntas Frequentes</span>
                                         </a>
-                                        <button onclick="togglePublicacoes()" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-md transition-all text-center group">
+                                        <button onclick="togglePublicacoes()" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all text-center group">
                                             <i data-lucide="file-text" class="w-6 h-6 text-sistran-gold group-hover:scale-110 transition-transform"></i>
                                             <span class="text-xs font-semibold text-sistran-heading">Publicações</span>
                                         </button>
-                                        <a href="#" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-md transition-all text-center group">
+                                        <a href="#" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all text-center group">
                                             <i data-lucide="github" class="w-6 h-6 text-sistran-gold group-hover:scale-110 transition-transform"></i>
                                             <span class="text-xs font-semibold text-sistran-heading">Github</span>
                                         </a>
@@ -561,7 +632,7 @@
                                     <!-- Grid de cards estilo Infosiga - 4 colunas lado a lado -->
                                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
                                         <!-- Card: Plano de Ação PSV-SP (Ciclo 2025–2027) -->
-                                        <a href="#" onclick="mockDownload('Plano-de-Acao-Ciclo-1-2025-2027.pdf'); return false;" class="bg-white border border-sistran-border rounded-lg p-4 hover:shadow-md transition-all group flex flex-col items-center text-center">
+                                        <a href="#" onclick="mockDownload('Plano-de-Acao-Ciclo-1-2025-2027.pdf'); return false;" class="bg-white border border-sistran-border rounded-lg p-4 hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all group flex flex-col items-center text-center">
                                             <div class="w-10 h-10 bg-sistran-gold/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-sistran-gold/20 transition-colors mb-3">
                                                 <i data-lucide="file-check" class="w-5 h-5 text-sistran-gold"></i>
                                             </div>
@@ -570,7 +641,7 @@
                                             <p class="text-[9px] text-sistran-muted mt-2">Publicado em Dez/2025 • PDF (8.4 MB)</p>
                                         </a>
                                         <!-- Card: Plano Detalhado de Ações de Impacto Anual 2026 -->
-                                        <a href="#" onclick="mockDownload('Plano-Anual-Acoes-2026.pdf'); return false;" class="bg-white border border-sistran-border rounded-lg p-4 hover:shadow-md transition-all group flex flex-col items-center text-center">
+                                        <a href="#" onclick="mockDownload('Plano-Anual-Acoes-2026.pdf'); return false;" class="bg-white border border-sistran-border rounded-lg p-4 hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all group flex flex-col items-center text-center">
                                             <div class="w-10 h-10 bg-sistran-gold/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-sistran-gold/20 transition-colors mb-3">
                                                 <i data-lucide="clipboard-list" class="w-5 h-5 text-sistran-gold"></i>
                                             </div>
@@ -579,7 +650,7 @@
                                             <p class="text-[9px] text-sistran-muted mt-2">Publicado em Jan/2026 • PDF (4.1 MB)</p>
                                         </a>
                                         <!-- Card: Relatório Anual de Desempenho e Impacto 2025 -->
-                                        <a href="#" onclick="mockDownload('Relatorio-Anual-Desempenho-2025.pdf'); return false;" class="bg-white border border-sistran-border rounded-lg p-4 hover:shadow-md transition-all group flex flex-col items-center text-center">
+                                        <a href="#" onclick="mockDownload('Relatorio-Anual-Desempenho-2025.pdf'); return false;" class="bg-white border border-sistran-border rounded-lg p-4 hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all group flex flex-col items-center text-center">
                                             <div class="w-10 h-10 bg-sistran-gold/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-sistran-gold/20 transition-colors mb-3">
                                                 <i data-lucide="bar-chart-2" class="w-5 h-5 text-sistran-gold"></i>
                                             </div>
@@ -588,7 +659,7 @@
                                             <p class="text-[9px] text-sistran-muted mt-2">Publicado em Fev/2026 • PDF (12.2 MB)</p>
                                         </a>
                                         <!-- Card: Relatório Semestral de Indicadores Jul–Dez 2025 -->
-                                        <a href="#" onclick="mockDownload('Relatorio-Semestral-2025-2.pdf'); return false;" class="bg-white border border-sistran-border rounded-lg p-4 hover:shadow-md transition-all group flex flex-col items-center text-center">
+                                        <a href="#" onclick="mockDownload('Relatorio-Semestral-2025-2.pdf'); return false;" class="bg-white border border-sistran-border rounded-lg p-4 hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all group flex flex-col items-center text-center">
                                             <div class="w-10 h-10 bg-sistran-gold/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-sistran-gold/20 transition-colors mb-3">
                                                 <i data-lucide="calendar" class="w-5 h-5 text-sistran-gold"></i>
                                             </div>
