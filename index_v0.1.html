@@ -538,69 +538,43 @@
                                 </div>
 
                                 <!-- Seção Publicações (oculta por padrão, aparece ao clicar no botão Publicações) -->
-                                <div id="secao-publicacoes" class="hidden space-y-6">
+                                <div id="secao-publicacoes" class="hidden">
 
-                                <!-- Planos de Ação Anuais -->
-                                <div id="sec-planos-acao" class="scroll-mt-28">
-                                    <h3 class="text-lg font-bold text-sistran-heading mb-2 flex items-center gap-2">
-                                        <i data-lucide="book-open" class="text-sistran-gold w-5 h-5"></i>
-                                        Planos de Ação Anuais
-                                    </h3>
-                                    <p class="text-xs text-sistran-body mb-4">
-                                        Cronograma anual detalhado das ações prioritárias a serem desenvolvidas e pactuadas entre os órgãos integradores do SISTRAN-SP para mitigação de riscos de sinistros.
-                                    </p>
-                                    <div class="space-y-3">
-                                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-md border border-sistran-border hover:border-sistran-gold transition-colors">
-                                            <div>
-                                                <h4 class="text-xs font-bold text-sistran-heading">Plano de Ação PSV-SP (Ciclo 2025–2027)</h4>
-                                                <p class="text-[10px] text-sistran-muted">Publicado em Dez/2025 • PDF (8.4 MB)</p>
+                                    <!-- Grid de cards estilo Infosiga -->
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+                                        <!-- Card: Plano de Ação -->
+                                        <a href="#" onclick="mockDownload('Plano-de-Acao-Ciclo-1-2025-2027.pdf'); return false;" class="bg-white border border-sistran-border rounded-lg p-5 hover:shadow-md transition-all group text-center">
+                                            <div class="w-12 h-12 bg-sistran-gold/10 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-sistran-gold/20 transition-colors">
+                                                <i data-lucide="file-check" class="w-6 h-6 text-sistran-gold"></i>
                                             </div>
-                                            <button onclick="mockDownload('Plano-de-Acao-Ciclo-1-2025-2027.pdf')" class="text-sistran-gold hover:text-sistran-ink flex items-center gap-1.5 text-xs font-semibold">
-                                                <i data-lucide="download" class="w-4 h-4"></i> Download PDF
-                                            </button>
-                                        </div>
-                                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-md border border-sistran-border hover:border-sistran-gold transition-colors">
-                                            <div>
-                                                <h4 class="text-xs font-bold text-sistran-heading">Plano Detalhado de Ações de Impacto Anual 2026</h4>
-                                                <p class="text-[10px] text-sistran-muted">Publicado em Jan/2026 • PDF (4.1 MB)</p>
+                                            <h4 class="text-xs font-bold text-sistran-heading mb-1">Plano de Ação PSV-SP</h4>
+                                            <p class="text-[11px] text-sistran-body leading-snug">Baixe o plano de ação do ciclo 2025-2027 do PSV-SP.</p>
+                                        </a>
+                                        <!-- Card: Relatório Anual -->
+                                        <a href="#" onclick="mockDownload('Relatorio-Anual-Desempenho-2025.pdf'); return false;" class="bg-white border border-sistran-border rounded-lg p-5 hover:shadow-md transition-all group text-center">
+                                            <div class="w-12 h-12 bg-sistran-gold/10 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-sistran-gold/20 transition-colors">
+                                                <i data-lucide="bar-chart-2" class="w-6 h-6 text-sistran-gold"></i>
                                             </div>
-                                            <button onclick="mockDownload('Plano-Anual-Acoes-2026.pdf')" class="text-sistran-gold hover:text-sistran-ink flex items-center gap-1.5 text-xs font-semibold">
-                                                <i data-lucide="download" class="w-4 h-4"></i> Download PDF
-                                            </button>
-                                        </div>
+                                            <h4 class="text-xs font-bold text-sistran-heading mb-1">Relatório Anual de Desempenho</h4>
+                                            <p class="text-[11px] text-sistran-body leading-snug">Consulte o relatório anual de desempenho e impacto 2025.</p>
+                                        </a>
+                                        <!-- Card: Relatório Semestral -->
+                                        <a href="#" onclick="mockDownload('Relatorio-Semestral-2025-2.pdf'); return false;" class="bg-white border border-sistran-border rounded-lg p-5 hover:shadow-md transition-all group text-center">
+                                            <div class="w-12 h-12 bg-sistran-gold/10 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-sistran-gold/20 transition-colors">
+                                                <i data-lucide="calendar" class="w-6 h-6 text-sistran-gold"></i>
+                                            </div>
+                                            <h4 class="text-xs font-bold text-sistran-heading mb-1">Relatório Semestral de Indicadores</h4>
+                                            <p class="text-[11px] text-sistran-body leading-snug">Baixe o relatório semestral Jul-Dez 2025 do PSV-SP.</p>
+                                        </a>
+                                        <!-- Card: Plano Detalhado -->
+                                        <a href="#" onclick="mockDownload('Plano-Anual-Acoes-2026.pdf'); return false;" class="bg-white border border-sistran-border rounded-lg p-5 hover:shadow-md transition-all group text-center">
+                                            <div class="w-12 h-12 bg-sistran-gold/10 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-sistran-gold/20 transition-colors">
+                                                <i data-lucide="clipboard-list" class="w-6 h-6 text-sistran-gold"></i>
+                                            </div>
+                                            <h4 class="text-xs font-bold text-sistran-heading mb-1">Plano Detalhado de Ações 2026</h4>
+                                            <p class="text-[11px] text-sistran-body leading-snug">Conheça o plano detalhado de ações de impacto anual 2026.</p>
+                                        </a>
                                     </div>
-                                </div>
-
-                                <!-- Relatórios de Monitoramento -->
-                                <div id="sec-relatorios" class="scroll-mt-28">
-                                    <h3 class="text-lg font-bold text-sistran-heading mb-2 flex items-center gap-2">
-                                        <i data-lucide="award" class="text-sistran-gold w-5 h-5"></i>
-                                        Relatórios de Monitoramento
-                                    </h3>
-                                    <p class="text-xs text-sistran-body mb-4">
-                                        Estudos científicos e técnicos de avaliação periódica de impacto sobre as mortes em vias municipais urbanas e rodovias no estado de São Paulo.
-                                    </p>
-                                    <div class="space-y-3">
-                                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-md border border-sistran-border hover:border-sistran-gold transition-colors">
-                                            <div>
-                                                <h4 class="text-xs font-bold text-sistran-heading">Relatório Anual de Desempenho e Impacto 2025</h4>
-                                                <p class="text-[10px] text-sistran-muted">Publicado em Fev/2026 • PDF (12.2 MB)</p>
-                                            </div>
-                                            <button onclick="mockDownload('Relatorio-Anual-Desempenho-2025.pdf')" class="text-sistran-gold hover:text-sistran-ink flex items-center gap-1.5 text-xs font-semibold">
-                                                <i data-lucide="download" class="w-4 h-4"></i> Download PDF
-                                            </button>
-                                        </div>
-                                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-md border border-sistran-border hover:border-sistran-gold transition-colors">
-                                            <div>
-                                                <h4 class="text-xs font-bold text-sistran-heading">Relatório Semestral de Indicadores Jul–Dez 2025</h4>
-                                                <p class="text-[10px] text-sistran-muted">Publicado em Jan/2026 • PDF (6.8 MB)</p>
-                                            </div>
-                                            <button onclick="mockDownload('Relatorio-Semestral-2025-2.pdf')" class="text-sistran-gold hover:text-sistran-ink flex items-center gap-1.5 text-xs font-semibold">
-                                                <i data-lucide="download" class="w-4 h-4"></i> Download PDF
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
 
                                 </div><!-- fecha secao-publicacoes -->
 
