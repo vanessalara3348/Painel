@@ -1,0 +1,2794 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIMO - SISTRAN-SP | Monitoramento PSV-SP</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome para Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Ícones Lucide para componentes modernos -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- SheetJS para processamento de planilhas Excel em tempo real -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    
+    <!-- Google Fonts - Open Sans (Design System SISTRAN) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Configuração dos Tokens do Design System no Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sistran: {
+                            yellow: '#FECF03',
+                            'yellow-hover': '#EBBF00',
+                            gold: '#C68B00',
+                            'gold-surface': '#FFF1C9',
+                            ink: '#262828',
+                            heading: '#111414',
+                            body: '#57595A',
+                            muted: '#B0B0B0',
+                            surface: '#FFFFFF',
+                            'surface-muted': '#F9F9F9',
+                            border: '#D3D8DB',
+                            error: '#FF0000',
+                            success: '#10B981',
+                            warning: '#F59E0B'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Open Sans"', 'Helvetica', 'Arial', 'sans-serif']
+                    },
+                    boxShadow: {
+                        card: '0 6px 19px rgba(0,0,0,0.06)',
+                        subtle: '0 1px 8px rgba(211,216,219,0.8)'
+                    },
+                    borderRadius: {
+                        sm: '8px',
+                        md: '16px',
+                        lg: '24px',
+                        pill: '32px'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --ss-yellow: #FECF03;
+            --ss-yellow-hover: #EBBF00;
+            --ss-gold: #C68B00;
+            --ss-gold-surface: #FFF1C9;
+            --ss-ink: #262828;
+            --ss-text-heading: #111414;
+            --ss-text-body: #57595A;
+            --ss-text-muted: #B0B0B0;
+            --ss-surface: #FFFFFF;
+            --ss-surface-muted: #F9F9F9;
+            --ss-border: #D3D8DB;
+            --ss-error: #FF0000;
+            --ss-font-family: "Open Sans", Helvetica, Arial, sans-serif;
+            --ss-radius-sm: 8px;
+            --ss-radius-md: 16px;
+            --ss-radius-lg: 24px;
+            --ss-radius-pill: 32px;
+            --ss-shadow-card: 0 6px 19px rgba(0,0,0,0.06);
+            --ss-shadow-subtle: 0 1px 8px rgba(211,216,219,0.8);
+        }
+
+        body {
+            font-family: var(--ss-font-family);
+            color: var(--ss-text-body);
+            scroll-behavior: smooth;
+        }
+        
+        /* Estilos do menu ativo com contraste aprimorado */
+        .active-tab {
+            background-color: var(--ss-gold-surface) !important;
+            border-left: 4px solid var(--ss-gold) !important;
+        }
+        .active-tab .tab-title {
+            color: var(--ss-text-heading) !important;
+        }
+        .active-tab i {
+            color: var(--ss-gold) !important;
+        }
+
+        /* Hover no botão ativo selecionado */
+        .active-tab:hover {
+            background-color: var(--ss-yellow) !important;
+            color: var(--ss-text-heading) !important;
+        }
+        .active-tab:hover .tab-title {
+            color: var(--ss-text-heading) !important;
+        }
+        .active-tab:hover i {
+            color: var(--ss-ink) !important;
+        }
+
+        /* Sidenav ativa */
+        .sidenav-link.active {
+            background-color: var(--ss-gold-surface) !important;
+            color: var(--ss-gold) !important;
+            font-weight: 600;
+            border-left: 4px solid var(--ss-gold) !important;
+        }
+
+        /* Custom scrollbar para tabelas de dados */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: var(--ss-surface-muted);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: var(--ss-border);
+            border-radius: 3px;
+        }
+        
+        /* Controladores das Abas */
+        .sub-tab-content {
+            display: none;
+        }
+        .sub-tab-content.active {
+            display: block;
+        }
+
+        .animate-spin-slow {
+            animation: spin 10s linear infinite;
+        }
+
+        /* ===== Legibilidade: piso mínimo da escala tipográfica (issue #23) =====
+           Os cards usavam muitos tamanhos abaixo de 12px (8/9/10/11px) e
+           text-xs (12px) como corpo padrão, prejudicando a leitura. Aqui
+           elevamos o piso da escala de forma consistente em todo o painel.
+           O seletor com prefixo "body" garante prioridade sobre as classes
+           utilitárias do Tailwind sem precisar de !important. */
+        body .text-\[8px\],
+        body .text-\[9px\] { font-size: 11px; }
+        body .text-\[10px\] { font-size: 12px; }
+        body .text-\[11px\] { font-size: 13px; }
+        body .text-xs { font-size: 13px; line-height: 1.25rem; }
+        body .text-sm { font-size: 14.5px; line-height: 1.4rem; }
+    </style>
+</head>
+<body class="bg-sistran-surface-muted antialiased custom-scrollbar h-screen overflow-hidden">
+
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- SIDEBAR DE NAVEGAÇÃO COMPLETA -->
+        <aside class="w-80 bg-white border-r border-sistran-border text-sistran-body flex flex-col flex-shrink-0 z-20 transition-all duration-300 hidden md:flex">
+            
+            <!-- HEADER DO SIDEBAR COM LOGO ADAPTADA - ALINHADO AO HEADER DA PÁGINA (Sem caixa/borda no entorno) -->
+            <div class="h-16 flex items-center px-6 border-b border-sistran-border bg-white flex-shrink-0">
+                <div class="flex items-center gap-3">
+                    <img class="h-10 w-auto object-contain flex-shrink-0" src="https://www.cetran.sp.gov.br/CetranWeb/resources/img/hero/sistran.png" alt="SISTRAN SP" onerror="this.onerror=null; this.src='https://placehold.co/150x50/FFFFFF/262828?text=SISTRAN+SP';">
+                    <span class="text-lg font-bold text-sistran-heading tracking-tight leading-none border-l border-sistran-border pl-3">Sistran.SP</span>
+                </div>
+            </div>
+
+            <!-- Menus ordenados de forma otimizada conforme solicitação -->
+            <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto bg-white custom-scrollbar">
+                <p class="px-3 text-xs font-extrabold text-sistran-gold uppercase tracking-wider mb-3 border-b border-sistran-border pb-1">Ambientes de Sistema</p>
+                
+                <!-- 1. Apresentação dos resultados -->
+                <div class="space-y-1">
+                    <button onclick="togglePublicSubmenu()" id="nav-publico" class="w-full flex items-center justify-between px-3 py-2.5 rounded-md text-sistran-body hover:bg-zinc-100 transition duration-150 text-left">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-users text-lg w-5 flex-shrink-0 text-sistran-body"></i>
+                            <span class="tab-title text-xs font-bold text-sistran-heading">Apresentação dos Resultados</span>
+                        </div>
+                        <i id="chevron-publico" class="fa-solid fa-chevron-down text-xs transition-transform duration-200 text-sistran-muted"></i>
+                    </button>
+                    
+                    <!-- Submenu das Seções do Painel (Sem numeração) -->
+                    <div id="submenu-publico" class="hidden pl-6 space-y-1 overflow-hidden transition-all duration-300 border-l-2 border-sistran-border ml-5 mt-1">
+                        <button onclick="selectPublicSubitem('introducao')" id="subitem-introducao" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-medium text-sistran-body hover:bg-zinc-100 hover:text-sistran-heading transition-colors text-left">
+                            <i data-lucide="home" class="w-4 h-4 text-sistran-muted flex-shrink-0"></i>
+                            <span>Introdução</span>
+                        </button>
+                        <button onclick="selectPublicSubitem('impacto')" id="subitem-impacto" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-medium text-sistran-body hover:bg-zinc-100 hover:text-sistran-heading transition-colors text-left">
+                            <i data-lucide="trending-down" class="w-4 h-4 text-sistran-muted flex-shrink-0"></i>
+                            <span>Impacto</span>
+                        </button>
+                        <button onclick="selectPublicSubitem('desempenho')" id="subitem-desempenho" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-medium text-sistran-body hover:bg-zinc-100 hover:text-sistran-heading transition-colors text-left">
+                            <i data-lucide="activity" class="w-4 h-4 text-sistran-muted flex-shrink-0"></i>
+                            <span>Desempenho</span>
+                        </button>
+                        <button onclick="selectPublicSubitem('implementacao')" id="subitem-implementacao" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-medium text-sistran-body hover:bg-zinc-100 hover:text-sistran-heading transition-colors text-left">
+                            <i data-lucide="check-square" class="w-4 h-4 text-sistran-muted flex-shrink-0"></i>
+                            <span>Implementação</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 2. Coleta de Dados (Ambiente Restrito com login fictício) -->
+                <div class="space-y-1">
+                    <button onclick="toggleColetaSubmenu()" id="nav-coleta" class="w-full flex items-center justify-between px-3 py-2.5 rounded-md text-sistran-body hover:bg-zinc-100 transition duration-150 text-left">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-file-pen text-lg w-5 flex-shrink-0 text-sistran-body"></i>
+                            <span class="tab-title text-xs font-bold text-sistran-heading">Coleta de Dados</span>
+                        </div>
+                        <i id="chevron-coleta" class="fa-solid fa-chevron-down text-xs transition-transform duration-200 text-sistran-muted"></i>
+                    </button>
+                    
+                    <!-- Submenu colapsável para Coleta de Dados -->
+                    <div id="submenu-coleta" class="hidden pl-6 space-y-1 overflow-hidden transition-all duration-300 border-l-2 border-sistran-border ml-5 mt-1">
+                        <button onclick="selectColetaSubitem('formulario')" id="subitem-formulario" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-medium text-sistran-body hover:bg-zinc-100 hover:text-sistran-heading transition-colors text-left">
+                            <i data-lucide="file-text" class="w-4 h-4 text-sistran-muted flex-shrink-0"></i>
+                            <span>Formulário de Submissão</span>
+                        </button>
+                        <button onclick="selectColetaSubitem('historico')" id="subitem-historico" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-medium text-sistran-body hover:bg-zinc-100 hover:text-sistran-heading transition-colors text-left">
+                            <i data-lucide="history" class="w-4 h-4 text-sistran-muted flex-shrink-0"></i>
+                            <span>Histórico de Produtos</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3. Acompanhamento e Consulta dos Resultados -->
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sistran-body hover:bg-zinc-100 transition duration-150 text-left">
+                    <i class="fa-solid fa-chart-line text-lg w-5 flex-shrink-0 text-sistran-body"></i>
+                    <span class="tab-title text-xs font-bold text-sistran-heading">Acompanhamento e Consulta dos Resultados</span>
+                </button>
+
+                <!-- 4. Monitoramento e Validação (Ambiente Restrito) -->
+                <button onclick="switchTab('validacao')" id="nav-validacao" class="w-full flex items-center justify-between px-3 py-2.5 rounded-md text-sistran-body hover:bg-zinc-100 transition duration-150 text-left">
+                    <div class="flex items-center gap-3 flex-1">
+                        <i class="fa-solid fa-shield-halved text-lg w-5 flex-shrink-0 text-sistran-body"></i>
+                        <span class="tab-title text-xs font-bold text-sistran-heading">Monitoramento e Validação</span>
+                    </div>
+                    <span id="badge-validar" class="bg-sistran-yellow text-sistran-ink font-bold px-1.5 py-0.2 rounded text-[9px] ml-1">1</span>
+                </button>
+
+                <!-- Seção de Contato -->
+                <p class="px-3 text-xs font-extrabold text-sistran-gold uppercase tracking-wider mt-6 mb-3 border-b border-sistran-border pb-1">Contato</p>
+
+                <!-- Suporte Técnico -->
+                <button onclick="openSupportModal()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sistran-body hover:bg-zinc-100 transition duration-150 text-left">
+                    <i class="fa-solid fa-headset text-lg w-5 text-sistran-body flex-shrink-0"></i>
+                    <span class="text-xs font-bold leading-tight text-sistran-heading">Suporte Técnico</span>
+                </button>
+            </nav>
+
+            <div class="p-4 border-t border-sistran-border bg-zinc-50 text-center">
+                <p class="text-[10px] text-sistran-body font-medium">Versão do Sistema: 2.1</p>
+                <p class="text-[9px] text-sistran-muted mt-0.5">Junho, 2026 • Governo de SP</p>
+            </div>
+        </aside>
+
+        <!-- MAIN LAYOUT -->
+        <main class="flex-1 flex flex-col h-full overflow-hidden">
+            
+            <!-- HEADER SUPERIOR ESTÁTICO -->
+            <header class="bg-sistran-surface border-b border-sistran-border h-16 flex items-center justify-between px-6 flex-shrink-0 z-10">
+                <div class="flex items-center gap-4">
+                    <button class="md:hidden text-sistran-ink hover:text-sistran-gold" id="mobile-menu-btn">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                    <div>
+                        <h2 id="page-title" class="text-lg font-bold text-sistran-heading">Apresentação dos Resultados</h2>
+                        <p id="page-subtitle" class="text-xs text-sistran-body font-medium hidden md:block">Gerenciamento Integrado de Segurança Viária (PSV-SP 2025-2035)</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <!-- Indicação de login apenas no canto superior direito -->
+                    <div class="flex items-center gap-3">
+                        <div class="text-right">
+                            <p class="text-[10px] text-sistran-muted uppercase font-bold tracking-wider">Acesso Ponto Focal</p>
+                            <span id="user-badge" class="text-xs font-semibold text-sistran-textHeading bg-sistran-surface-muted px-2.5 py-1 rounded-full border border-sistran-border">Visitante Público</span>
+                        </div>
+                        <button onclick="toggleLoginIndicatorClick()" class="p-1 hover:bg-slate-100 rounded-full transition-colors relative" title="Perfil / Sair">
+                            <div class="w-9 h-9 rounded-full bg-sistran-yellow text-sistran-ink flex items-center justify-center font-bold text-sm shadow relative">
+                                <span id="avatar-initials">VP</span>
+                                <span id="login-indicator" class="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <div class="flex-1 overflow-y-auto p-6 bg-sistran-surface-muted custom-scrollbar" id="content-container">
+
+                <!-- Breadcrumb Dinâmico e Unificado -->
+                <div id="dynamic-breadcrumb" class="flex items-center gap-2 text-xs text-sistran-muted mb-4 px-1">
+                    <!-- Gerado de forma robusta e dinâmica via Javascript -->
+                </div>
+
+                <!-- MODAL DE NOTIFICAÇÃO DO TOAST -->
+                <div id="custom-notification" class="hidden fixed bottom-5 right-5 bg-sistran-ink text-white px-6 py-4 rounded-md shadow-card flex items-center gap-3 border border-sistran-border max-w-sm z-50 transform translate-y-0 transition duration-300">
+                    <span id="notif-icon-container" class="p-2 rounded-sm bg-sistran-yellow text-sistran-ink">
+                        <i id="notif-icon" class="fa-solid fa-circle-check"></i>
+                    </span>
+                    <div>
+                        <h4 id="notif-title" class="font-bold text-sm text-white">Sucesso!</h4>
+                        <p id="notif-desc" class="text-xs text-sistran-muted">Ação realizada com êxito.</p>
+                    </div>
+                </div>
+
+                <!-- ==================== AMBIENTE 4: APRESENTAÇÃO DOS RESULTADOS (PORTAL COMPLETO) ==================== -->
+                <section id="tab-publico" class="space-y-6">
+                    
+                    <!-- Layout Principal em Coluna Única Expandida -->
+                    <div class="w-full min-w-0 space-y-6">
+
+                        <!-- SUB-ABA 1: INTRODUÇÃO -->
+                        <div id="sub-tab-introducao" class="sub-tab-content active space-y-6">
+                            
+                            <!-- Cards Resumo Consolidado -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                                <div class="bg-white border border-sistran-border rounded-md p-5 shadow-subtle hover:shadow-md transition">
+                                    <p class="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-1">Impacto (Óbitos)</p>
+                                    <h3 class="text-2xl font-extrabold text-sistran-heading" id="card-impacto-valor">-5.1%</h3>
+                                    <p class="text-xs text-sistran-body mt-2 flex items-center gap-1">
+                                        <span class="text-emerald-500 font-semibold">&darr; 312 óbitos</span> em relação a 2024
+                                    </p>
+                                </div>
+                                <div class="bg-white border border-sistran-border rounded-md p-5 shadow-subtle hover:shadow-md transition">
+                                    <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider mb-1">Desempenho Geral</p>
+                                    <div class="flex items-baseline gap-2">
+                                        <h3 class="text-2xl font-extrabold text-sistran-heading">58.1%</h3>
+                                        <span class="text-xs font-semibold text-amber-500 bg-amber-50 px-1.5 py-0.5 rounded">Regular</span>
+                                    </div>
+                                    <p class="text-xs text-sistran-body mt-2">Média ponderada dos 8 eixos do plano</p>
+                                </div>
+                                
+                                <div class="bg-white border border-sistran-border rounded-md p-5 shadow-subtle hover:shadow-md transition flex flex-col justify-between h-full">
+                                    <div>
+                                        <p class="text-xs font-bold text-blue-600 uppercase tracking-wider mb-1">Implementação</p>
+                                        <h3 class="text-2xl font-extrabold text-sistran-heading" id="card-imp-ratio">1 / 15</h3>
+                                    </div>
+                                    <div class="flex items-center justify-between gap-2 mt-2">
+                                        <div class="w-14 h-14 flex-shrink-0">
+                                            <canvas id="cardStatusDonutChart"></canvas>
+                                        </div>
+                                        <div class="text-[9px] text-sistran-body leading-tight space-y-0.5 flex-1 pl-1 font-semibold">
+                                            <div><span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 mr-0.5"></span> Concluintes (10%)</div>
+                                            <div><span class="inline-block w-1.5 h-1.5 rounded-full bg-amber-400 mr-0.5"></span> Em Curso (50%)</div>
+                                            <div><span class="inline-block w-1.5 h-1.5 rounded-full bg-rose-500 mr-0.5"></span> Pendentes (40%)</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-white border border-sistran-border rounded-md p-5 shadow-subtle hover:shadow-md transition">
+                                    <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider mb-1">Vidas Salvas Estimadas</p>
+                                    <div class="flex items-baseline gap-1">
+                                        <h3 class="text-2xl font-extrabold text-emerald-600">~1.240</h3>
+                                        <span class="text-xs text-sistran-muted font-bold">(2025-2026)</span>
+                                    </div>
+                                    <p class="text-xs text-sistran-body mt-2">Projeção do cumprimento do plano decenal</p>
+                                </div>
+                            </div>
+
+                            <!-- O que é o monitoramento? -->
+                            <div id="sec-o-que-e" class="bg-white border border-sistran-border rounded-md p-6 shadow-subtle scroll-mt-28">
+                                <h3 class="text-lg font-bold text-sistran-heading mb-2">O que é o Monitoramento do PSV-SP?</h3>
+                                <p class="text-sm text-sistran-body leading-relaxed mb-6">
+                                    O Plano de Segurança Viária é monitorado de forma contínua por meio de três tipos complementares de indicadores estruturados de forma piramidal. Isso permite que a gestão pública avalie desde a conformidade da execução de ações pontuais até o impacto final na preservação de vidas no trânsito paulista.
+                                </p>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <div class="p-4 bg-gray-50 rounded-md border border-gray-100">
+                                        <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded uppercase tracking-wider">Impacto</span>
+                                        <h4 class="font-bold text-sistran-heading mt-3 mb-1 text-xs">O que o Plano está alcançando?</h4>
+                                        <p class="text-[11px] text-sistran-body leading-relaxed">
+                                            Mede os efeitos globais do plano. A meta principal é reduzir em 50% as mortes no trânsito até 2030, alinhando São Paulo às diretrizes internacionais da ONU e ao PNATRANS.
+                                        </p>
+                                    </div>
+                                    <div class="p-4 bg-gray-50 rounded-md border border-gray-100">
+                                        <span class="text-xs font-bold text-amber-500 bg-amber-50 px-2.5 py-1 rounded uppercase tracking-wider">Desempenho</span>
+                                        <h4 class="font-bold text-sistran-heading mt-3 mb-1 text-xs">Estamos na direção certa?</h4>
+                                        <p class="text-[11px] text-sistran-body leading-relaxed">
+                                            Avalia mudanças intermediárias vinculadas aos 8 eixos estratégicos, incluindo a qualidade da gestão estadual, velocidade das vias, fiscalização de infrações e resposta a acidentes.
+                                        </p>
+                                    </div>
+                                    <div class="p-4 bg-gray-50 rounded-md border border-gray-100">
+                                        <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded uppercase tracking-wider">Implementação</span>
+                                        <h4 class="font-bold text-sistran-heading mt-3 mb-1 text-xs">As ações foram executadas?</h4>
+                                        <p class="text-[11px] text-sistran-body leading-relaxed">
+                                            Verifica de forma estrita se os produtos e ações acordados na matriz do PSV-SP foram entregues dentro dos prazos pactuados para cada órgão e secretaria parceira.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Ciclo de Monitoramento expandido em largura completa -->
+                            <div class="bg-white border border-sistran-border rounded-md p-6 shadow-subtle w-full">
+                                <div>
+                                    <h3 class="text-base font-bold text-sistran-heading mb-4 flex items-center gap-2">
+                                        <i data-lucide="refresh-cw" class="text-sistran-gold w-5 h-5 animate-spin-slow"></i>
+                                        Ciclo de Monitoramento & Políticas Públicas
+                                    </h3>
+                                    <p class="text-xs text-sistran-body leading-relaxed mb-6">
+                                        O PSV-SP opera sob um modelo cíclico de governança integrada voltado para a melhoria contínua da mobilidade segura. O processo se renova em etapas sucessivas para readequar estratégias estaduais e municipais com foco em resultados eficientes para a preservação de vidas.
+                                    </p>
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                        <div class="p-4 bg-sistran-surface-muted border border-sistran-border rounded-md">
+                                            <div class="font-bold text-emerald-600 bg-emerald-50 w-7 h-7 flex items-center justify-center rounded-full mb-2">1</div>
+                                            <strong class="text-xs text-sistran-heading block mb-1">Coleta e Registro de Dados</strong>
+                                            <p class="text-[11px] text-sistran-body leading-snug">Ocorrências registradas pelo Infosiga servem como diagnóstico em tempo real dos pontos de sinistros.</p>
+                                        </div>
+                                        <div class="p-4 bg-sistran-surface-muted border border-sistran-border rounded-md">
+                                            <div class="font-bold text-amber-600 bg-amber-50 w-7 h-7 flex items-center justify-center rounded-full mb-2">2</div>
+                                            <strong class="text-xs text-sistran-heading block mb-1">Análise & Consolidação</strong>
+                                            <p class="text-[11px] text-sistran-body leading-snug">O CETRAN-SP e a COST realizam cruzamentos periódicos de dados de decessos para verificar desvios de metas.</p>
+                                        </div>
+                                        <div class="p-4 bg-sistran-surface-muted border border-sistran-border rounded-md">
+                                            <div class="font-bold text-blue-600 bg-blue-50 w-7 h-7 flex items-center justify-center rounded-full mb-2">3</div>
+                                            <strong class="text-xs text-sistran-heading block mb-1">Implementação das Ações</strong>
+                                            <p class="text-[11px] text-sistran-body leading-snug">A Matriz de Ações entra em execução pelas Secretarias vinculadas com verificação de conformidade.</p>
+                                        </div>
+                                        <div class="p-4 bg-sistran-surface-muted border border-sistran-border rounded-md">
+                                            <div class="font-bold text-sistran-gold bg-sistran-gold-surface w-7 h-7 flex items-center justify-center rounded-full mb-2">4</div>
+                                            <strong class="text-xs text-sistran-heading block mb-1">Ajustes de Trajetória</strong>
+                                            <p class="text-[11px] text-sistran-body leading-snug">Revisão sistemática de meio-termo para ajustar prioridades regulatórias e de infraestrutura.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-6 pt-4 border-t border-sistran-border">
+                                    <p class="text-xs font-semibold text-sistran-heading mb-2">Cronograma de Marcos PSV-SP (Alinhado aos PPAs)</p>
+                                    <div class="grid grid-cols-3 gap-2 text-center text-[10px] text-sistran-body font-semibold">
+                                        <div class="p-2 bg-sistran-gold-surface rounded">
+                                            <span class="font-bold block text-sistran-gold">PPA 2024-2027</span>
+                                            Curto Prazo
+                                        </div>
+                                        <div class="p-2 bg-gray-100 rounded">
+                                            <span class="font-bold block">PPA 2028-2031</span>
+                                            Médio Prazo
+                                        </div>
+                                        <div class="p-2 bg-gray-100 rounded">
+                                            <span class="font-bold block">PPA 2032-2035</span>
+                                            Longo Prazo
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col gap-6">
+                                
+                                <!-- Planos de Ação -->
+                                <div id="sec-planos-acao" class="bg-white border border-sistran-border rounded-md p-6 shadow-subtle scroll-mt-28">
+                                    <h3 class="text-lg font-bold text-sistran-heading mb-2 flex items-center gap-2">
+                                        <i data-lucide="book-open" class="text-sistran-gold w-5 h-5"></i>
+                                        Planos de Ação Anuais
+                                    </h3>
+                                    <p class="text-xs text-sistran-body mb-4">
+                                        Cronograma anual detalhado das ações prioritárias a serem desenvolvidas e pactuadas entre os órgãos integradores do SISTRAN-SP para mitigação de riscos de sinistros.
+                                    </p>
+                                    <div class="space-y-3">
+                                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-md border border-sistran-border hover:border-sistran-gold transition-colors">
+                                            <div>
+                                                <h4 class="text-xs font-bold text-sistran-heading">Plano de Ação PSV-SP (Ciclo 2025–2027)</h4>
+                                                <p class="text-[10px] text-sistran-muted">Publicado em Dez/2025 • PDF (8.4 MB)</p>
+                                            </div>
+                                            <button onclick="mockDownload('Plano-de-Acao-Ciclo-1-2025-2027.pdf')" class="text-sistran-gold hover:text-sistran-ink flex items-center gap-1.5 text-xs font-semibold">
+                                                <i data-lucide="download" class="w-4 h-4"></i> Download PDF
+                                            </button>
+                                        </div>
+                                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-md border border-sistran-border hover:border-sistran-gold transition-colors">
+                                            <div>
+                                                <h4 class="text-xs font-bold text-sistran-heading">Plano Detalhado de Ações de Impacto Anual 2026</h4>
+                                                <p class="text-[10px] text-sistran-muted">Publicado em Jan/2026 • PDF (4.1 MB)</p>
+                                            </div>
+                                            <button onclick="mockDownload('Plano-Anual-Acoes-2026.pdf')" class="text-sistran-gold hover:text-sistran-ink flex items-center gap-1.5 text-xs font-semibold">
+                                                <i data-lucide="download" class="w-4 h-4"></i> Download PDF
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Relatórios de Monitoramento -->
+                                <div id="sec-relatorios" class="bg-white border border-sistran-border rounded-md p-6 shadow-subtle scroll-mt-28">
+                                    <h3 class="text-lg font-bold text-sistran-heading mb-2 flex items-center gap-2">
+                                        <i data-lucide="award" class="text-sistran-gold w-5 h-5"></i>
+                                        Relatórios de Monitoramento
+                                    </h3>
+                                    <p class="text-xs text-sistran-body mb-4">
+                                        Estudos científicos e técnicos de avaliação periódica de impacto sobre as mortes em vias municipais urbanas e rodovias no estado de São Paulo.
+                                    </p>
+                                    <div class="space-y-3">
+                                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-md border border-sistran-border hover:border-sistran-gold transition-colors">
+                                            <div>
+                                                <h4 class="text-xs font-bold text-sistran-heading">Relatório Anual de Desempenho e Impacto 2025</h4>
+                                                <p class="text-[10px] text-sistran-muted">Publicado em Fev/2026 • PDF (12.2 MB)</p>
+                                            </div>
+                                            <button onclick="mockDownload('Relatorio-Anual-Desempenho-2025.pdf')" class="text-sistran-gold hover:text-sistran-ink flex items-center gap-1.5 text-xs font-semibold">
+                                                <i data-lucide="download" class="w-4 h-4"></i> Download PDF
+                                            </button>
+                                        </div>
+                                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-md border border-sistran-border hover:border-sistran-gold transition-colors">
+                                            <div>
+                                                <h4 class="text-xs font-bold text-sistran-heading">Relatório Semestral de Indicadores Jul–Dez 2025</h4>
+                                                <p class="text-[10px] text-sistran-muted">Publicado em Jan/2026 • PDF (6.8 MB)</p>
+                                            </div>
+                                            <button onclick="mockDownload('Relatorio-Semestral-2025-2.pdf')" class="text-sistran-gold hover:text-sistran-ink flex items-center gap-1.5 text-xs font-semibold">
+                                                <i data-lucide="download" class="w-4 h-4"></i> Download PDF
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- SUB-ABA 2: IMPACTO (CURVAS E RECORTE HISTÓRICO) -->
+                        <div id="sub-tab-impacto" class="sub-tab-content space-y-6">
+                            <div class="bg-white border border-sistran-border rounded-md p-6 shadow-subtle">
+                                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                                    <div>
+                                        <span class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Metas Globais de Impacto</span>
+                                        <h2 class="text-2xl font-bold text-sistran-heading">Redução de Óbitos no Trânsito Paulista</h2>
+                                        <p class="text-xs text-sistran-body mt-1">Conforme pactuado com a Organização das Nações Unidas (ONU) e o Pnatrans.</p>
+                                    </div>
+                                    
+                                    <div class="flex gap-2">
+                                        <button onclick="resetImpactFilters()" class="bg-white border-2 border-sistran-gold hover:bg-sistran-gold-surface text-sistran-ink font-bold py-1.5 px-4 rounded-pill text-xs transition duration-150">
+                                            Limpar Filtros
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 font-semibold">
+                                    <div class="p-4 bg-amber-50 border border-amber-200 rounded-md">
+                                        <p class="text-[10px] font-bold text-sistran-gold uppercase">Meta Principal 2030</p>
+                                        <h4 class="text-2xl font-bold text-sistran-heading">-50%</h4>
+                                        <p class="text-xs text-sistran-body mt-1">Redução de mortes contra linha base de 2024</p>
+                                    </div>
+                                    <div class="p-4 bg-gray-50 border border-gray-200 rounded-md">
+                                        <p class="text-[10px] font-bold text-sistran-muted uppercase">Linha Base (2024)</p>
+                                        <h4 class="text-2xl font-semibold text-sistran-heading">6.122</h4>
+                                        <p class="text-xs text-sistran-body mt-1">Óbitos totais consolidados no Infosiga</p>
+                                    </div>
+                                    <div class="p-4 bg-gray-50 border border-gray-200 rounded-md">
+                                        <p class="text-[10px] font-bold text-sistran-muted uppercase">Ano Recente (2025)</p>
+                                        <h4 class="text-2xl font-semibold text-sistran-heading">5.810</h4>
+                                        <p class="text-xs text-sistran-body mt-1">Consolidação preliminar anualizada</p>
+                                    </div>
+                                    <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-md">
+                                        <p class="text-[10px] font-bold text-emerald-600 uppercase">Diferença Atual</p>
+                                        <h4 class="text-2xl font-bold text-emerald-600">-5.1%</h4>
+                                        <p class="text-xs text-sistran-body mt-1">Tendência descendente observada</p>
+                                    </div>
+                                </div>
+
+                                <div class="bg-gray-50 p-4 rounded-md border border-sistran-border mb-6">
+                                    <p class="text-xs font-bold text-sistran-heading mb-3 flex items-center gap-2">
+                                        <i data-lucide="filter" class="w-4 h-4 text-sistran-gold"></i>
+                                        Filtros de Séries Históricas e Projeções
+                                    </p>
+                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                        <div>
+                                            <label class="block text-xs font-semibold text-sistran-body mb-1">Visualizar Recorte</label>
+                                            <select id="select-impact-type" onchange="updateImpactChart()" class="w-full text-xs p-2.5 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                <option value="total">Taxa Total de Óbitos (Absoluto)</option>
+                                                <option value="rate">Mortalidade por 100 mil habitantes</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-semibold text-sistran-body mb-1">Modo de Transporte</label>
+                                            <select id="select-impact-mode" onchange="updateImpactChart()" class="w-full text-xs p-2.5 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                <option value="all">Todos os Modos</option>
+                                                <option value="pedestres">Pedestres</option>
+                                                <option value="ciclistas">Ciclistas</option>
+                                                <option value="motociclistas">Motociclistas</option>
+                                                <option value="automoveis">Ocupantes de Automóvel</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-semibold text-sistran-body mb-1">Tipo de Via</label>
+                                            <select id="select-impact-via" onchange="updateImpactChart()" class="w-full text-xs p-2.5 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                <option value="all">Vias Urbanas e Rodovias</option>
+                                                <option value="urbanas">Apenas Vias Urbanas</option>
+                                                <option value="rodovias">Apenas Rodovias</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-white p-4 border border-sistran-border rounded-md">
+                                    <div class="flex items-center justify-between mb-2 font-semibold">
+                                        <p class="text-xs text-sistran-heading">Série Histórica e Trajetória de Metas até 2030</p>
+                                        <span class="text-[10px] text-sistran-muted">Fontes oficiais: Infosiga / IBGE / base consolidada</span>
+                                    </div>
+                                    <div class="h-80 w-full">
+                                        <canvas id="impactLineChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 class="text-base font-bold text-sistran-heading mb-4">Mortalidade Segmentada (Em relação a 2024)</h3>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    <div class="bg-white border border-sistran-border rounded-md p-4 flex justify-between items-center shadow-subtle">
+                                        <div>
+                                            <p class="text-[10px] font-bold text-sistran-muted uppercase">Mortalidade de Motociclistas</p>
+                                            <h4 class="text-lg font-bold text-sistran-heading">2.340 óbitos</h4>
+                                            <p class="text-xs text-rose-500 mt-1 flex items-center gap-0.5 font-semibold">
+                                                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> +1.2% versus 2024
+                                            </p>
+                                        </div>
+                                        <span class="p-2 bg-rose-50 text-rose-500 rounded text-xs font-bold">Crítico</span>
+                                    </div>
+                                    <div class="bg-white border border-sistran-border rounded-md p-4 flex justify-between items-center shadow-subtle">
+                                        <div>
+                                            <p class="text-[10px] font-bold text-sistran-muted uppercase">Mortalidade de Pedestres</p>
+                                            <h4 class="text-lg font-bold text-sistran-heading">1.104 óbitos</h4>
+                                            <p class="text-xs text-rose-500 mt-1 flex items-center gap-0.5 font-semibold">
+                                                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> +1.2% versus 2024
+                                            </p>
+                                        </div>
+                                        <span class="p-2 bg-rose-50 text-rose-500 rounded text-xs font-bold">Crítico</span>
+                                    </div>
+                                    <div class="bg-white border border-sistran-border rounded-md p-4 flex justify-between items-center shadow-subtle">
+                                        <div>
+                                            <p class="text-[10px] font-bold text-sistran-muted uppercase">Mortalidade de Ciclistas</p>
+                                            <h4 class="text-lg font-bold text-sistran-heading">320 óbitos</h4>
+                                            <p class="text-xs text-emerald-500 mt-1 flex items-center gap-0.5 font-semibold">
+                                                <i data-lucide="trending-down" class="w-3.5 h-3.5"></i> -2.2% versus 2024
+                                            </p>
+                                        </div>
+                                        <span class="p-2 bg-emerald-50 text-emerald-500 rounded text-xs font-bold">Seguro</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SUB-ABA 3: DESEMPENHO (EIXOS E MATRIZ ANALÍTICA) -->
+                        <div id="sub-tab-desempenho" class="sub-tab-content space-y-6">
+                            <div class="bg-white border border-sistran-border rounded-md p-6 shadow-subtle space-y-6">
+                                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                    <div>
+                                        <span class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Acompanhamento Tático</span>
+                                        <h2 class="text-2xl font-bold text-sistran-heading">Indicadores de Desempenho por Eixo</h2>
+                                        <p class="text-xs text-sistran-body">Meta de andamento tático de processos, estruturas e governança estadual do trânsito.</p>
+                                    </div>
+                                    <button onclick="exportDesempenhoCSV()" class="bg-white border-2 border-sistran-gold hover:bg-sistran-gold-surface text-sistran-ink font-bold py-2 px-4 rounded-pill text-xs flex items-center gap-1.5 transition">
+                                        <i data-lucide="download" class="w-4 h-4"></i> Exportar CSV (.csv)
+                                    </button>
+                                </div>
+
+                                <div class="p-5 bg-white border border-sistran-border rounded-md shadow-subtle">
+                                    <div class="flex justify-between items-center mb-2 font-semibold">
+                                        <span class="text-xs text-sistran-heading">Índice Geral de Desempenho do Plano (IGD)</span>
+                                        <span class="text-sm text-sistran-gold">58.1% Cumprido</span>
+                                    </div>
+                                    <div class="w-full bg-gray-100 rounded-pill h-3">
+                                        <div class="bg-sistran-yellow h-3 rounded-pill" style="width: 58.1%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-3">
+                                    <p class="text-xs font-bold text-sistran-heading mb-2">Desempenho de Metas por Eixo</p>
+                                    
+                                    <!-- EIXO 1 -->
+                                    <div class="border border-sistran-border rounded-md overflow-hidden">
+                                        <button onclick="toggleAccordion('acc-eixo1')" class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors">
+                                            <div class="flex items-center gap-3">
+                                                <span class="w-8 h-8 rounded-full bg-sistran-gold-surface text-sistran-gold text-xs font-bold flex items-center justify-center">E1</span>
+                                                <div class="text-left">
+                                                    <h4 class="text-xs font-bold text-sistran-heading">Gestão da Segurança Viária</h4>
+                                                    <p class="text-[10px] text-sistran-muted">Governança, descentralização e captação de fundos</p>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center gap-4">
+                                                <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">75.0%</span>
+                                                <i data-lucide="chevron-down" class="w-4 h-4 text-sistran-muted transition-transform" id="icon-acc-eixo1"></i>
+                                            </div>
+                                        </button>
+                                        
+                                        <div id="acc-eixo1" class="hidden p-4 bg-white border-t border-sistran-border space-y-4">
+                                            <p class="text-[11px] text-sistran-muted uppercase font-bold tracking-wider">Objetivos Estratégicos & Indicadores</p>
+                                            <div class="space-y-4 text-xs">
+                                                <div class="p-3 bg-gray-50 rounded-md">
+                                                    <div class="flex justify-between font-bold text-sistran-heading mb-2">
+                                                        <span>OE 1.1: Fortalecer a Governança do SISTRAN-SP</span>
+                                                        <span class="text-sistran-gold">75% Cumprido</span>
+                                                    </div>
+                                                    <div class="space-y-2">
+                                                        <div class="flex justify-between items-center text-[11px] border-b border-gray-100 py-1">
+                                                            <span>1.1.a Índice de maturidade da governança do PSV-SP</span>
+                                                            <span class="font-semibold text-sistran-heading">Média: 75%</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- EIXO 2 -->
+                                    <div class="border border-sistran-border rounded-md overflow-hidden">
+                                        <button onclick="toggleAccordion('acc-eixo2')" class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors">
+                                            <div class="flex items-center gap-3">
+                                                <span class="w-8 h-8 rounded-full bg-sistran-gold-surface text-sistran-gold text-xs font-bold flex items-center justify-center">E2</span>
+                                                <div class="text-left">
+                                                    <h4 class="text-xs font-bold text-sistran-heading">Gestão da Informação e Dados</h4>
+                                                    <p class="text-[10px] text-sistran-muted">Integração cadastral, Infosiga e transparência de acidentes</p>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center gap-4">
+                                                <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">88.0%</span>
+                                                <i data-lucide="chevron-down" class="w-4 h-4 text-sistran-muted transition-transform" id="icon-acc-eixo2"></i>
+                                            </div>
+                                        </button>
+                                        <div id="acc-eixo2" class="hidden p-4 bg-white border-t border-sistran-border text-xs text-sistran-body">
+                                            <p class="font-bold text-sistran-heading mb-2">Principais Indicadores:</p>
+                                            <ul class="list-disc pl-5 space-y-1">
+                                                <li>Tempo médio de conciliação de óbitos: <strong>12 dias</strong></li>
+                                                <li>Integração das bases de dados municipais de sinistros: <strong>88% concluído</strong></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white border border-sistran-border rounded-md p-6 shadow-subtle space-y-4">
+                                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                    <h3 class="text-base font-bold text-sistran-heading">Matriz Analítica de Indicadores de Desempenho</h3>
+                                    <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+                                        <select id="filter-desempenho-eixo" onchange="filterDesempenhoTable()" class="text-xs p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                            <option value="all">Filtrar por Todos os Eixos</option>
+                                            <option value="Eixo 1">Apenas Eixo 1</option>
+                                            <option value="Eixo 2">Apenas Eixo 2</option>
+                                        </select>
+                                        <input type="text" id="search-desempenho" onkeyup="filterDesempenhoTable()" placeholder="Pesquisar..." class="text-xs p-2 bg-white border border-sistran-border rounded-sm flex-1 sm:w-60 focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                    </div>
+                                </div>
+
+                                <div class="table-container overflow-x-auto border border-sistran-border rounded-md">
+                                    <table class="w-full text-left border-collapse text-xs">
+                                        <thead>
+                                            <tr class="bg-sistran-surface-muted text-sistran-heading font-bold border-b border-sistran-border">
+                                                <th class="p-3">Eixo</th>
+                                                <th class="p-3">Objetivo Estratégico</th>
+                                                <th class="p-3">Indicador</th>
+                                                <th class="p-3">O que Mede</th>
+                                                <th class="p-3">Fonte</th>
+                                                <th class="p-3 text-right">Resultado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="table-desempenho-body" class="divide-y divide-gray-100"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SUB-ABA 4: IMPLEMENTAÇÃO (MATRIZ DE ENTREGAS) -->
+                        <div id="sub-tab-implementacao" class="sub-tab-content space-y-6">
+                            <div class="bg-white border border-sistran-border rounded-md p-6 shadow-subtle space-y-6">
+                                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                    <div>
+                                        <span class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Matriz de Entrega</span>
+                                        <h2 class="text-2xl font-bold text-sistran-heading">Matriz de Implementação de Ações e Produtos</h2>
+                                        <p class="text-xs text-sistran-body">Controle operacional e qualitativo do andamento das secretarias municipais e estaduais.</p>
+                                    </div>
+                                    <button onclick="exportImplementacaoCSV()" class="bg-white border-2 border-sistran-gold hover:bg-sistran-gold-surface text-sistran-ink font-bold py-2 px-4 rounded-pill text-xs flex items-center gap-1.5 transition">
+                                        <i data-lucide="download" class="w-4 h-4"></i> Exportar Base (.csv)
+                                    </button>
+                                </div>
+
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center font-semibold text-xs">
+                                    <div class="p-3 bg-gray-50 border border-sistran-border rounded-md">
+                                        <span class="text-sistran-muted block">Produtos Previstos</span>
+                                        <strong class="text-xl font-bold text-sistran-heading" id="imp-total-previsto">15</strong>
+                                    </div>
+                                    <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-md">
+                                        <span class="text-emerald-600 block">Produtos Concluídos</span>
+                                        <strong class="text-xl font-bold text-emerald-600" id="imp-total-concluidos">1</strong>
+                                    </div>
+                                    <div class="p-3 bg-amber-50 border border-amber-200 rounded-md">
+                                        <span class="text-amber-600 block">Em Andamento</span>
+                                        <strong class="text-xl font-bold text-amber-600" id="imp-total-andamento">2</strong>
+                                    </div>
+                                    <div class="p-3 bg-rose-50 border border-rose-200 rounded-md">
+                                        <span class="text-rose-600 block">Produtos Pendentes</span>
+                                        <strong class="text-xl font-bold text-rose-600" id="imp-total-atrasados">12</strong>
+                                    </div>
+                                </div>
+
+                                <div class="bg-gray-50 p-4 border border-sistran-border rounded-md space-y-4">
+                                    <p class="text-xs font-bold text-sistran-heading flex items-center gap-2">
+                                        <i data-lucide="sliders" class="w-4 h-4 text-sistran-gold"></i>
+                                        Filtros Combinados para Gestão de Portfólio
+                                    </p>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+                                        <div>
+                                            <label class="block text-sistran-body font-semibold mb-1">Filtrar Ciclo Temporal</label>
+                                            <select id="filter-imp-ciclo" onchange="filterImplementacao()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                <option value="all" selected>Todos os Ciclos</option>
+                                                <option value="2025-2027">Ciclo Curto (2025-2027)</option>
+                                                <option value="2028-2030">Ciclo Médio (2028-2030)</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sistran-body font-semibold mb-1">Status Operacional</label>
+                                            <select id="filter-imp-status" onchange="filterImplementacao()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                <option value="all" selected>Todos os Status</option>
+                                                <option value="Concluído">Apenas Concluídos</option>
+                                                <option value="Em andamento">Em Andamento</option>
+                                                <option value="Pendente">Pendente</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sistran-body font-semibold mb-1">Alinhamento Transversal</label>
+                                            <select id="filter-imp-transversal" onchange="filterImplementacao()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                <option value="all" selected>Qualquer Alinhamento</option>
+                                                <option value="PNATRANS">Alinhado ao PNATRANS</option>
+                                                <option value="RISCO">Fatores de Risco</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sistran-body font-semibold mb-1">Busca Textual</label>
+                                            <input type="text" id="search-imp-text" onkeyup="filterImplementacao()" placeholder="Ação, produto..." class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="table-container overflow-x-auto border border-sistran-border rounded-md">
+                                    <table class="w-full text-left border-collapse text-xs">
+                                        <thead>
+                                            <tr class="bg-sistran-surface-muted text-sistran-heading font-bold border-b border-sistran-border">
+                                                <th class="p-3 w-12">Cód.</th>
+                                                <th class="p-3 w-40">Objetivo Estratégico</th>
+                                                <th class="p-3">Produto a ser Entregue</th>
+                                                <th class="p-3">Órgão Responsável</th>
+                                                <th class="p-3">Meta Parcial</th>
+                                                <th class="p-3">Status</th>
+                                                <th class="p-3 text-center">Info</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="table-implementacao-body" class="divide-y divide-gray-100"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <!-- ==================== AMBIENTE 1: MONITORAMENTO E VALIDAÇÃO ==================== -->
+                <section id="tab-validacao" class="space-y-6 hidden">
+                    
+                    <div class="bg-sistran-gold-surface border border-sistran-yellow rounded-md p-5 flex gap-4 text-sistran-ink shadow-subtle">
+                        <div class="p-3 bg-white text-sistran-gold rounded-sm h-fit shadow-sm border border-sistran-border">
+                            <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-sistran-heading mb-1 text-sm">Aprovação do Comitê de Governança Viária (SIMO - Monitoramento e Validação)</h4>
+                            <p class="text-xs leading-relaxed text-sistran-body">
+                                Conforme diretrizes do <strong>Artigo 5º do Decreto nº 70.551/2026</strong> e as definições do documento <strong>DMRLT_PSV_Termo de Referência v1.1_3.docx</strong>, compete ao Comitê Executivo e órgãos do SISTRAN-SP validar os produtos informados pelas entidades parceiras. Os dados abaixo representam entregas que aguardam validação técnica de evidências antes de atualizar o Painel Público.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-md shadow-card border border-sistran-border p-6">
+                        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6">
+                            <div>
+                                <h3 class="font-bold text-base text-sistran-heading">Validação de Entregas & Evidências</h3>
+                                <p class="text-xs text-sistran-body">Revise os detalhes, documentos comprobatórios e aprove para o Painel Geral</p>
+                            </div>
+                            <div class="flex gap-2">
+                                <select id="filtro-eixo-validacao" onchange="renderValidationCards()" class="bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs px-3 py-2 text-sistran-body focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                    <option value="todos" selected>Todos os Eixos</option>
+                                    <option value="Eixo 1">Gestão da Segurança</option>
+                                    <option value="Eixo 2">Gestão da Informação</option>
+                                    <option value="Eixo 3">Vias Seguras</option>
+                                    <option value="Eixo 4">Educação</option>
+                                    <option value="Eixo 5">Comunicação</option>
+                                    <option value="Eixo 6">Fiscalização</option>
+                                    <option value="Eixo 7">Veículos Seguros</option>
+                                    <option value="Eixo 8">Atendimento</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-4" id="validation-cards-container">
+                            <!-- Preenchido via Javascript -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== AMBIENTE 2: COLETA DE DADOS ==================== -->
+                <section id="tab-coleta" class="space-y-6 hidden">
+                    
+                    <!-- Login de Ponto Focal Simulado e Totalmente Fictício -->
+                    <div id="coleta-auth-container" class="bg-white border border-sistran-border rounded-md p-8 max-w-md mx-auto shadow-card space-y-6">
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-sistran-gold-surface text-sistran-gold rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i class="fa-solid fa-lock text-xl"></i>
+                            </div>
+                            <h3 class="font-bold text-sistran-heading text-base">Acesso Restrito - Pontos Focais</h3>
+                            <p class="text-xs text-sistran-body mt-1">Identifique-se de forma genérica para submeter relatórios de conformidade e produtos do PSV-SP.</p>
+                        </div>
+
+                        <div class="space-y-4 text-xs">
+                            <div>
+                                <label class="block font-bold text-sistran-heading mb-1 uppercase text-[10px]">Selecione o Perfil Simulado *</label>
+                                <select id="auth-perfil-mock" class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm p-3 font-medium text-sistran-heading focus:ring-1 focus:ring-sistran-gold focus:outline-none">
+                                    <option value="fulano">Fulano de Tal (Órgão) - Gestor Público</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block font-bold text-sistran-heading mb-1 uppercase text-[10px]">Senha de Acesso</label>
+                                <input type="password" value="••••••••" readonly class="w-full bg-gray-100 border border-sistran-border rounded-sm p-2.5 text-zinc-500 cursor-not-allowed">
+                            </div>
+                            <button onclick="handleColetaLogin()" class="w-full bg-sistran-yellow hover:bg-sistran-yellow-hover text-sistran-ink font-bold py-3 rounded-pill transition duration-150 flex items-center justify-center gap-2 text-xs">
+                                <i class="fa-solid fa-right-to-bracket"></i> Autenticar Ponto Focal
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Formulário e Histórico de Coleta -->
+                    <div id="coleta-form-container" class="hidden space-y-6">
+                        
+                        <!-- [Box de Sessão ativa suprimido conforme instruções. O Logout reside apenas nos cabeçalhos e Header] -->
+
+                        <!-- SUB-ABA: Formulário de Submissão Expandido e Clean (Sem requisitos de validação) -->
+                        <div id="sub-tab-coleta-formulario" class="coleta-sub-content max-w-5xl mx-auto space-y-6">
+                            <div class="bg-white rounded-md shadow-card border border-sistran-border p-6 space-y-6">
+                                <div class="flex items-center justify-between border-b border-sistran-border pb-4">
+                                    <div>
+                                        <h3 class="font-bold text-base text-sistran-heading">Formulário de Submissão de Produto</h3>
+                                        <p class="text-xs text-sistran-body">Selecione os campos baseados na estrutura oficial decenal do PSV-SP. Os campos estão estruturados em cascata de acordo com a planilha de monitoramento.</p>
+                                    </div>
+                                    <!-- Botão de desconectar discreto e muito funcional para o fluxo de logout -->
+                                    <button onclick="handleColetaLogout()" class="text-rose-500 hover:text-rose-700 font-bold text-xs uppercase flex items-center gap-1.5 transition">
+                                        <i class="fa-solid fa-power-off"></i> Sair da Área Restrita
+                                    </button>
+                                </div>
+
+                                <form id="form-coleta-dados" class="space-y-4" onsubmit="handleFormSubmitColeta(event)">
+                                    <!-- Eixo Temático -->
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Eixo Temático *</label>
+                                        <select id="form-coleta-eixo" onchange="handleEixoChange()" class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-heading font-medium focus:outline-none focus:ring-1 focus:ring-sistran-gold" required>
+                                            <option value="">Carregando eixos...</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Objetivo Estratégico -->
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Objetivo Estratégico *</label>
+                                        <select id="form-coleta-objetivo" onchange="handleObjetivoChange()" class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-heading font-medium focus:outline-none focus:ring-1 focus:ring-sistran-gold disabled:opacity-50" required disabled>
+                                            <option value="">Selecione o Eixo Temático primeiro...</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Ação -->
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Ação *</label>
+                                        <select id="form-coleta-acao" onchange="handleAcaoChange()" class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-heading font-medium focus:outline-none focus:ring-1 focus:ring-sistran-gold disabled:opacity-50" required disabled>
+                                            <option value="">Selecione o Objetivo Estratégico primeiro...</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Produto -->
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Produto *</label>
+                                        <select id="form-coleta-produto" onchange="handleProdutoChange()" class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-heading font-medium focus:outline-none focus:ring-1 focus:ring-sistran-gold disabled:opacity-50" required disabled>
+                                            <option value="">Selecione a Ação primeiro...</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Indicador -->
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Indicador *</label>
+                                        <select id="form-coleta-indicador" class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-heading font-medium focus:outline-none focus:ring-1 focus:ring-sistran-gold disabled:opacity-50" required disabled>
+                                            <option value="">Selecione o Produto primeiro...</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Ano de Referência & Valor do Resultado -->
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Ano de Referência *</label>
+                                            <select id="form-coleta-ano" class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-body focus:outline-none focus:ring-1 focus:ring-sistran-gold" required>
+                                                <option value="2025">2025</option>
+                                                <option value="2026" selected>2026</option>
+                                                <option value="2027">2027</option>
+                                                <option value="2028">2028</option>
+                                                <option value="2029">2029</option>
+                                                <option value="2030">2030</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Valor do Resultado *</label>
+                                            <input type="text" id="form-coleta-valor" placeholder="Escrita livre (ex: 15 km, concluído, 42%)" class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-body focus:outline-none focus:ring-1 focus:ring-sistran-gold" required>
+                                        </div>
+                                    </div>
+
+                                    <!-- Link Comprobatório -->
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Link para o Documento Comprobatório *</label>
+                                        <input type="text" id="form-coleta-link" placeholder="Escrita livre (ex: https://sei.sp.gov.br/processo/12345)" class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-body focus:outline-none focus:ring-1 focus:ring-sistran-gold" required>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Upload de Arquivos Comprobatórios (PDF, JPEG, PNG, TIFF) *</label>
+                                        <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-sistran-border border-dashed rounded-md bg-sistran-surface-muted hover:bg-zinc-50 transition relative">
+                                            <div class="space-y-1 text-center">
+                                                <i class="fa-solid fa-cloud-arrow-up text-3xl text-sistran-gold mb-2 block"></i>
+                                                <div class="flex text-xs text-sistran-body justify-center">
+                                                    <label for="form-coleta-file" class="relative cursor-pointer bg-white rounded-md font-semibold text-sistran-gold hover:text-sistran-heading focus-within:outline-none">
+                                                        <span>Carregar arquivo comprovatório</span>
+                                                        <input id="form-coleta-file" name="form-coleta-file" type="file" accept=".pdf, .jpeg, .jpg, .png, .tiff" class="sr-only" required onchange="handleFileChange(event)">
+                                                    </label>
+                                                </div>
+                                                <p class="text-[10px] text-sistran-muted">PDF, JPEG, PNG ou TIFF de até 15MB</p>
+                                                <p id="file-upload-name" class="text-xs font-bold text-emerald-600 mt-2"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Descrição e Justificativa -->
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Descrição e Justificativa do Produto</label>
+                                        <textarea id="form-coleta-descricao" rows="3" placeholder="Insira o resumo técnico qualitativo e a justificativa para a conformidade do produto de segurança viária..." class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-body focus:outline-none focus:ring-1 focus:ring-sistran-gold"></textarea>
+                                    </div>
+
+                                    <button type="submit" class="w-full bg-sistran-yellow hover:bg-sistran-yellow-hover text-sistran-ink font-bold py-3 rounded-pill text-xs transition duration-150 flex items-center justify-center gap-2 shadow-sm">
+                                        <i class="fa-solid fa-paper-plane"></i> Submeter para Avaliação
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- SUB-ABA: Histórico de Produtos Enviados -->
+                        <div id="sub-tab-coleta-historico" class="coleta-sub-content hidden bg-white rounded-md shadow-card border border-sistran-border p-6 max-w-5xl mx-auto">
+                            <div class="flex justify-between items-center mb-4">
+                                <div>
+                                    <h3 class="font-bold text-sm text-sistran-heading">Histórico de Produtos Enviados</h3>
+                                    <p class="text-xs text-sistran-body">Acompanhe o andamento regulatório das suas submissões de conformidade.</p>
+                                </div>
+                                <button onclick="handleColetaLogout()" class="text-rose-500 hover:text-rose-700 font-bold text-xs uppercase flex items-center gap-1.5 transition">
+                                    <i class="fa-solid fa-power-off"></i> Sair da Área Restrita
+                                </button>
+                            </div>
+
+                            <div class="overflow-x-auto border border-sistran-border rounded-md">
+                                <table class="w-full text-left text-xs border-collapse">
+                                    <thead>
+                                        <tr class="bg-sistran-surface-muted text-sistran-heading font-bold border-b border-sistran-border">
+                                            <th class="p-3 w-28">ID Único</th>
+                                            <th class="p-3">Código / Produto</th>
+                                            <th class="p-3">Resumo da Submissão</th>
+                                            <th class="p-3">Data de Envio</th>
+                                            <th class="p-3 text-right">Status do Recebimento</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="coleta-historico-tbody" class="divide-y divide-gray-100">
+                                        <!-- Preenchido via Javascript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- ==================== AMBIENTE 3: ACOMPANHAMENTO E CONSULTA DOS RESULTADOS ==================== -->
+                <section id="tab-dashboard" class="space-y-6 hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        
+                        <!-- KPI 1: Meta de Vidas -->
+                        <div class="bg-gradient-to-br from-sistran-ink to-zinc-900 text-white p-6 rounded-md shadow-card border border-zinc-800 relative overflow-hidden">
+                            <div class="absolute right-0 bottom-0 opacity-10 translate-x-2 translate-y-2">
+                                <i class="fa-solid fa-heart-pulse text-9xl"></i>
+                            </div>
+                            <div class="flex justify-between items-start">
+                                <span class="bg-sistran-yellow text-sistran-ink text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-pill">Meta Global 2030</span>
+                                <i class="fa-solid fa-star-of-life text-sistran-yellow animate-pulse text-lg"></i>
+                            </div>
+                            <div class="mt-4">
+                                <h3 class="text-3xl font-extrabold text-sistran-yellow">19.000</h3>
+                                <p class="text-sm font-semibold text-zinc-300">Vidas a serem salvas</p>
+                            </div>
+                        </div>
+
+                        <!-- KPI 2: Sinistros Acumulados -->
+                        <div class="bg-white p-6 rounded-md shadow-card border border-sistran-border relative overflow-hidden">
+                            <div class="absolute right-0 bottom-0 opacity-5 translate-x-2 translate-y-2">
+                                <i class="fa-solid fa-triangle-exclamation text-[110px]"></i>
+                            </div>
+                            <div class="flex justify-between items-start">
+                                <span class="bg-red-50 text-sistran-error text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-pill border border-red-100">Óbitos Anuais (SP)</span>
+                                <span class="text-sistran-error font-bold text-xs"><i class="fa-solid fa-circle-down mr-1"></i>-4.2%</span>
+                            </div>
+                            <div class="mt-4">
+                                <h3 class="text-3xl font-extrabold text-sistran-heading" id="obitos-atuais">5.180</h3>
+                                <p class="text-sm font-semibold text-sistran-body">Média atual de mortes no trânsito/ano</p>
+                            </div>
+                        </div>
+
+                        <!-- KPI 3: Status de Entregas -->
+                        <div class="bg-white p-6 rounded-md shadow-card border border-sistran-border relative overflow-hidden">
+                            <div class="absolute right-0 bottom-0 opacity-5 translate-x-2 translate-y-2">
+                                <i class="fa-solid fa-list-check text-[110px]"></i>
+                            </div>
+                            <div class="flex justify-between items-start">
+                                <span class="bg-sistran-gold-surface text-sistran-gold text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-pill border border-sistran-yellow">Progresso de Ações</span>
+                                <span class="text-sistran-gold font-bold text-xs"><i class="fa-solid fa-circle-check mr-1"></i>Vias Seguras</span>
+                            </div>
+                            <div class="mt-4">
+                                <h3 class="text-3xl font-extrabold text-sistran-heading" id="percent-concluido">58.5%</h3>
+                                <p class="text-sm font-semibold text-sistran-body">Ações desenvolvidas ou em curso</p>
+                                <div class="w-full bg-sistran-border rounded-pill h-1.5 mt-3">
+                                    <div id="ui-progress-bar" class="bg-sistran-gold h-1.5 rounded-pill transition-all duration-500" style="width: 58.5%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- KPI 4: Municípios Integrados -->
+                        <div class="bg-white p-6 rounded-md shadow-card border border-sistran-border relative overflow-hidden">
+                            <div class="absolute right-0 bottom-0 opacity-5 translate-x-2 translate-y-2">
+                                <i class="fa-solid fa-map-location-dot text-[110px]"></i>
+                            </div>
+                            <div class="flex justify-between items-start">
+                                <span class="bg-sistran-surface-muted text-sistran-body text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-pill border border-sistran-border">Pacto de Cooperação</span>
+                                <span class="text-sistran-gold font-bold text-xs">Pnatrans</span>
+                            </div>
+                            <div class="mt-4">
+                                <h3 class="text-3xl font-extrabold text-sistran-heading" id="municipios-ativos">218</h3>
+                                <p class="text-sm font-semibold text-sistran-body">Municípios integrados ao SISTRAN-SP</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Tendência de Mortalidade -->
+                        <div class="bg-white p-6 rounded-md shadow-card border border-sistran-border lg:col-span-2">
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <h3 class="font-bold text-base text-sistran-heading">Projeção de Curva de Óbitos por Trânsito (SP)</h3>
+                                    <p class="text-xs text-sistran-body">Tendência sem plano vs. Trajetória projetada com PSV-SP (Visão Zero)</p>
+                                </div>
+                                <span class="bg-sistran-gold-surface text-sistran-gold px-3 py-1 rounded-pill text-xs font-semibold">Horizonte 2035</span>
+                            </div>
+                            <div class="h-80 w-full">
+                                <canvas id="chartTendenciaObitos"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Distribuição por Eixo -->
+                        <div class="bg-white p-6 rounded-md shadow-card border border-sistran-border">
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <h3 class="font-bold text-base text-sistran-heading">Status dos Produtos</h3>
+                                    <p class="text-xs text-sistran-body">Progresso acumulado das metas</p>
+                                </div>
+                            </div>
+                            <div class="h-64 flex items-center justify-center">
+                                <canvas id="chartProgressoFisico"></canvas>
+                            </div>
+                            <div class="mt-4 grid grid-cols-3 gap-2 text-center text-xs font-semibold">
+                                <div class="bg-emerald-50 text-emerald-700 p-2 rounded-sm border border-emerald-100">
+                                    <div class="font-bold text-lg" id="prod-desenvolvidos">1</div>
+                                    <div>Desenvolvido</div>
+                                </div>
+                                <div class="bg-amber-50 text-amber-700 p-2 rounded-sm border border-amber-100">
+                                    <div class="font-bold text-lg" id="prod-desenvolvimento">2</div>
+                                    <div>Em Curso</div>
+                                </div>
+                                <div class="bg-sistran-surface-muted text-sistran-body p-2 rounded-sm border border-sistran-border">
+                                    <div class="font-bold text-lg" id="prod-fazer">12</div>
+                                    <div>Pendente</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- ==================== MODAL DE APOIO / DETALHES ==================== -->
+    <div id="modal-qualitativo" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white max-w-lg w-full rounded-md shadow-xl overflow-hidden border border-sistran-border">
+            <div class="bg-sistran-gold-surface p-4 flex justify-between items-center border-b border-sistran-border">
+                <h4 class="text-xs font-bold text-sistran-heading flex items-center gap-2">
+                    <i data-lucide="info" class="w-4 h-4 text-sistran-gold"></i>
+                    Ficha do Produto de Implementação
+                </h4>
+                <button onclick="closeModal()" class="text-sistran-heading hover:text-sistran-gold">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-4 text-xs">
+                <div>
+                    <p class="text-sistran-muted font-bold uppercase tracking-wider text-[10px]">Cód & Produto</p>
+                    <p id="modal-produto-nome" class="font-bold text-sistran-heading text-sm mt-0.5">-</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sistran-muted font-bold uppercase tracking-wider text-[10px]">Responsabilidade</p>
+                        <p id="modal-responsavel" class="font-semibold text-sistran-heading mt-0.5">-</p>
+                    </div>
+                    <div>
+                        <p class="text-sistran-muted font-bold uppercase tracking-wider text-[10px]">Status Operacional</p>
+                        <span id="modal-status-badge" class="inline-block mt-1 px-2.5 py-0.5 rounded text-[10px] font-bold">-</span>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-sistran-muted font-bold uppercase tracking-wider text-[10px]">Análise e Observação Qualitativa</p>
+                    <p id="modal-observacao" class="text-sistran-body leading-relaxed mt-1 p-3 bg-sistran-surface-muted rounded border border-sistran-border">-</p>
+                </div>
+            </div>
+            <div class="p-4 bg-gray-50 border-t border-sistran-border text-right">
+                <button onclick="closeModal()" class="bg-white border-2 border-sistran-gold hover:bg-sistran-gold-surface text-sistran-ink font-bold py-1.5 px-4 rounded-pill text-xs transition duration-150">Fechar Detalhes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL DE SUPORTE ==================== -->
+    <div id="modal-suporte" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white max-w-md w-full rounded-md shadow-xl overflow-hidden border border-sistran-border">
+            <div class="bg-sistran-gold-surface p-4 flex justify-between items-center border-b border-sistran-border">
+                <h4 class="text-sm font-bold text-sistran-heading flex items-center gap-2">
+                    <i data-lucide="help-circle" class="w-4 h-4 text-sistran-gold"></i>
+                    Suporte Técnico Integrado
+                </h4>
+                <button onclick="closeSupportModal()" class="text-sistran-heading hover:text-sistran-gold">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <form onsubmit="handleSupportSubmit(event)" class="p-6 space-y-4 text-xs">
+                <div>
+                    <label class="block text-sistran-body font-bold mb-1">Seu Nome / Órgão Vinculado</label>
+                    <input type="text" required placeholder="Ex: Engenheiro João - CETRAN-SP" class="w-full p-2.5 bg-white border border-sistran-border rounded text-xs focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                </div>
+                <div>
+                    <label class="block text-sistran-body font-bold mb-1">Mensagem ou Solicitação Acadêmica</label>
+                    <textarea required rows="4" placeholder="Escreva sua dúvida, sugestão ou pedido de dados do Infosiga em formato estruturado..." class="w-full p-2.5 bg-white border border-sistran-border rounded text-xs focus:outline-none focus:ring-1 focus:ring-sistran-gold"></textarea>
+                </div>
+                <p class="text-[10px] text-sistran-muted">
+                    * De acordo com as diretrizes do SIMO, o prazo regulamentar máximo de atendimento às solicitações é de <strong>24 horas</strong>.
+                </p>
+                <div class="text-right space-x-2 pt-2">
+                    <button type="button" onclick="closeSupportModal()" class="bg-white border border-sistran-border rounded py-1.5 px-4">Cancelar</button>
+                    <button type="submit" class="bg-sistran-yellow hover:bg-sistran-yellow-hover text-sistran-ink font-semibold rounded py-1.5 px-4">Enviar Chamado</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Feedback -->
+    <div id="toast" class="hidden fixed bottom-6 right-6 bg-sistran-ink text-white text-xs px-4 py-3 rounded shadow-lg z-50 flex items-center gap-2">
+        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+        <span id="toast-message">Exportado com sucesso!</span>
+    </div>
+
+    <!-- SCRIPT DE CONTROLE GERAL -->
+    <script>
+        let currentPontoFocal = null;
+        let pontoFocalFile = null;
+        let charts = {};
+        
+        // Controle de estados para trilha de navegação (Breadcrumbs)
+        let activePublicSubTab = 'introducao';
+        let activeColetaSubTab = 'formulario';
+
+        // Base unificada que mapeia as colunas do Excel para as regras de cascata
+        let psvSpreadsheetData = [];
+
+        // Perfil único e fictício de Ponto Focal para simulação
+        const perfisPF = {
+            fulano: {
+                nome: "Fulano de Tal",
+                cargo: "Gestor Público",
+                orgao: "Órgão",
+                iniciais: "FT"
+            }
+        };
+
+        const dbDesempenho = [
+            {
+                eixo: "Eixo 1",
+                objetivo: "OE 1.1 Fortalecer a Governança",
+                indicador: "1.1.a Índice de maturidade da governança do PSV-SP",
+                oqueMede: "Avalia a consolidação jurídica, regimentos, cronogramas e pactuação do comitê gestor.",
+                fórmula: "(Atividades concluídas ÷ total pactuado) * 100",
+                fonte: "CETRAN-SP / Regimentos",
+                periodicidade: "Anual",
+                resultado: "75%",
+                percentual: 75
+            },
+            {
+                eixo: "Eixo 2",
+                objetivo: "OE 2.1 Banco de Dados Integrado",
+                indicador: "2.1.a Tempo médio de conciliação de óbitos",
+                oqueMede: "Mede o intervalo em dias entre o óbito viário e o lançamento oficial homologado no Infosiga.",
+                fórmula: "Média (Data publicação - Data ocorrência)",
+                fonte: "Infosiga SP",
+                periodicidade: "Mensal",
+                resultado: "12 dias",
+                percentual: 88
+            }
+        ];
+
+        // Matriz mestre de implementação representando os Eixos
+        const dbImplementacao = [
+            {
+                cod: "1.1.1.1",
+                eixo: "Eixo 1",
+                objetivo: "OE 1.1 Fortalecer a Governança do SISTRAN-SP",
+                acao: "Consolidar o SISTRAN-SP como instância coordenadora da política estadual de segurança viária.",
+                produto: "Publicação oficial do regimento interno reformulado do SISTRAN-SP no Diário Oficial.",
+                responsavel: "Órgão",
+                metaCiclo: "1 regimento",
+                status: "Concluído",
+                ciclo: "2025-2027",
+                transversal: "PNATRANS",
+                obs: "Regimento publicado integralmente no Diário Oficial do Estado de São Paulo em 14/11/2025."
+            },
+            {
+                cod: "2.1.1.1",
+                eixo: "Eixo 2",
+                objetivo: "OE 2.1 Banco de Dados Integrado",
+                acao: "Unificar e tratar a base de acidentalidade estadual.",
+                produto: "Plataforma de conciliação estatística Infosiga integrada ao SISTRAN.",
+                responsavel: "Órgão",
+                metaCiclo: "1 portal",
+                status: "Pendente",
+                ciclo: "2025-2027",
+                transversal: "PNATRANS",
+                obs: "Aguardando homologação de convênio de proteção de dados."
+            },
+            {
+                cod: "3.1.1.1",
+                eixo: "Eixo 3",
+                objetivo: "OE 3.1 Infraestrutura Viária Tolerante",
+                acao: "Tratar locais críticos de acidentes em rodovias paulistas.",
+                produto: "Implantação de faixas elevadas e sinalização passiva na SP-055.",
+                responsavel: "Órgão",
+                metaCiclo: "14 faixas",
+                status: "Em andamento",
+                ciclo: "2025-2027",
+                transversal: "RISCO",
+                obs: "Fase de execução física de pavimentação nos trechos urbanos."
+            }
+        ];
+
+        // Mock database de submissões pendentes para o fluxo de moderação (Ambiente 1 & 2)
+        const mockDatabase = {
+            totalObitos2025: 5410,
+            obitosAtual: 5180,
+            totalPoupados: 19000,
+            municipiosPactuados: 218,
+            concluidoPercent: 58.5,
+            
+            acoes: [
+                {
+                    id: 7401928,
+                    orgao: "Órgão",
+                    responsavel: "Fulano de Tal",
+                    cargo: "Gestor Público",
+                    eixo: "Eixo 3 - Vias Seguras",
+                    codProd: "3.1.1.1",
+                    produto: "Faixas elevadas e moderação de velocidade na SP-055",
+                    indicador: "Intervenções executadas",
+                    valor: "14",
+                    horizonte: "2026",
+                    evidencia: "https://www.sei.sp.gov.br/processo-faixas-elevadas",
+                    descricao: "Implantação de faixas elevadas em locais de alta travessia de pedestres.",
+                    data: "10/06/2026",
+                    status: "Recebido"
+                }
+            ]
+        };
+
+        async function loadSpreadsheetData() {
+            try {
+                let response = await fetch('COST_DRMLT_Monitoramento_Implementação_PSV (1)_2.xlsx');
+                if (!response.ok) {
+                    throw new Error("Não foi possível acessar a planilha local de monitoramento.");
+                }
+                
+                const arrayBuffer = await response.arrayBuffer();
+                const data = new Uint8Array(arrayBuffer);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const firstSheetName = workbook.SheetNames[0];
+                const sheet = workbook.Sheets[firstSheetName];
+                const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+                
+                const tempDataset = [];
+                for (let i = 1; i < rows.length; i++) {
+                    const row = rows[i];
+                    if (!row || row.length === 0) continue;
+                    
+                    const colA = row[0] ? String(row[0]).trim() : ''; 
+                    const colB = row[1] ? String(row[1]).trim() : ''; 
+                    const colC = row[2] ? String(row[2]).trim() : ''; 
+                    const colD = row[3] ? String(row[3]).trim() : ''; 
+                    const colE = row[4] ? String(row[4]).trim() : ''; 
+                    const colF = row[5] ? String(row[5]).trim() : ''; 
+                    const colG = row[6] ? String(row[6]).trim() : ''; 
+                    const colH = row[7] ? String(row[7]).trim() : ''; 
+                    const colL = row[11] ? String(row[11]).trim() : ''; 
+                    
+                    if (colA && colC && colE && colG) {
+                        tempDataset.push({
+                            eixoKey: `${colA} - ${colB}`,
+                            objKey: `${colC} - ${colD}`,
+                            acaoKey: `${colE} - ${colF}`,
+                            prodKey: `${colG} - ${colH}`,
+                            indicador: colL || "Métrica não especificada"
+                        });
+                    }
+                }
+                
+                if (tempDataset.length > 0) {
+                    psvSpreadsheetData = tempDataset;
+                }
+            } catch (err) {
+                console.warn("Utilizando banco de dados local estruturado como contingência para o preview.");
+                psvSpreadsheetData = [
+                    { 
+                        eixoKey: "1 - Eixo 1 - Gestão da Segurança Viária", 
+                        objKey: "OE 1.1 - Fortalecer a Governança do SISTRAN-SP", 
+                        acaoKey: "AC 1.1.1 - Consolidar o SISTRAN-SP como instância coordenadora", 
+                        prodKey: "1.1.1.1 - Publicação oficial do regimento interno reformulado do SISTRAN-SP", 
+                        indicador: "Regimento interno reformulado publicado no DOE (unidade)" 
+                    },
+                    { 
+                        eixoKey: "1 - Eixo 1 - Gestão da Segurança Viária", 
+                        objKey: "OE 1.1 - Fortalecer a Governança do SISTRAN-SP", 
+                        acaoKey: "AC 1.1.1 - Consolidar o SISTRAN-SP como instância coordenadora", 
+                        prodKey: "1.1.1.2 - Reuniões periódicas estruturadas de articulação", 
+                        indicador: "Porcentagem de reuniões realizadas frente ao planejado (%)" 
+                    },
+                    { 
+                        eixoKey: "2 - Eixo 2 - Gestão da Informação", 
+                        objKey: "OE 2.1 - Unificar e Qualificar a Base de Dados", 
+                        acaoKey: "AC 2.1.1 - Consolidar o sistema estadual Infosiga", 
+                        prodKey: "2.1.1.1 - Plataforma de conciliação estatística integrada", 
+                        indicador: "Tempo médio de publicação e conciliação de óbitos (dias)" 
+                    },
+                    { 
+                        eixoKey: "3 - Eixo 3 - Vias Seguras", 
+                        objKey: "OE 3.1 - Infraestrutura Viária Tolerante", 
+                        acaoKey: "AC 3.1.1 - Eliminar pontos críticos em rodovias estaduais", 
+                        prodKey: "3.1.1.1 - Intervenções de moderação de velocidade implementadas na SP-055", 
+                        indicador: "Extensão de rodovias com moderação física implementada (km)" 
+                    },
+                    { 
+                        eixoKey: "3 - Eixo 3 - Vias Seguras", 
+                        objKey: "OE 3.2 - Mobilidade Ativa e Protegida", 
+                        acaoKey: "AC 3.2.1 - Implantar faixas de pedestres iluminadas e elevadas", 
+                        prodKey: "3.2.1.1 - Travessias seguras construídas no entorno de polos geradores", 
+                        indicador: "Número de travessias elevadas construídas (unidades)" 
+                    }
+                ];
+            }
+            buildCascadingDropdowns();
+        }
+
+        window.onload = function() {
+            lucide.createIcons();
+            loadSpreadsheetData();
+            
+            buildDesempenhoTable();
+            buildImplementacaoTable();
+            initCharts();
+
+            renderValidationCards();
+            updateUIStats();
+            setupMobileMenu();
+
+            // Configuração visual inicial padrão
+            switchTab('publico');
+            selectPublicSubitem('introducao');
+        };
+
+        function setupMobileMenu() {
+            const btn = document.getElementById('mobile-menu-btn');
+            const sidebar = document.querySelector('aside');
+            if (btn && sidebar) {
+                btn.addEventListener('click', () => {
+                    sidebar.classList.toggle('hidden');
+                });
+            }
+        }
+
+        function updateBreadcrumbs(mainTabId, subTabId = null) {
+            const container = document.getElementById('dynamic-breadcrumb');
+            if (!container) return;
+
+            let html = `
+                <i data-lucide="home" class="w-3.5 h-3.5 text-sistran-gold"></i>
+                <span class="hover:underline cursor-pointer font-medium text-sistran-heading text-xs" onclick="switchTab('publico')">SIMO</span>
+                <span class="text-sistran-muted text-xs">&rsaquo;</span>
+            `;
+
+            const mainTabNames = {
+                'publico': 'Apresentação dos Resultados',
+                'validacao': 'Monitoramento e Validação',
+                'coleta': 'Coleta de Dados',
+                'dashboard': 'Acompanhamento e Consulta dos Resultados'
+            };
+
+            const subTabNames = {
+                'introducao': 'Introdução',
+                'impacto': 'Impacto',
+                'desempenho': 'Desempenho',
+                'implementacao': 'Implementação',
+                'formulario': 'Formulário de Submissão',
+                'historico': 'Histórico de Produtos'
+            };
+
+            const mainName = mainTabNames[mainTabId] || mainTabId;
+            if (subTabId) {
+                const subName = subTabNames[subTabId] || subTabId;
+                html += `
+                    <span class="hover:underline cursor-pointer font-medium text-sistran-heading text-xs" onclick="switchTab('${mainTabId}')">${mainName}</span>
+                    <span class="text-sistran-muted text-xs">&rsaquo;</span>
+                    <span class="text-sistran-gold font-bold text-xs">${subName}</span>
+                `;
+            } else {
+                html += `
+                    <span class="text-sistran-gold font-bold text-xs">${mainName}</span>
+                `;
+            }
+
+            container.innerHTML = html;
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        }
+
+        function toggleLoginIndicatorClick() {
+            if (currentPontoFocal) {
+                if (confirm("Deseja encerrar a sessão do Ponto Focal fictício 'Fulano de Tal'?")) {
+                    handleColetaLogout();
+                }
+            } else {
+                toggleLoginModal();
+            }
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('main section').forEach(sec => sec.classList.add('hidden'));
+            
+            // Remove realce de TODOS os botões da barra lateral
+            document.querySelectorAll('aside nav button').forEach(btn => {
+                btn.classList.remove('active-tab');
+            });
+            
+            const targetSec = document.getElementById(`tab-${tabId}`);
+            if (targetSec) {
+                targetSec.classList.remove('hidden');
+            }
+            
+            // Ativa o realce APENAS para o ambiente principal selecionado (Exclusividade do ambiente ativo)
+            if (tabId === 'publico') {
+                const navBtn = document.getElementById('nav-publico');
+                if (navBtn) navBtn.classList.add('active-tab');
+            } else if (tabId === 'coleta') {
+                const navBtn = document.getElementById('nav-coleta');
+                if (navBtn) navBtn.classList.add('active-tab');
+            } else {
+                const navBtn = document.getElementById(`nav-${tabId}`);
+                if (navBtn) navBtn.classList.add('active-tab');
+            }
+
+            const pageTitle = document.getElementById('page-title');
+            const pageSubtitle = document.getElementById('page-subtitle');
+            
+            const titles = {
+                'validacao': 'Monitoramento e Validação',
+                'coleta': 'Coleta de Dados',
+                'dashboard': 'Acompanhamento e Consulta dos Resultados',
+                'publico': 'Apresentação dos Resultados'
+            };
+
+            const subtitles = {
+                'validacao': 'Equipe de Monitoramento (PSV-SP 2025-2035)',
+                'coleta': 'Produtos do Plano de Segurança Viária do Estado de São Paulo (PSV-SP 2025 - 2035)',
+                'dashboard': 'Gerenciamento Integrado de Segurança Viária (PSV-SP 2025-2035)',
+                'publico': 'Gerenciamento Integrado de Segurança Viária (PSV-SP 2025-2035)'
+            };
+
+            if (pageTitle) pageTitle.textContent = titles[tabId] || 'Portal de Gestão SIMO';
+            if (pageSubtitle) pageSubtitle.textContent = subtitles[tabId] || 'Gerenciamento Integrado de Segurança Viária';
+
+            // Atualização dinâmica de trilha de navegação (Breadcrumbs)
+            let activeSub = null;
+            if (tabId === 'publico') activeSub = activePublicSubTab;
+            else if (tabId === 'coleta' && currentPontoFocal) activeSub = activeColetaSubTab;
+            
+            updateBreadcrumbs(tabId, activeSub);
+
+            const sidebar = document.querySelector('aside');
+            if (window.innerWidth < 768 && sidebar) {
+                sidebar.classList.add('hidden');
+            }
+
+            setTimeout(() => {
+                if (tabId === 'dashboard' && charts.chartTendencia) charts.chartTendencia.resize();
+                if (tabId === 'publico') {
+                    if (charts.cardStatusDonut) charts.cardStatusDonut.resize();
+                    if (charts.impactLine) charts.impactLine.resize();
+                }
+            }, 100);
+        }
+
+        function switchSubTab(subTabId) {
+            document.querySelectorAll('.sub-tab-content').forEach(sub => sub.classList.remove('active'));
+
+            const targetSub = document.getElementById(`sub-tab-${subTabId}`);
+            if (targetSub) targetSub.classList.add('active');
+
+            activePublicSubTab = subTabId;
+            updateBreadcrumbs('publico', subTabId);
+
+            document.querySelectorAll('#submenu-publico button').forEach(btn => {
+                btn.classList.remove('bg-sistran-gold-surface', 'text-sistran-gold', 'font-semibold');
+                btn.classList.add('text-sistran-body');
+                const icon = btn.querySelector('svg') || btn.querySelector('i');
+                if (icon) {
+                    icon.classList.remove('text-sistran-gold');
+                    icon.classList.add('text-sistran-muted');
+                }
+            });
+
+            const activeSubitem = document.getElementById(`subitem-${subTabId}`);
+            if (activeSubitem) {
+                activeSubitem.classList.add('bg-sistran-gold-surface', 'text-sistran-gold', 'font-semibold');
+                activeSubitem.classList.remove('text-sistran-body');
+                const icon = activeSubitem.querySelector('svg') || activeSubitem.querySelector('i');
+                if (icon) {
+                    icon.classList.add('text-sistran-gold');
+                    icon.classList.remove('text-sistran-muted');
+                }
+            }
+
+            const submenu = document.getElementById('submenu-publico');
+            const chevron = document.getElementById('chevron-publico');
+            if (submenu && submenu.classList.contains('hidden')) {
+                submenu.classList.remove('hidden');
+                if (chevron) chevron.classList.add('rotate-180');
+            }
+
+            setTimeout(() => {
+                if (subTabId === 'introducao' && charts.cardStatusDonut) charts.cardStatusDonut.resize();
+                if (subTabId === 'impacto' && charts.impactLine) charts.impactLine.resize();
+            }, 100);
+        }
+
+        function togglePublicSubmenu() {
+            const submenu = document.getElementById('submenu-publico');
+            const chevron = document.getElementById('chevron-publico');
+            
+            if (submenu.classList.contains('hidden')) {
+                submenu.classList.remove('hidden');
+                chevron.classList.add('rotate-180');
+                switchTab('publico');
+                selectPublicSubitem('introducao');
+            } else {
+                submenu.classList.add('hidden');
+                chevron.classList.remove('rotate-180');
+            }
+        }
+
+        function selectPublicSubitem(subTabId) {
+            switchTab('publico');
+            switchSubTab(subTabId);
+        }
+
+        function toggleColetaSubmenu() {
+            const submenu = document.getElementById('submenu-coleta');
+            const chevron = document.getElementById('chevron-coleta');
+
+            if (currentPontoFocal === null) {
+                switchTab('coleta');
+                submenu.classList.add('hidden');
+                chevron.classList.remove('rotate-180');
+                showNotification("Identificação Necessária", "Selecione o perfil de 'Fulano de Tal' para autenticação.", "warning");
+            } else {
+                if (submenu.classList.contains('hidden')) {
+                    submenu.classList.remove('hidden');
+                    chevron.classList.add('rotate-180');
+                    switchTab('coleta');
+                    selectColetaSubitem('formulario');
+                } else {
+                    submenu.classList.add('hidden');
+                    chevron.classList.remove('rotate-180');
+                }
+            }
+        }
+
+        function selectColetaSubitem(subTabId) {
+            switchTab('coleta');
+
+            document.querySelectorAll('.coleta-sub-content').forEach(el => {
+                el.classList.add('hidden');
+            });
+            const targetSub = document.getElementById(`sub-tab-coleta-${subTabId}`);
+            if (targetSub) targetSub.classList.remove('hidden');
+
+            activeColetaSubTab = subTabId;
+            updateBreadcrumbs('coleta', subTabId);
+
+            document.querySelectorAll('#submenu-coleta button').forEach(btn => {
+                btn.classList.remove('bg-sistran-gold-surface', 'text-sistran-gold', 'font-semibold');
+                btn.classList.add('text-sistran-body');
+                const icon = btn.querySelector('svg') || btn.querySelector('i');
+                if (icon) {
+                    icon.classList.remove('text-sistran-gold');
+                    icon.classList.add('text-sistran-muted');
+                }
+            });
+
+            const activeSubitem = document.getElementById(`subitem-${subTabId}`);
+            if (activeSubitem) {
+                activeSubitem.classList.add('bg-sistran-gold-surface', 'text-sistran-gold', 'font-semibold');
+                activeSubitem.classList.remove('text-sistran-body');
+                const icon = activeSubitem.querySelector('svg') || activeSubitem.querySelector('i');
+                if (icon) {
+                    icon.classList.add('text-sistran-gold');
+                    icon.classList.remove('text-sistran-muted');
+                }
+            }
+        }
+
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                const offset = 148;
+                const bodyRect = document.body.getBoundingClientRect().top;
+                const elementRect = element.getBoundingClientRect().top;
+                const elementPosition = elementRect - bodyRect;
+                const offsetPosition = elementPosition - offset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        function updateUIStats() {
+            const aprovadas = mockDatabase.acoes.filter(a => a.status === 'Aprovado').length;
+            const pendentes = mockDatabase.acoes.filter(a => a.status === 'Recebido' || a.status === 'Em Análise').length;
+            const total = mockDatabase.acoes.length;
+
+            const badge = document.getElementById('badge-validar');
+            if (badge) badge.textContent = pendentes;
+            
+            const dev = document.getElementById('prod-desenvolvidos');
+            if (dev) dev.textContent = aprovadas;
+
+            const dcurso = document.getElementById('prod-desenvolvimento');
+            if (dcurso) dcurso.textContent = pendentes;
+
+            const dfazer = document.getElementById('prod-fazer');
+            if (dfazer) dfazer.textContent = total;
+
+            const totalMatriz = dbImplementacao.length;
+            const concluídosMatriz = dbImplementacao.filter(item => item.status === 'Concluído').length;
+            const andamentoMatriz = dbImplementacao.filter(item => item.status === 'Em andamento').length;
+            const pendentesMatriz = dbImplementacao.filter(item => item.status === 'Pendente').length;
+
+            const impPrev = document.getElementById('imp-total-previsto');
+            if (impPrev) impPrev.innerText = totalMatriz;
+
+            const impConcl = document.getElementById('imp-total-concluidos');
+            if (impConcl) impConcl.innerText = concluídosMatriz;
+
+            const impAnd = document.getElementById('imp-total-andamento');
+            if (impAnd) impAnd.innerText = andamentoMatriz;
+
+            const impAtr = document.getElementById('imp-total-atrasados');
+            if (impAtr) impAtr.innerText = pendentesMatriz;
+
+            const impRatio = document.getElementById('card-imp-ratio');
+            if (impRatio) impRatio.innerText = `${concluídosMatriz} / ${totalMatriz}`;
+
+            const concluidoPorcentagem = ((concluídosMatriz / totalMatriz) * 100).toFixed(1);
+            const pconcluido = document.getElementById('percent-concluido');
+            if (pconcluido) pconcluido.textContent = `${concluidoPorcentagem}%`;
+
+            const uiprog = document.getElementById('ui-progress-bar');
+            if (uiprog) uiprog.style.width = `${concluidoPorcentagem}%`;
+
+            if (charts.cardStatusDonut) {
+                charts.cardStatusDonut.data.datasets[0].data = [concluídosMatriz, andamentoMatriz, pendentesMatriz, 0];
+                charts.cardStatusDonut.update();
+            }
+
+            if (charts.chartProgresso) {
+                charts.chartProgresso.data.datasets[0].data = [concluídosMatriz, andamentoMatriz, pendentesMatriz];
+                charts.chartProgresso.update();
+            }
+        }
+
+        function initCharts() {
+            const ctxCardIntro = document.getElementById('cardStatusDonutChart').getContext('2d');
+            charts.cardStatusDonut = new Chart(ctxCardIntro, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Concluído', 'Em andamento', 'Pendente', 'Não iniciado'],
+                    datasets: [{
+                        data: [1, 2, 5, 0],
+                        backgroundColor: ['#10B981', '#FECF03', '#FF0000', '#D3D8DB'],
+                        borderWidth: 1.5,
+                        borderColor: '#FFFFFF'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: true }
+                    },
+                    cutout: '65%'
+                }
+            });
+
+            const ctxImpact = document.getElementById('impactLineChart').getContext('2d');
+            charts.impactLine = new Chart(ctxImpact, {
+                type: 'line',
+                data: {
+                    labels: ['2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024 (Base)', '2025 (Prev)', '2026 (Meta)', '2027 (Meta)', '2028 (Meta)', '2029 (Meta)', '2030 (Meta)'],
+                    datasets: [
+                        {
+                            label: 'Série Histórica Registrada',
+                            data: [6400, 6250, 6100, 5950, 5800, 5200, 5400, 5700, 6050, 6122, null, null, null, null, null, null],
+                            borderColor: '#C68B00',
+                            backgroundColor: 'rgba(198, 139, 0, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.1
+                        },
+                        {
+                            label: 'Consolidação Preliminar',
+                            data: [null, null, null, null, null, null, null, null, null, 6122, 5810, null, null, null, null, null],
+                            borderColor: '#FECF03',
+                            borderWidth: 3,
+                            pointStyle: 'circle',
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        },
+                        {
+                            label: 'Trajetória Recomendada (-50%)',
+                            data: [null, null, null, null, null, null, null, null, null, 6122, 5612, 5102, 4592, 4082, 3572, 3061],
+                            borderColor: '#111414',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            pointStyle: 'rectRot',
+                            pointRadius: 5
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { font: { family: 'Open Sans', size: 11 } }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            min: 2000,
+                            max: 7000,
+                            grid: { color: '#E5E7EB' }
+                        }
+                    }
+                }
+            });
+
+            const ctxTendencia = document.getElementById('chartTendenciaObitos').getContext('2d');
+            charts.chartTendencia = new Chart(ctxTendencia, {
+                type: 'line',
+                data: {
+                    labels: ['2025', '2027', '2029', '2031', '2033', '2035'],
+                    datasets: [
+                        {
+                            label: 'Tendência Sem o Plano (Inércia)',
+                            data: [5410, 5630, 5800, 5950, 6100, 6250],
+                            borderColor: '#262828',
+                            backgroundColor: 'rgba(38, 40, 40, 0.05)',
+                            borderDash: [5, 5],
+                            tension: 0.3,
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Trajetória Alvo (PSV-SP Meta -50%)',
+                            data: [5410, 4200, 2705, 2300, 1900, 1350],
+                            borderColor: '#C68B00',
+                            backgroundColor: 'rgba(198, 139, 0, 0.1)',
+                            fill: true,
+                            tension: 0.3,
+                            borderWidth: 3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: { boxWidth: 12, font: { size: 11, weight: 'bold', family: 'Open Sans' } }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                            ticks: { font: { size: 10 } }
+                        }
+                    }
+                }
+            });
+
+            const ctxProgresso = document.getElementById('chartProgressoFisico').getContext('2d');
+            charts.chartProgresso = new Chart(ctxProgresso, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Desenvolvidos', 'Em Curso', 'Planejados'],
+                    datasets: [{
+                        data: [1, 2, 5],
+                        backgroundColor: ['#C68B00', '#FECF03', '#D3D8DB'],
+                        borderWidth: 2,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { boxWidth: 10, font: { size: 10 } }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+
+        function updateImpactChart() {
+            const type = document.getElementById('select-impact-type').value;
+            const mode = document.getElementById('select-impact-mode').value;
+            const via = document.getElementById('select-impact-via').value;
+
+            let scaleFactor = 1.0;
+            if (type === 'rate') {
+                scaleFactor = 0.0022;
+            }
+
+            let baseValues = [6400, 6250, 6100, 5950, 5800, 5200, 5400, 5700, 6050, 6122];
+            if (mode === 'pedestres') baseValues = [1400, 1380, 1320, 1290, 1250, 1100, 1120, 1180, 1220, 1104];
+            else if (mode === 'ciclistas') baseValues = [400, 390, 380, 360, 350, 310, 320, 340, 350, 320];
+            else if (mode === 'motociclistas') baseValues = [2100, 2150, 2200, 2220, 2250, 2100, 2180, 2250, 2300, 2340];
+            else if (mode === 'automoveis') baseValues = [1200, 1180, 1150, 1110, 1080, 950, 990, 1020, 1050, 1040];
+
+            if (via === 'urbanas') baseValues = baseValues.map(v => Math.round(v * 0.47));
+            else if (via === 'rodovias') baseValues = baseValues.map(v => Math.round(v * 0.53));
+
+            const modifiedHistorical = baseValues.map(v => Math.round(v * scaleFactor));
+            const baseValueCurrent = modifiedHistorical[9];
+
+            charts.impactLine.data.datasets[0].data = [...modifiedHistorical, null, null, null, null, null, null];
+            charts.impactLine.data.datasets[1].data = [null, null, null, null, null, null, null, null, null, baseValueCurrent, Math.round(baseValueCurrent * 0.95), null, null, null, null, null];
+
+            const step = (baseValueCurrent * 0.5) / 6;
+            charts.impactLine.data.datasets[2].data = [
+                null, null, null, null, null, null, null, null, null,
+                baseValueCurrent,
+                Math.round(baseValueCurrent - step),
+                Math.round(baseValueCurrent - step * 2),
+                Math.round(baseValueCurrent - step * 3),
+                Math.round(baseValueCurrent - step * 4),
+                Math.round(baseValueCurrent - step * 5),
+                Math.round(baseValueCurrent * 0.5)
+            ];
+
+            charts.impactLine.options.scales.y.min = Math.round(baseValueCurrent * 0.3);
+            charts.impactLine.options.scales.y.max = Math.round(baseValueCurrent * 1.3);
+
+            charts.impactLine.update();
+        }
+
+        function resetImpactFilters() {
+            document.getElementById('select-impact-type').value = 'total';
+            document.getElementById('select-impact-mode').value = 'all';
+            document.getElementById('select-impact-via').value = 'all';
+            updateImpactChart();
+        }
+
+        function toggleAccordion(accId) {
+            const element = document.getElementById(accId);
+            const icon = document.getElementById(`icon-${accId}`);
+            
+            if (element.classList.contains('hidden')) {
+                element.classList.remove('hidden');
+                if (icon) icon.style.transform = 'rotate(180deg)';
+            } else {
+                element.classList.add('hidden');
+                if (icon) icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        function buildDesempenhoTable() {
+            const tbody = document.getElementById('table-desempenho-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            dbDesempenho.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50 border-b border-gray-100 transition-colors';
+                
+                let badgeClass = 'bg-rose-50 text-rose-500';
+                if (item.percentual >= 80) badgeClass = 'bg-emerald-50 text-emerald-600';
+                else if (item.percentual >= 50) badgeClass = 'bg-amber-50 text-amber-500';
+
+                tr.innerHTML = `
+                    <td class="p-3 font-semibold text-sistran-heading">${item.eixo}</td>
+                    <td class="p-3 font-medium text-sistran-body">${item.objetivo}</td>
+                    <td class="p-3 font-semibold text-sistran-heading">${item.indicador}</td>
+                    <td class="p-3 text-sistran-body max-w-xs">${item.oqueMede}</td>
+                    <td class="p-3 text-sistran-muted">
+                        <span class="block text-[11px] font-semibold">${item.fonte}</span>
+                        <span>${item.periodicidade}</span>
+                    </td>
+                    <td class="p-3 text-right">
+                        <span class="px-2.5 py-1 rounded text-xs font-bold ${badgeClass}">
+                            ${item.resultado}
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterDesempenhoTable() {
+            const valEixo = document.getElementById('filter-desempenho-eixo').value;
+            const valSearch = document.getElementById('search-desempenho').value.toLowerCase();
+            const rows = document.querySelectorAll('#table-desempenho-body tr');
+
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                const colEixo = row.cells[0].innerText;
+
+                const matchesEixo = (valEixo === 'all' || colEixo.includes(valEixo));
+                const matchesSearch = text.includes(valSearch);
+
+                if (matchesEixo && matchesSearch) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        function buildImplementacaoTable() {
+            const tbody = document.getElementById('table-implementacao-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            dbImplementacao.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50 border-b border-gray-100 transition-colors';
+                
+                let statusBadge = 'bg-gray-100 text-sistran-body';
+                if (item.status === 'Concluído') statusBadge = 'bg-emerald-50 text-emerald-600';
+                else if (item.status === 'Em andamento') statusBadge = 'bg-amber-50 text-amber-500';
+                else if (item.status === 'Pendente') statusBadge = 'bg-rose-50 text-rose-500';
+
+                tr.innerHTML = `
+                    <td class="p-3 font-bold text-sistran-gold">${item.cod}</td>
+                    <td class="p-3">
+                        <span class="block text-[10px] font-bold text-sistran-muted uppercase">${item.eixo}</span>
+                        <span class="font-medium text-sistran-heading leading-tight">${item.acao}</span>
+                    </td>
+                    <td class="p-3 text-sistran-body font-semibold max-w-xs">${item.produto}</td>
+                    <td class="p-3 font-semibold text-sistran-heading">${item.responsavel}</td>
+                    <td class="p-3 text-sistran-body">${item.metaCiclo}</td>
+                    <td class="p-3">
+                        <span class="px-2.5 py-1 rounded text-[10px] font-bold ${statusBadge}">
+                            ${item.status}
+                        </span>
+                    </td>
+                    <td class="p-3 text-center">
+                        <button onclick="openModalDetails(${index})" class="text-sistran-gold hover:text-sistran-heading hover:bg-sistran-gold-surface p-1.5 rounded-full transition-colors">
+                            <i data-lucide="info" class="w-4 h-4"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            lucide.createIcons();
+        }
+
+        function filterImplementacao() {
+            const ciclo = document.getElementById('filter-imp-ciclo').value;
+            const status = document.getElementById('filter-imp-status').value;
+            const transversal = document.getElementById('filter-imp-transversal').value;
+            const query = document.getElementById('search-imp-text').value.toLowerCase();
+
+            const filtered = dbImplementacao.filter(item => {
+                const matchesCiclo = (ciclo === 'all' || item.ciclo === ciclo);
+                const matchesStatus = (status === 'all' || item.status === status);
+                const matchesTransversal = (transversal === 'all' || item.transversal === transversal);
+                
+                const textContent = `${item.cod} ${item.acao} ${item.produto} ${item.responsavel} ${item.eixo}`.toLowerCase();
+                const matchesQuery = textContent.includes(query);
+
+                return matchesCiclo && matchesStatus && matchesTransversal && matchesQuery;
+            });
+
+            const tbody = document.getElementById('table-implementacao-body');
+            tbody.innerHTML = '';
+
+            filtered.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50 border-b border-gray-100 transition-colors';
+                
+                let statusBadge = 'bg-gray-100 text-sistran-body';
+                if (item.status === 'Concluído') statusBadge = 'bg-emerald-50 text-emerald-600';
+                else if (item.status === 'Em andamento') statusBadge = 'bg-amber-50 text-amber-500';
+                else if (item.status === 'Pendente') statusBadge = 'bg-rose-50 text-rose-500';
+
+                const originalIndex = dbImplementacao.findIndex(original => original.cod === item.cod);
+
+                tr.innerHTML = `
+                    <td class="p-3 font-bold text-sistran-gold">${item.cod}</td>
+                    <td class="p-3">
+                        <span class="block text-[10px] font-bold text-sistran-muted uppercase">${item.eixo}</span>
+                        <span class="font-medium text-sistran-heading leading-tight">${item.acao}</span>
+                    </td>
+                    <td class="p-3 text-sistran-body font-semibold max-w-xs">${item.produto}</td>
+                    <td class="p-3 font-semibold text-sistran-heading">${item.responsavel}</td>
+                    <td class="p-3 text-sistran-body">${item.metaCiclo}</td>
+                    <td class="p-3 font-medium">
+                        <span class="px-2.5 py-1 rounded text-[10px] font-bold ${statusBadge}">
+                            ${item.status}
+                        </span>
+                    </td>
+                    <td class="p-3 text-center">
+                        <button onclick="openModalDetails(${originalIndex})" class="text-sistran-gold hover:text-sistran-heading hover:bg-sistran-gold-surface p-1.5 rounded-full transition-colors">
+                            <i data-lucide="info" class="w-4 h-4"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            lucide.createIcons();
+        }
+
+        function buildCascadingDropdowns() {
+            const selectEixo = document.getElementById('form-coleta-eixo');
+            const selectObjetivo = document.getElementById('form-coleta-objetivo');
+            const selectAcao = document.getElementById('form-coleta-acao');
+            const selectProduto = document.getElementById('form-coleta-produto');
+            const selectIndicador = document.getElementById('form-coleta-indicador');
+
+            const uniqueEixes = [...new Set(psvSpreadsheetData.map(item => item.eixoKey))].filter(Boolean);
+            
+            uniqueEixes.sort((a, b) => {
+                const numA = parseInt(a.split(' - ')[0]) || 0;
+                const numB = parseInt(b.split(' - ')[0]) || 0;
+                return numA - numB;
+            });
+
+            selectEixo.innerHTML = '<option value="">Selecione o Eixo Temático...</option>';
+            uniqueEixes.forEach(eixo => {
+                const opt = document.createElement('option');
+                opt.value = eixo;
+                opt.textContent = eixo;
+                selectEixo.appendChild(opt);
+            });
+
+            resetSelect(selectObjetivo, 'Selecione o Objetivo Estratégico...');
+            resetSelect(selectAcao, 'Selecione a Ação...');
+            resetSelect(selectProduto, 'Selecione o Produto...');
+            resetSelect(selectIndicador, 'Selecione o Indicador...');
+        }
+
+        function resetSelect(selectEl, placeholder) {
+            selectEl.innerHTML = `<option value="">${placeholder}</option>`;
+            selectEl.disabled = true;
+        }
+
+        function handleEixoChange() {
+            const selectEixo = document.getElementById('form-coleta-eixo');
+            const selectObjetivo = document.getElementById('form-coleta-objetivo');
+            const selectAcao = document.getElementById('form-coleta-acao');
+            const selectProduto = document.getElementById('form-coleta-produto');
+            const selectIndicador = document.getElementById('form-coleta-indicador');
+
+            const selectedEixo = selectEixo.value;
+            if (!selectedEixo) {
+                resetSelect(selectObjetivo, 'Selecione o Objetivo Estratégico...');
+                resetSelect(selectAcao, 'Selecione a Ação...');
+                resetSelect(selectProduto, 'Selecione o Produto...');
+                resetSelect(selectIndicador, 'Selecione o Indicador...');
+                return;
+            }
+
+            const filteredObjs = [...new Set(psvSpreadsheetData
+                .filter(item => item.eixoKey === selectedEixo)
+                .map(item => item.objKey)
+            )].filter(Boolean);
+
+            selectObjetivo.innerHTML = '<option value="">Selecione o Objetivo Estratégico...</option>';
+            filteredObjs.forEach(obj => {
+                const opt = document.createElement('option');
+                opt.value = obj;
+                opt.textContent = obj;
+                selectObjetivo.appendChild(opt);
+            });
+            selectObjetivo.disabled = false;
+
+            resetSelect(selectAcao, 'Selecione a Ação...');
+            resetSelect(selectProduto, 'Selecione o Produto...');
+            resetSelect(selectIndicador, 'Selecione o Indicador...');
+        }
+
+        function handleObjetivoChange() {
+            const selectEixo = document.getElementById('form-coleta-eixo');
+            const selectObjetivo = document.getElementById('form-coleta-objetivo');
+            const selectAcao = document.getElementById('form-coleta-acao');
+            const selectProduto = document.getElementById('form-coleta-produto');
+            const selectIndicador = document.getElementById('form-coleta-indicador');
+
+            const selectedEixo = selectEixo.value;
+            const selectedObj = selectObjetivo.value;
+            if (!selectedObj) {
+                resetSelect(selectAcao, 'Selecione a Ação...');
+                resetSelect(selectProduto, 'Selecione o Produto...');
+                resetSelect(selectIndicador, 'Selecione o Indicador...');
+                return;
+            }
+
+            const filteredAcoes = [...new Set(psvSpreadsheetData
+                .filter(item => item.eixoKey === selectedEixo && item.objKey === selectedObj)
+                .map(item => item.acaoKey)
+            )].filter(Boolean);
+
+            selectAcao.innerHTML = '<option value="">Selecione a Ação...</option>';
+            filteredAcoes.forEach(acao => {
+                const opt = document.createElement('option');
+                opt.value = acao;
+                opt.textContent = acao;
+                selectAcao.appendChild(opt);
+            });
+            selectAcao.disabled = false;
+
+            resetSelect(selectProduto, 'Selecione o Produto...');
+            resetSelect(selectIndicador, 'Selecione o Indicador...');
+        }
+
+        function handleAcaoChange() {
+            const selectEixo = document.getElementById('form-coleta-eixo');
+            const selectObjetivo = document.getElementById('form-coleta-objetivo');
+            const selectAcao = document.getElementById('form-coleta-acao');
+            const selectProduto = document.getElementById('form-coleta-produto');
+            const selectIndicador = document.getElementById('form-coleta-indicador');
+
+            const selectedEixo = selectEixo.value;
+            const selectedObj = selectObjetivo.value;
+            const selectedAcao = selectAcao.value;
+            if (!selectedAcao) {
+                resetSelect(selectProduto, 'Selecione o Produto...');
+                resetSelect(selectIndicador, 'Selecione o Indicador...');
+                return;
+            }
+
+            const filteredProds = [...new Set(psvSpreadsheetData
+                .filter(item => item.eixoKey === selectedEixo && item.objKey === selectedObj && item.acaoKey === selectedAcao)
+                .map(item => item.prodKey)
+            )].filter(Boolean);
+
+            selectProduto.innerHTML = '<option value="">Selecione o Produto...</option>';
+            filteredProds.forEach(prod => {
+                const opt = document.createElement('option');
+                opt.value = prod;
+                opt.textContent = prod;
+                selectProduto.appendChild(opt);
+            });
+            selectProduto.disabled = false;
+
+            resetSelect(selectIndicador, 'Selecione o Indicador...');
+        }
+
+        function handleProdutoChange() {
+            const selectEixo = document.getElementById('form-coleta-eixo');
+            const selectObjetivo = document.getElementById('form-coleta-objetivo');
+            const selectAcao = document.getElementById('form-coleta-acao');
+            const selectProduto = document.getElementById('form-coleta-produto');
+            const selectIndicador = document.getElementById('form-coleta-indicador');
+
+            const selectedEixo = selectEixo.value;
+            const selectedObj = selectObjetivo.value;
+            const selectedAcao = selectAcao.value;
+            const selectedProd = selectProduto.value;
+            if (!selectedProd) {
+                resetSelect(selectIndicador, 'Selecione o Indicador...');
+                return;
+            }
+
+            const filteredInds = [...new Set(psvSpreadsheetData
+                .filter(item => item.eixoKey === selectedEixo && item.objKey === selectedObj && item.acaoKey === selectedAcao && item.prodKey === selectedProd)
+                .map(item => item.indicador)
+            )].filter(Boolean);
+
+            selectIndicador.innerHTML = '<option value="">Selecione o Indicador...</option>';
+            filteredInds.forEach(ind => {
+                const opt = document.createElement('option');
+                opt.value = ind;
+                opt.textContent = ind;
+                selectIndicador.appendChild(opt);
+            });
+            selectIndicador.disabled = false;
+
+            if (filteredInds.length === 1) {
+                selectIndicador.value = filteredInds[0];
+            }
+        }
+
+        function handleColetaLogin() {
+            const mockSel = document.getElementById('auth-perfil-mock').value;
+            currentPontoFocal = perfisPF[mockSel];
+
+            if (currentPontoFocal) {
+                // Atualização visual do estado logado única no topo superior direito
+                document.getElementById('user-badge').textContent = `${currentPontoFocal.nome} (${currentPontoFocal.orgao})`;
+                document.getElementById('avatar-initials').textContent = currentPontoFocal.iniciais;
+
+                document.getElementById('coleta-auth-container').classList.add('hidden');
+                document.getElementById('coleta-form-container').classList.remove('hidden');
+
+                const submenu = document.getElementById('submenu-coleta');
+                const chevron = document.getElementById('chevron-coleta');
+                submenu.classList.remove('hidden');
+                chevron.classList.add('rotate-180');
+
+                const indicator = document.getElementById('login-indicator');
+                indicator.classList.remove('bg-red-500');
+                indicator.classList.add('bg-emerald-500');
+
+                selectColetaSubitem('formulario');
+
+                showNotification("Acesso Autorizado", `Ponto Focal logado ficticiamente como ${currentPontoFocal.nome}.`, "emerald");
+                renderColetaHistorico();
+            }
+        }
+
+        function handleColetaLogout() {
+            currentPontoFocal = null;
+            pontoFocalFile = null;
+            document.getElementById('file-upload-name').textContent = "";
+            document.getElementById('form-coleta-dados').reset();
+            
+            // Restabelece estado "Visitante Público" na indicação única superior direita
+            document.getElementById('user-badge').textContent = "Visitante Público";
+            document.getElementById('avatar-initials').textContent = "VP";
+
+            const indicator = document.getElementById('login-indicator');
+            indicator.classList.remove('bg-emerald-500');
+            indicator.classList.add('bg-red-500');
+
+            document.getElementById('coleta-form-container').classList.add('hidden');
+            document.getElementById('coleta-auth-container').classList.remove('hidden');
+
+            const submenu = document.getElementById('submenu-coleta');
+            const chevron = document.getElementById('chevron-coleta');
+            submenu.classList.add('hidden');
+            chevron.classList.remove('rotate-180');
+
+            document.querySelectorAll('#submenu-coleta button').forEach(btn => {
+                btn.classList.remove('bg-sistran-gold-surface', 'text-sistran-gold', 'font-semibold');
+            });
+
+            showNotification("Sessão Encerrada", "Você saiu da área restrita de Pontos Focais.", "rose");
+            switchTab('publico');
+        }
+
+        function handleFileChange(event) {
+            const file = event.target.files[0];
+            const nameEl = document.getElementById('file-upload-name');
+            nameEl.textContent = "";
+
+            if (!file) {
+                pontoFocalFile = null;
+                return;
+            }
+
+            const allowedExtensions = /(\.pdf|\.jpeg|\.jpg|\.png|\.tiff)$/i;
+            if (!allowedExtensions.exec(file.name)) {
+                showNotification("Erro!", "Formato de arquivo inválido. Apenas PDF, JPEG, PNG ou TIFF são aceitos.", "rose");
+                event.target.value = '';
+                pontoFocalFile = null;
+                return;
+            }
+
+            const maxSizeInBytes = 15 * 1024 * 1024;
+            if (file.size > maxSizeInBytes) {
+                showNotification("Erro!", "Tamanho do arquivo excede o limite de 15MB.", "rose");
+                event.target.value = '';
+                pontoFocalFile = null;
+                return;
+            }
+
+            pontoFocalFile = file;
+            nameEl.textContent = `✓ ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB) pronto para envio.`;
+        }
+
+        function handleFormSubmitColeta(event) {
+            event.preventDefault();
+
+            if (!currentPontoFocal) {
+                showNotification("Erro!", "Sessão de Ponto Focal expirada. Faça login novamente.", "rose");
+                return;
+            }
+
+            const selectEixo = document.getElementById('form-coleta-eixo');
+            const selectObjetivo = document.getElementById('form-coleta-objetivo');
+            const selectAcao = document.getElementById('form-coleta-acao');
+            const selectProduto = document.getElementById('form-coleta-produto');
+            const selectIndicador = document.getElementById('form-coleta-indicador');
+
+            const txtEixo = selectEixo.value;
+            const txtProd = selectProduto.value;
+            const valIndicador = selectIndicador.value;
+
+            const rowObjetivoVal = selectObjetivo.value;
+            const rowAcaoVal = selectAcao.value;
+
+            const anoRef = document.getElementById('form-coleta-ano').value;
+            const valor = document.getElementById('form-coleta-valor').value;
+            const link = document.getElementById('form-coleta-link').value;
+            const descricao = document.getElementById('form-coleta-descricao').value;
+
+            if (!pontoFocalFile) {
+                showNotification("Erro!", "Por favor, anexe o arquivo de referência.", "rose");
+                return;
+            }
+
+            const idSeteDigitos = Math.floor(1000000 + Math.random() * 9000000);
+
+            const novoProduto = {
+                id: idSeteDigitos,
+                orgao: currentPontoFocal.orgao,
+                responsavel: currentPontoFocal.nome,
+                cargo: currentPontoFocal.cargo,
+                eixo: txtEixo,
+                codProd: txtProd.split(' - ')[0],
+                produto: txtProd.includes(' - ') ? txtProd.split(' - ')[1] : txtProd,
+                indicador: valIndicador,
+                valor: valor,
+                horizonte: anoRef,
+                evidencia: link,
+                descricao: descricao || "Relatório técnico analítico e comprovação das colunas pactuadas.",
+                data: new Date().toLocaleDateString('pt-BR'),
+                status: "Recebido"
+            };
+
+            mockDatabase.acoes.unshift(novoProduto);
+
+            const originalItem = dbImplementacao.find(item => item.cod === novoProduto.codProd);
+            if (originalItem) {
+                originalItem.status = "Em andamento";
+            } else {
+                dbImplementacao.push({
+                    cod: novoProduto.codProd,
+                    eixo: txtEixo.split(' - ')[1] || txtEixo,
+                    objetivo: rowObjetivoVal,
+                    acao: rowAcaoVal,
+                    produto: novoProduto.produto,
+                    responsavel: currentPontoFocal.orgao,
+                    metaCiclo: "Acompanhamento",
+                    status: "Em andamento",
+                    ciclo: "2025-2027",
+                    transversal: "PNATRANS",
+                    obs: "Submetido em análise regulamentar."
+                });
+            }
+
+            document.getElementById('form-coleta-dados').reset();
+            buildCascadingDropdowns();
+            pontoFocalFile = null;
+            document.getElementById('file-upload-name').textContent = "";
+
+            showNotification("Produto Enviado!", `O produto #${idSeteDigitos} foi recebido com sucesso e aguarda validação.`, "emerald");
+
+            updateUIStats();
+            renderColetaHistorico();
+            renderValidationCards();
+            buildImplementacaoTable();
+
+            selectColetaSubitem('historico');
+        }
+
+        function renderColetaHistorico() {
+            const tbody = document.getElementById('coleta-historico-tbody');
+            if (!tbody) return;
+            tbody.innerHTML = "";
+
+            const minhasAcoes = mockDatabase.acoes.filter(a => a.orgao === currentPontoFocal.orgao);
+
+            if (minhasAcoes.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-sistran-muted font-medium">Nenhum produto enviado para este órgão.</td></tr>`;
+                return;
+            }
+
+            minhasAcoes.forEach(acao => {
+                let statusBadge = "";
+                if (acao.status === "Recebido") {
+                    statusBadge = `<span class="bg-blue-50 text-blue-600 border border-blue-100 px-2 py-0.5 rounded font-bold text-[10px]">Recebido</span>`;
+                } else if (acao.status === "Em Análise") {
+                    statusBadge = `<span class="bg-amber-50 text-amber-500 border border-amber-200 px-2 py-0.5 rounded font-bold text-[10px]"><i class="fa-solid fa-spinner animate-spin text-[8px] mr-1"></i>Em Análise</span>`;
+                } else if (acao.status === "Aprovado") {
+                    statusBadge = `<span class="bg-emerald-50 text-emerald-600 border border-emerald-200 px-2 py-0.5 rounded font-bold text-[10px]"><i class="fa-solid fa-check mr-1"></i>Aprovado</span>`;
+                } else if (acao.status === "Reprovado") {
+                    statusBadge = `<span class="bg-rose-50 text-sistran-error border border-rose-200 px-2 py-0.5 rounded font-bold text-[10px]"><i class="fa-solid fa-xmark mr-1"></i>Reprovado</span>`;
+                }
+
+                const tr = `
+                    <tr class="hover:bg-gray-50 border-b border-gray-100 transition-colors">
+                        <td class="p-3 font-bold text-sistran-gold">#${acao.id}</td>
+                        <td class="p-3">
+                            <span class="block font-bold text-[10px] text-sistran-muted">${acao.codProd || 'Produto'}</span>
+                            <span class="font-medium text-sistran-heading leading-tight">${acao.produto}</span>
+                        </td>
+                        <td class="p-3 text-sistran-body">
+                            Métrica: <strong>${acao.valor}</strong> • Link: <a href="${acao.evidencia}" target="_blank" class="text-sistran-gold hover:underline font-semibold">Acessar Documento</a>
+                        </td>
+                        <td class="p-3 font-semibold text-sistran-heading">${acao.data}</td>
+                        <td class="p-3 text-right">${statusBadge}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += tr;
+            });
+        }
+
+        function renderValidationCards() {
+            const container = document.getElementById('validation-cards-container');
+            if (!container) return;
+            const filtro = document.getElementById('filtro-eixo-validacao').value;
+            container.innerHTML = "";
+
+            const pendentes = mockDatabase.acoes.filter(a => a.status === 'Recebido' || a.status === 'Em Análise');
+            const filtradas = filtro === 'todos' ? pendentes : pendentes.filter(a => a.eixo.toLowerCase().includes(filtro.toLowerCase()));
+
+            if (filtradas.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-sistran-muted">
+                        <i class="fa-solid fa-folder-open text-4xl mb-3 block"></i>
+                        <p class="text-sm">Nenhuma entrega pendente de validação neste momento.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtradas.forEach(acao => {
+                let workflowBtn = "";
+                let cardColor = "bg-white";
+
+                if (acao.status === "Recebido") {
+                    cardColor = "bg-blue-50/20 border-blue-200";
+                    workflowBtn = `
+                        <button onclick="changeProductStatus(${acao.id}, 'Em Análise')" class="flex-1 md:flex-none bg-amber-400 hover:bg-amber-500 text-sistran-ink font-bold text-xs px-5 py-2.5 rounded-pill transition duration-150 flex items-center justify-center gap-1.5 shadow-sm">
+                            <i class="fa-solid fa-spinner animate-spin text-[10px]"></i> Iniciar Análise
+                        </button>
+                    `;
+                } else if (acao.status === "Em Análise") {
+                    cardColor = "bg-amber-50/20 border-amber-200";
+                    workflowBtn = `
+                        <button onclick="changeProductStatus(${acao.id}, 'Aprovado')" class="flex-1 md:flex-none bg-[#10B981] text-white hover:bg-emerald-600 font-bold text-xs px-5 py-2.5 rounded-pill transition duration-150 flex items-center justify-center gap-1.5 shadow-sm">
+                            <i class="fa-solid fa-check"></i> Aprovar Produto
+                        </button>
+                    `;
+                }
+
+                const card = `
+                    <div class="border rounded-md p-6 hover:shadow-subtle transition flex flex-col md:flex-row justify-between gap-6 ${cardColor}" id="card-${acao.id}">
+                        <div class="space-y-3 flex-1 text-xs">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="bg-sistran-ink text-white text-[10px] font-bold uppercase px-2.5 py-1 rounded-sm">${acao.orgao}</span>
+                                <span class="text-sistran-muted font-medium"><i class="fa-regular fa-clock mr-1"></i>Enviado em ${acao.data}</span>
+                                <span class="border text-[10px] font-bold uppercase px-2 py-0.5 rounded-sm bg-sistran-gold-surface text-sistran-gold border-sistran-yellow">${acao.eixo}</span>
+                                <span class="text-zinc-400">ID: <strong>#${acao.id}</strong></span>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sistran-heading text-sm leading-snug">${acao.produto}</h4>
+                                <p class="text-sistran-muted mt-1">Responsável: <strong>${acao.responsavel} (${acao.cargo || 'Ponto Focal'})</strong></p>
+                            </div>
+                            <p class="text-sistran-body leading-relaxed bg-sistran-surface-muted border border-sistran-border p-3 rounded">${acao.descricao}</p>
+                            
+                            <div class="flex gap-4">
+                                <div><span class="text-sistran-muted font-medium">Indicador:</span> <strong class="text-sistran-heading">${acao.indicador}</strong></div>
+                                <div><span class="text-sistran-muted font-medium">Resultado:</span> <strong class="text-sistran-gold">${acao.valor}</strong></div>
+                            </div>
+
+                            <a href="${acao.evidencia}" target="_blank" class="inline-flex items-center gap-1.5 text-sistran-gold hover:underline font-semibold transition">
+                                <i class="fa-solid fa-file-pdf"></i> Ver Documento de Evidência Técnica (A2)
+                            </a>
+                        </div>
+
+                        <div class="flex md:flex-col justify-end gap-3 self-center w-full md:w-auto">
+                            ${workflowBtn}
+                            <button onclick="changeProductStatus(${acao.id}, 'Reprovado')" class="flex-1 md:flex-none bg-rose-500 text-white hover:bg-rose-600 font-bold text-xs px-5 py-2.5 rounded-pill transition duration-150 flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-xmark"></i> Reprovar
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+        }
+
+        function changeProductStatus(id, novoStatus) {
+            const acao = mockDatabase.acoes.find(a => a.id === id);
+            if (acao) {
+                acao.status = novoStatus;
+
+                let cor = "blue";
+                if (novoStatus === "Aprovado") {
+                    cor = "emerald";
+                    const originalItem = dbImplementacao.find(item => item.cod === acao.codProd);
+                    if (originalItem) {
+                        originalItem.status = "Concluído";
+                        originalItem.obs = `Aprovado pelo Comitê Gestor via SIMO #${acao.id} em ${new Date().toLocaleDateString('pt-BR')}.`;
+                        buildImplementacaoTable();
+                    }
+                }
+                if (novoStatus === "Reprovado") cor = "rose";
+
+                showNotification("Ação Registrada", `O status do produto #${id} foi updated para: ${novoStatus}.`, cor);
+
+                updateUIStats();
+                renderValidationCards();
+                if (currentPontoFocal) renderColetaHistorico();
+            }
+        }
+
+        function openModalDetails(index) {
+            const item = dbImplementacao[index];
+            document.getElementById('modal-produto-nome').innerText = `[${item.cod}] ${item.produto}`;
+            document.getElementById('modal-responsavel').innerText = item.responsavel;
+            document.getElementById('modal-observacao').innerText = item.obs;
+
+            const badge = document.getElementById('modal-status-badge');
+            badge.innerText = item.status;
+            badge.className = 'inline-block mt-1 px-2.5 py-0.5 rounded text-[10px] font-bold ';
+            
+            if (item.status === 'Concluído') badge.className += 'bg-emerald-50 text-emerald-600';
+            else if (item.status === 'Em andamento') badge.className += 'bg-amber-50 text-amber-500';
+            else if (item.status === 'Pendente') badge.className += 'bg-rose-50 text-rose-500';
+
+            document.getElementById('modal-qualitativo').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modal-qualitativo').classList.add('hidden');
+        }
+
+        function openSupportModal() {
+            document.getElementById('modal-suporte').classList.remove('hidden');
+        }
+
+        function closeSupportModal() {
+            document.getElementById('modal-suporte').classList.add('hidden');
+        }
+
+        function handleSupportSubmit(e) {
+            e.preventDefault();
+            closeSupportModal();
+            showToast("Suporte encaminhado! Prazo de resposta: 24h.");
+        }
+
+        function mockDownload(filename) {
+            showToast(`Iniciando download do arquivo: ${filename}`);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = message;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3500);
+        }
+
+        function showNotification(title, message, color) {
+            const notif = document.getElementById('custom-notification');
+            const notifIconContainer = document.getElementById('notif-icon-container');
+            const notifIcon = document.getElementById('notif-icon');
+            const notifTitle = document.getElementById('notif-title');
+            const notifDesc = document.getElementById('notif-desc');
+
+            if (color === "emerald") {
+                notifIconContainer.className = "p-2 rounded-sm bg-emerald-500 text-zinc-950";
+                notifIcon.className = "fa-solid fa-circle-check";
+            } else if (color === "rose") {
+                notifIconContainer.className = "p-2 rounded-sm bg-sistran-error text-white";
+                notifIcon.className = "fa-solid fa-circle-xmark";
+            } else {
+                notifIconContainer.className = "p-2 rounded-sm bg-sistran-gold text-white";
+                notifIcon.className = "fa-solid fa-paper-plane";
+            }
+
+            notifTitle.textContent = title;
+            notifDesc.textContent = message;
+
+            notif.classList.remove('hidden');
+            setTimeout(() => {
+                notif.classList.add('hidden');
+            }, 4500);
+        }
+
+        function exportDesempenhoCSV() {
+            let csvContent = "data:text/csv;charset=utf-8,Eixo,Objetivo Estrategico,Indicador,O que Mede,Formula,Fonte,Periodicidade,Resultado\n";
+            dbDesempenho.forEach(item => {
+                const row = [
+                    `"${item.eixo}"`,
+                    `"${item.objetivo}"`,
+                    `"${item.indicador}"`,
+                    `"${item.oqueMede}"`,
+                    `"${item.fórmula || ''}"`,
+                    `"${item.fonte}"`,
+                    `"${item.periodicidade || ''}"`,
+                    `"${item.resultado}"`
+                ].join(",");
+                csvContent += row + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "PSV-SP_Indicadores_Desempenho.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast("Tabela de Desempenho exportada com sucesso!");
+        }
+
+        function exportImplementacaoCSV() {
+            let csvContent = "data:text/csv;charset=utf-8,Codigo,Eixo,Objetivo,Acao,Produto,Orgao Responsavel,Meta Parcial,Status,Ciclo,Alinhamento,Observacoes\n";
+            dbImplementacao.forEach(item => {
+                const row = [
+                    `"${item.cod}"`,
+                    `"${item.eixo}"`,
+                    `"${item.objetivo}"`,
+                    `"${item.acao}"`,
+                    `"${item.produto}"`,
+                    `"${item.responsavel}"`,
+                    `"${item.metaCiclo}"`,
+                    `"${item.status}"`,
+                    `"${item.ciclo}"`,
+                    `"${item.transversal}"`,
+                    `"${item.obs}"`
+                ].join(",");
+                csvContent += row + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "PSV-SP_Matriz_Implementacao.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast("Matriz de Implementação exportada com sucesso!");
+        }
+    </script>
+</body>
+</html>
