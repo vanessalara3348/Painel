@@ -39,22 +39,35 @@
                             'surface-muted': '#F9F9F9',
                             border: '#D3D8DB',
                             error: '#FF0000',
-                            success: '#10B981',
+                            success: '#1F8A4C',
                             warning: '#F59E0B'
                         }
                     },
                     fontFamily: {
                         sans: ['"Open Sans"', 'Helvetica', 'Arial', 'sans-serif']
                     },
+                    fontSize: {
+                        'display': ['40px', { lineHeight: '1.4', fontWeight: '400' }],
+                        'section': ['24px', { lineHeight: '1.5', fontWeight: '600' }],
+                        'h3': ['18px', { lineHeight: '1.55', fontWeight: '600' }],
+                        'body': ['16px', { lineHeight: '1.5', fontWeight: '400' }],
+                        'small': ['14px', { lineHeight: '1.6', fontWeight: '400' }],
+                        'eyebrow': ['13px', { lineHeight: '1.5', fontWeight: '600', letterSpacing: '1.2px' }]
+                    },
                     boxShadow: {
+                        subtle: '0 1px 8px rgba(211,216,219,0.8)',
                         card: '0 6px 19px rgba(0,0,0,0.06)',
-                        subtle: '0 1px 8px rgba(211,216,219,0.8)'
+                        hover: '0 12px 32px rgba(0,0,0,0.10)'
                     },
                     borderRadius: {
                         sm: '8px',
                         md: '16px',
                         lg: '24px',
                         pill: '32px'
+                    },
+                    transitionDuration: {
+                        'btn': '150ms',
+                        'card': '200ms'
                     }
                 }
             }
@@ -75,18 +88,22 @@
             --ss-surface-muted: #F9F9F9;
             --ss-border: #D3D8DB;
             --ss-error: #FF0000;
+            --ss-success: #1F8A4C;
             --ss-font-family: "Open Sans", Helvetica, Arial, sans-serif;
             --ss-radius-sm: 8px;
             --ss-radius-md: 16px;
             --ss-radius-lg: 24px;
             --ss-radius-pill: 32px;
-            --ss-shadow-card: 0 6px 19px rgba(0,0,0,0.06);
             --ss-shadow-subtle: 0 1px 8px rgba(211,216,219,0.8);
+            --ss-shadow-card: 0 6px 19px rgba(0,0,0,0.06);
+            --ss-shadow-hover: 0 12px 32px rgba(0,0,0,0.10);
         }
 
         body {
             font-family: var(--ss-font-family);
             color: var(--ss-text-body);
+            font-size: 16px;
+            line-height: 1.5;
             scroll-behavior: smooth;
         }
         
@@ -147,18 +164,19 @@
             animation: spin 10s linear infinite;
         }
 
-        /* ===== Legibilidade: piso mínimo da escala tipográfica (issue #23) =====
-           Os cards usavam muitos tamanhos abaixo de 12px (8/9/10/11px) e
-           text-xs (12px) como corpo padrão, prejudicando a leitura. Aqui
-           elevamos o piso da escala de forma consistente em todo o painel.
-           O seletor com prefixo "body" garante prioridade sobre as classes
-           utilitárias do Tailwind sem precisar de !important. */
+        /* ===== Escala tipográfica alinhada ao Design System Sistran-SP =====
+           Body: 16px | Small: 14px | Eyebrow: 13px
+           Piso mínimo: 12px para metadados e labels menores */
         body .text-\[8px\],
-        body .text-\[9px\] { font-size: 11px; }
-        body .text-\[10px\] { font-size: 12px; }
-        body .text-\[11px\] { font-size: 13px; }
-        body .text-xs { font-size: 13px; line-height: 1.25rem; }
-        body .text-sm { font-size: 14.5px; line-height: 1.4rem; }
+        body .text-\[9px\] { font-size: 12px; }
+        body .text-\[10px\] { font-size: 13px; }
+        body .text-\[11px\] { font-size: 14px; line-height: 1.5; }
+        body .text-xs { font-size: 14px; line-height: 1.6; }
+        body .text-sm { font-size: 16px; line-height: 1.5; }
+        body .text-base { font-size: 16px; line-height: 1.5; }
+        body .text-lg { font-size: 18px; line-height: 1.55; font-weight: 600; }
+        body .text-xl { font-size: 24px; line-height: 1.5; font-weight: 600; }
+        body .text-2xl { font-size: 24px; line-height: 1.5; font-weight: 600; }
     </style>
 </head>
 <body class="bg-sistran-surface-muted antialiased custom-scrollbar h-screen overflow-hidden">
