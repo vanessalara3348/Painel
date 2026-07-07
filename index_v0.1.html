@@ -254,55 +254,10 @@
 
     <div class="flex h-screen overflow-hidden">
 
-        <!-- SIDEBAR DE NAVEGAÇÃO -->
-        <!-- Mobile: dropdown abaixo do header; Desktop: sidebar fixo à esquerda -->
+        <!-- SIDEBAR DE NAVEGAÇÃO COMPLETA -->
+        <!-- Mobile: overlay fixo com backdrop; Desktop: sidebar fixo à esquerda -->
         <div id="mobile-backdrop" class="fixed inset-0 bg-black/40 z-30 hidden md:hidden" onclick="closeMobileMenu()"></div>
-        
-        <!-- Menu dropdown mobile (aparece abaixo do header) -->
-        <div id="mobile-dropdown-menu" class="hidden md:hidden fixed top-16 left-0 right-0 z-40 bg-white border-b border-sistran-border shadow-card max-h-[70vh] overflow-y-auto custom-scrollbar">
-            <nav class="px-4 py-4 space-y-1">
-                <p class="px-3 text-xs font-extrabold text-sistran-gold uppercase tracking-wider mb-2">Ambientes de Sistema</p>
-                <button onclick="selectPublicSubitem('introducao'); closeMobileMenu();" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sistran-body hover:bg-zinc-100 transition text-left">
-                    <i class="fa-solid fa-users text-sm w-5 flex-shrink-0 text-sistran-gold"></i>
-                    <span class="text-xs font-bold text-sistran-heading">Apresentação dos Resultados</span>
-                </button>
-                <div class="pl-8 space-y-0.5">
-                    <button onclick="selectPublicSubitem('introducao'); closeMobileMenu();" class="w-full flex items-center gap-2 px-3 py-1.5 rounded text-xs text-sistran-body hover:bg-zinc-100 text-left">
-                        <i data-lucide="home" class="w-3.5 h-3.5 text-sistran-muted"></i> Introdução
-                    </button>
-                    <button onclick="selectPublicSubitem('impacto'); closeMobileMenu();" class="w-full flex items-center gap-2 px-3 py-1.5 rounded text-xs text-sistran-body hover:bg-zinc-100 text-left">
-                        <i data-lucide="trending-down" class="w-3.5 h-3.5 text-sistran-muted"></i> Impacto
-                    </button>
-                    <button onclick="selectPublicSubitem('desempenho'); closeMobileMenu();" class="w-full flex items-center gap-2 px-3 py-1.5 rounded text-xs text-sistran-body hover:bg-zinc-100 text-left">
-                        <i data-lucide="activity" class="w-3.5 h-3.5 text-sistran-muted"></i> Desempenho
-                    </button>
-                    <button onclick="selectPublicSubitem('implementacao'); closeMobileMenu();" class="w-full flex items-center gap-2 px-3 py-1.5 rounded text-xs text-sistran-body hover:bg-zinc-100 text-left">
-                        <i data-lucide="check-square" class="w-3.5 h-3.5 text-sistran-muted"></i> Implementação
-                    </button>
-                </div>
-                <button onclick="switchTab('coleta'); closeMobileMenu();" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sistran-body hover:bg-zinc-100 transition text-left">
-                    <i class="fa-solid fa-file-pen text-sm w-5 flex-shrink-0 text-sistran-gold"></i>
-                    <span class="text-xs font-bold text-sistran-heading">Coleta de Dados</span>
-                </button>
-                <button onclick="switchTab('dashboard'); closeMobileMenu();" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sistran-body hover:bg-zinc-100 transition text-left">
-                    <i class="fa-solid fa-chart-line text-sm w-5 flex-shrink-0 text-sistran-gold"></i>
-                    <span class="text-xs font-bold text-sistran-heading">Acompanhamento e Consulta</span>
-                </button>
-                <button onclick="switchTab('validacao'); closeMobileMenu();" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sistran-body hover:bg-zinc-100 transition text-left">
-                    <i class="fa-solid fa-shield-halved text-sm w-5 flex-shrink-0 text-sistran-gold"></i>
-                    <span class="text-xs font-bold text-sistran-heading">Monitoramento e Validação</span>
-                </button>
-                <div class="border-t border-sistran-border mt-2 pt-2">
-                    <button onclick="openSupportModal(); closeMobileMenu();" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sistran-body hover:bg-zinc-100 transition text-left">
-                        <i class="fa-solid fa-headset text-sm w-5 flex-shrink-0 text-sistran-gold"></i>
-                        <span class="text-xs font-bold text-sistran-heading">Suporte Técnico</span>
-                    </button>
-                </div>
-            </nav>
-        </div>
-
-        <!-- Sidebar desktop (oculto em mobile) -->
-        <aside id="sidebar" class="w-80 bg-white border-r border-sistran-border text-sistran-body flex-col flex-shrink-0 z-20 hidden md:flex">
+        <aside id="sidebar" class="w-80 bg-white border-r border-sistran-border text-sistran-body flex flex-col flex-shrink-0 z-40 transition-transform duration-300 fixed md:relative h-full -translate-x-full md:translate-x-0">
             
             <!-- HEADER DO SIDEBAR COM LOGO ADAPTADA - ALINHADO AO HEADER DA PÁGINA (Sem caixa/borda no entorno) -->
             <div class="h-16 flex items-center px-6 border-b border-sistran-border bg-white flex-shrink-0">
@@ -1692,28 +1647,20 @@
 
         function setupMobileMenu() {
             const btn = document.getElementById('mobile-menu-btn');
-            if (btn) {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('mobile-backdrop');
+            if (btn && sidebar) {
                 btn.addEventListener('click', () => {
-                    toggleMobileDropdown();
+                    sidebar.classList.toggle('-translate-x-full');
+                    backdrop.classList.toggle('hidden');
                 });
             }
         }
 
-        function toggleMobileDropdown() {
-            const dropdown = document.getElementById('mobile-dropdown-menu');
-            const backdrop = document.getElementById('mobile-backdrop');
-            if (dropdown) {
-                dropdown.classList.toggle('hidden');
-                backdrop.classList.toggle('hidden');
-                // Re-render lucide icons inside dropdown
-                if (window.lucide) lucide.createIcons();
-            }
-        }
-
         function closeMobileMenu() {
-            const dropdown = document.getElementById('mobile-dropdown-menu');
+            const sidebar = document.getElementById('sidebar');
             const backdrop = document.getElementById('mobile-backdrop');
-            if (dropdown) dropdown.classList.add('hidden');
+            if (sidebar) sidebar.classList.add('-translate-x-full');
             if (backdrop) backdrop.classList.add('hidden');
         }
 
