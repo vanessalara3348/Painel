@@ -15,10 +15,10 @@
     <!-- SheetJS para processamento de planilhas Excel em tempo real -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     
-    <!-- Google Fonts - Open Sans (Design System SISTRAN) -->
+    <!-- Google Fonts - Open Sans (Design System SISTRAN) + Material Symbols Outlined -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
 
     <!-- Configuração dos Tokens do Design System no Tailwind -->
     <script>
@@ -247,6 +247,37 @@
             letter-spacing: 1.2px;
             line-height: 1.5;
             color: var(--ss-gold);
+        }
+
+        /* ===== Design System: Material Symbols Outlined ===== */
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 28px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            -webkit-font-smoothing: antialiased;
+        }
+        /* Icon badge padrão DS: 56x56, gold-surface bg, rounded */
+        .ds-icon-badge {
+            width: 56px;
+            height: 56px;
+            background-color: var(--ss-gold-surface);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .ds-icon-badge .material-symbols-outlined {
+            color: var(--ss-gold);
+            font-size: 28px;
         }
     </style>
 </head>
@@ -598,30 +629,42 @@
                                         <i data-lucide="folder-open" class="text-sistran-gold w-5 h-5"></i>
                                         Dados Abertos e Documentos
                                     </h3>
-                                    <!-- Botões estilo Infosiga - grade de cards com ícone e label -->
+                                    <!-- Botões estilo Infosiga - grade de cards com ícone Material Symbols -->
                                     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
                                         <a href="#" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all text-center group">
-                                            <i data-lucide="database" class="w-6 h-6 text-sistran-gold group-hover:scale-110 transition-transform"></i>
+                                            <div class="ds-icon-badge group-hover:scale-105 transition-transform">
+                                                <span class="material-symbols-outlined">database</span>
+                                            </div>
                                             <span class="text-xs font-semibold text-sistran-heading">Dados Abertos</span>
                                         </a>
                                         <a href="#" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all text-center group">
-                                            <i data-lucide="scale" class="w-6 h-6 text-sistran-gold group-hover:scale-110 transition-transform"></i>
+                                            <div class="ds-icon-badge group-hover:scale-105 transition-transform">
+                                                <span class="material-symbols-outlined">gavel</span>
+                                            </div>
                                             <span class="text-xs font-semibold text-sistran-heading">Normas e Regulações</span>
                                         </a>
                                         <a href="#" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all text-center group">
-                                            <i data-lucide="book-open" class="w-6 h-6 text-sistran-gold group-hover:scale-110 transition-transform"></i>
+                                            <div class="ds-icon-badge group-hover:scale-105 transition-transform">
+                                                <span class="material-symbols-outlined">menu_book</span>
+                                            </div>
                                             <span class="text-xs font-semibold text-sistran-heading">Glossário</span>
                                         </a>
                                         <a href="#" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all text-center group">
-                                            <i data-lucide="help-circle" class="w-6 h-6 text-sistran-gold group-hover:scale-110 transition-transform"></i>
+                                            <div class="ds-icon-badge group-hover:scale-105 transition-transform">
+                                                <span class="material-symbols-outlined">help</span>
+                                            </div>
                                             <span class="text-xs font-semibold text-sistran-heading">Perguntas Frequentes</span>
                                         </a>
                                         <button onclick="togglePublicacoes()" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all text-center group">
-                                            <i data-lucide="file-text" class="w-6 h-6 text-sistran-gold group-hover:scale-110 transition-transform"></i>
+                                            <div class="ds-icon-badge group-hover:scale-105 transition-transform">
+                                                <span class="material-symbols-outlined">description</span>
+                                            </div>
                                             <span class="text-xs font-semibold text-sistran-heading">Publicações</span>
                                         </button>
                                         <a href="#" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all text-center group">
-                                            <i data-lucide="github" class="w-6 h-6 text-sistran-gold group-hover:scale-110 transition-transform"></i>
+                                            <div class="ds-icon-badge group-hover:scale-105 transition-transform">
+                                                <i class="fa-brands fa-github text-sistran-gold" style="font-size: 28px;"></i>
+                                            </div>
                                             <span class="text-xs font-semibold text-sistran-heading">Github</span>
                                         </a>
                                     </div>
