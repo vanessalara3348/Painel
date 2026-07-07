@@ -1723,6 +1723,33 @@
             document.querySelectorAll('aside nav button').forEach(btn => {
                 btn.classList.remove('active-tab');
             });
+
+            // Recolhe submenus de outros ambientes ao trocar de aba
+            const submenuPublico = document.getElementById('submenu-publico');
+            const chevronPublico = document.getElementById('chevron-publico');
+            const submenuColeta = document.getElementById('submenu-coleta');
+            const chevronColeta = document.getElementById('chevron-coleta');
+
+            if (tabId !== 'publico') {
+                if (submenuPublico) submenuPublico.classList.add('hidden');
+                if (chevronPublico) chevronPublico.classList.remove('rotate-180');
+                document.querySelectorAll('#submenu-publico button').forEach(btn => {
+                    btn.classList.remove('bg-sistran-gold-surface', 'text-sistran-gold', 'font-semibold');
+                    btn.classList.add('text-sistran-body');
+                    const icon = btn.querySelector('svg') || btn.querySelector('i');
+                    if (icon) { icon.classList.remove('text-sistran-gold'); icon.classList.add('text-sistran-muted'); }
+                });
+            }
+            if (tabId !== 'coleta') {
+                if (submenuColeta) submenuColeta.classList.add('hidden');
+                if (chevronColeta) chevronColeta.classList.remove('rotate-180');
+                document.querySelectorAll('#submenu-coleta button').forEach(btn => {
+                    btn.classList.remove('bg-sistran-gold-surface', 'text-sistran-gold', 'font-semibold');
+                    btn.classList.add('text-sistran-body');
+                    const icon = btn.querySelector('svg') || btn.querySelector('i');
+                    if (icon) { icon.classList.remove('text-sistran-gold'); icon.classList.add('text-sistran-muted'); }
+                });
+            }
             
             const targetSec = document.getElementById(`tab-${tabId}`);
             if (targetSec) {
@@ -1842,6 +1869,11 @@
 
         function selectPublicSubitem(subTabId) {
             switchTab('publico');
+            // Garante que submenu está aberto ao navegar subitens
+            const submenu = document.getElementById('submenu-publico');
+            const chevron = document.getElementById('chevron-publico');
+            if (submenu) submenu.classList.remove('hidden');
+            if (chevron) chevron.classList.add('rotate-180');
             switchSubTab(subTabId);
         }
 
