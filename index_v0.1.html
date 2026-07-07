@@ -2786,6 +2786,7 @@
 
             filtradas.forEach(acao => {
                 let workflowBtn = "";
+                let reprovarBtn = "";
                 let cardColor = "bg-white";
 
                 if (acao.status === "Recebido") {
@@ -2795,11 +2796,17 @@
                             <i class="fa-solid fa-spinner animate-spin text-[10px]"></i> Iniciar Análise
                         </button>
                     `;
+                    reprovarBtn = "";
                 } else if (acao.status === "Em Análise") {
                     cardColor = "bg-amber-50/20 border-amber-200";
                     workflowBtn = `
                         <button onclick="changeProductStatus(${acao.id}, 'Aprovado')" class="flex-1 md:flex-none bg-[#10B981] text-white hover:bg-emerald-600 font-bold text-xs px-5 py-2.5 rounded-pill transition duration-150 flex items-center justify-center gap-1.5 shadow-sm">
                             <i class="fa-solid fa-check"></i> Aprovar Produto
+                        </button>
+                    `;
+                    reprovarBtn = `
+                        <button onclick="changeProductStatus(${acao.id}, 'Reprovado')" class="flex-1 md:flex-none bg-rose-500 text-white hover:bg-rose-600 font-bold text-xs px-5 py-2.5 rounded-pill transition duration-150 flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-xmark"></i> Reprovar
                         </button>
                     `;
                 }
@@ -2831,9 +2838,7 @@
 
                         <div class="flex md:flex-col justify-end gap-3 self-center w-full md:w-auto">
                             ${workflowBtn}
-                            <button onclick="changeProductStatus(${acao.id}, 'Reprovado')" class="flex-1 md:flex-none bg-rose-500 text-white hover:bg-rose-600 font-bold text-xs px-5 py-2.5 rounded-pill transition duration-150 flex items-center justify-center gap-1.5">
-                                <i class="fa-solid fa-xmark"></i> Reprovar
-                            </button>
+                            ${reprovarBtn}
                         </div>
                     </div>
                 `;
