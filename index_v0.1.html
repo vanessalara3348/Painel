@@ -255,7 +255,9 @@
     <div class="flex h-screen overflow-hidden">
 
         <!-- SIDEBAR DE NAVEGAÇÃO COMPLETA -->
-        <aside class="w-80 bg-white border-r border-sistran-border text-sistran-body flex flex-col flex-shrink-0 z-20 transition-all duration-300 hidden md:flex">
+        <!-- Mobile: overlay fixo com backdrop; Desktop: sidebar fixo à esquerda -->
+        <div id="mobile-backdrop" class="fixed inset-0 bg-black/40 z-30 hidden md:hidden" onclick="closeMobileMenu()"></div>
+        <aside id="sidebar" class="w-80 bg-white border-r border-sistran-border text-sistran-body flex flex-col flex-shrink-0 z-40 transition-transform duration-300 fixed md:relative h-full -translate-x-full md:translate-x-0">
             
             <!-- HEADER DO SIDEBAR COM LOGO ADAPTADA - ALINHADO AO HEADER DA PÁGINA (Sem caixa/borda no entorno) -->
             <div class="h-16 flex items-center px-6 border-b border-sistran-border bg-white flex-shrink-0">
@@ -358,21 +360,21 @@
         <main class="flex-1 flex flex-col h-full overflow-hidden">
             
             <!-- HEADER SUPERIOR ESTÁTICO -->
-            <header class="bg-sistran-surface border-b border-sistran-border h-16 flex items-center justify-between px-6 flex-shrink-0 z-10">
-                <div class="flex items-center gap-4">
-                    <button class="md:hidden text-sistran-ink hover:text-sistran-gold" id="mobile-menu-btn">
+            <header class="bg-sistran-surface border-b border-sistran-border h-16 flex items-center justify-between px-3 md:px-6 flex-shrink-0 z-10">
+                <div class="flex items-center gap-2 md:gap-4 min-w-0 flex-1">
+                    <button class="md:hidden text-sistran-ink hover:text-sistran-gold flex-shrink-0" id="mobile-menu-btn">
                         <i class="fa-solid fa-bars text-xl"></i>
                     </button>
-                    <div>
-                        <h2 class="text-sm font-bold text-sistran-yellow leading-tight">PLANO DE SEGURANÇA VIÁRIA DO ESTADO DE SÃO PAULO - PSV-SP (2025-2035)</h2>
-                        <p class="text-xs text-sistran-heading font-medium hidden md:block"><span class="font-extrabold">SIMO</span> SISTEMA INTEGRADO DE MONITORAMENTO</p>
+                    <div class="min-w-0">
+                        <h2 class="text-[10px] md:text-sm font-bold text-sistran-yellow leading-tight truncate">PLANO DE SEGURANÇA VIÁRIA DO ESTADO DE SÃO PAULO - PSV-SP (2025-2035)</h2>
+                        <p class="text-[9px] md:text-xs text-sistran-heading font-medium leading-tight"><span class="font-extrabold">SIMO</span> <span class="hidden sm:inline">SISTEMA INTEGRADO DE MONITORAMENTO</span><span class="sm:hidden">Monitoramento</span></p>
                     </div>
                 </div>
 
-                <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2 md:gap-4 flex-shrink-0">
                     <!-- Indicação de login apenas no canto superior direito -->
-                    <div class="flex items-center gap-3">
-                        <div class="text-right">
+                    <div class="flex items-center gap-2 md:gap-3">
+                        <div class="text-right hidden sm:block">
                             <p class="text-[10px] text-sistran-muted uppercase font-bold tracking-wider">Acesso Ponto Focal</p>
                             <span id="user-badge" class="text-xs font-semibold text-sistran-textHeading bg-sistran-surface-muted px-2.5 py-1 rounded-full border border-sistran-border">Visitante Público</span>
                         </div>
@@ -1646,12 +1648,21 @@
 
         function setupMobileMenu() {
             const btn = document.getElementById('mobile-menu-btn');
-            const sidebar = document.querySelector('aside');
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('mobile-backdrop');
             if (btn && sidebar) {
                 btn.addEventListener('click', () => {
-                    sidebar.classList.toggle('hidden');
+                    sidebar.classList.toggle('-translate-x-full');
+                    backdrop.classList.toggle('hidden');
                 });
             }
+        }
+
+        function closeMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('mobile-backdrop');
+            if (sidebar) sidebar.classList.add('-translate-x-full');
+            if (backdrop) backdrop.classList.add('hidden');
         }
 
         function updateBreadcrumbs(mainTabId, subTabId = null) {
@@ -1759,9 +1770,8 @@
             
             updateBreadcrumbs(tabId, activeSub);
 
-            const sidebar = document.querySelector('aside');
-            if (window.innerWidth < 768 && sidebar) {
-                sidebar.classList.add('hidden');
+            if (window.innerWidth < 768) {
+                closeMobileMenu();
             }
 
             setTimeout(() => {
