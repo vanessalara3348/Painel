@@ -285,10 +285,10 @@
 
     <div class="flex h-screen overflow-hidden">
 
-        <!-- SIDEBAR DE NAVEGAÇÃO COMPLETA -->
-        <!-- Mobile: overlay fixo com backdrop; Desktop: sidebar fixo à esquerda -->
+        <!-- SIDEBAR DE NAVEGAÇÃO -->
+        <!-- Mobile: oculto, abre com botão hamburger; Desktop: sidebar fixo à esquerda -->
         <div id="mobile-backdrop" class="fixed inset-0 bg-black/40 z-30 hidden md:hidden" onclick="closeMobileMenu()"></div>
-        <aside id="sidebar" class="w-80 bg-white border-r border-sistran-border text-sistran-body flex flex-col flex-shrink-0 z-40 transition-transform duration-300 fixed md:relative h-full -translate-x-full md:translate-x-0">
+        <aside id="sidebar" class="w-80 bg-white border-r border-sistran-border text-sistran-body flex flex-col flex-shrink-0 z-40 transition-transform duration-300 fixed md:static h-full -translate-x-full md:translate-x-0">
             
             <!-- HEADER DO SIDEBAR COM LOGO ADAPTADA - ALINHADO AO HEADER DA PÁGINA (Sem caixa/borda no entorno) -->
             <div class="h-16 flex items-center px-6 border-b border-sistran-border bg-white flex-shrink-0">
