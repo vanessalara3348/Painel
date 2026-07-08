@@ -2163,7 +2163,7 @@
                         
                         ctx.save();
                         ctx.font = 'bold 14px "Open Sans"';
-                        ctx.fillStyle = '#1F8A4C';
+                        ctx.fillStyle = '#C68B00';
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'middle';
                         ctx.fillText('19 MIL', x, y - 8);
@@ -2173,49 +2173,79 @@
                 }
             };
 
+            // Plugin para linha vertical tracejada em 2026 (marco temporal)
+            const marcoPSVPlugin = {
+                id: 'marcoPSV',
+                afterDraw: function(chart) {
+                    const ctx = chart.ctx;
+                    const xAxis = chart.scales.x;
+                    const yAxis = chart.scales.y;
+                    
+                    // Índice 11 = ano 2026
+                    const x = xAxis.getPixelForValue(11);
+                    
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.setLineDash([5, 4]);
+                    ctx.strokeStyle = '#1F8A4C';
+                    ctx.lineWidth = 1.5;
+                    ctx.moveTo(x, yAxis.top);
+                    ctx.lineTo(x, yAxis.bottom);
+                    ctx.stroke();
+                    
+                    // Label "Instituição do PSV-SP"
+                    ctx.font = '600 10px "Open Sans"';
+                    ctx.fillStyle = '#1F8A4C';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('Instituição', x, yAxis.top - 16);
+                    ctx.fillText('do PSV-SP', x, yAxis.top - 6);
+                    ctx.restore();
+                }
+            };
+
             charts.chartTendencia = new Chart(ctxTendencia, {
                 type: 'line',
-                plugins: [vidasSalvasTextPlugin],
+                plugins: [vidasSalvasTextPlugin, marcoPSVPlugin],
                 data: {
                     labels: ['2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030'],
                     datasets: [
                         {
                             label: 'Taxa real',
                             data: [14.2, 12.9, 12.0, 11.5, 11.3, 10.5, 10.4, 12.2, 12.4, 13.3, null, null, null, null, null, null],
-                            borderColor: '#C68B00',
-                            backgroundColor: 'rgba(198, 139, 0, 0.08)',
+                            borderColor: '#262828',
+                            backgroundColor: 'rgba(38, 40, 40, 0.05)',
                             tension: 0.2,
                             borderWidth: 3,
                             pointRadius: 4,
                             pointHoverRadius: 7,
-                            pointBackgroundColor: '#C68B00',
+                            pointBackgroundColor: '#262828',
                             fill: false,
                             spanGaps: false
                         },
                         {
                             label: 'Taxa projetada sem a meta',
                             data: [null, null, null, null, null, null, null, null, null, 13.3, 13.7, 14.3, 14.9, 15.4, 16.0, 16.5],
-                            borderColor: '#262828',
-                            backgroundColor: 'rgba(38, 40, 40, 0.03)',
+                            borderColor: '#B0B0B0',
+                            backgroundColor: 'rgba(176, 176, 176, 0.03)',
                             borderDash: [6, 4],
                             tension: 0.2,
                             borderWidth: 2.5,
                             pointRadius: 4,
                             pointHoverRadius: 6,
-                            pointBackgroundColor: '#262828',
+                            pointBackgroundColor: '#B0B0B0',
                             fill: false,
                             spanGaps: false
                         },
                         {
                             label: 'Taxa projetada com a meta',
                             data: [null, null, null, null, null, null, null, null, null, 13.3, 12.0, 10.6, 9.3, 7.9, 6.6, 5.2],
-                            borderColor: '#1F8A4C',
-                            backgroundColor: 'rgba(31, 138, 76, 0.12)',
+                            borderColor: '#C68B00',
+                            backgroundColor: 'rgba(198, 139, 0, 0.12)',
                             tension: 0.2,
                             borderWidth: 3,
                             pointRadius: 4,
                             pointHoverRadius: 7,
-                            pointBackgroundColor: '#1F8A4C',
+                            pointBackgroundColor: '#C68B00',
                             fill: '-1',
                             spanGaps: false
                         }
@@ -2224,6 +2254,9 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    layout: {
+                        padding: { top: 25 }
+                    },
                     animation: {
                         duration: 2000,
                         easing: 'easeInOutQuart',
@@ -2240,14 +2273,13 @@
                             position: 'top',
                             labels: {
                                 usePointStyle: true,
-                                pointStyle: 'circle',
-                                boxWidth: 6,
-                                boxHeight: 6,
+                                pointStyleWidth: 40,
                                 font: { size: 11, weight: 'bold', family: 'Open Sans' },
                                 padding: 16
                             }
                         },
                         tooltip: {
+                            z: 100,
                             backgroundColor: '#262828',
                             titleFont: { family: 'Open Sans', weight: '600' },
                             bodyFont: { family: 'Open Sans' },
