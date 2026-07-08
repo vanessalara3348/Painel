@@ -2153,12 +2153,12 @@
                     const meta1 = chart.getDatasetMeta(1); // Taxa sem meta
                     const meta2 = chart.getDatasetMeta(2); // Taxa com meta
                     
-                    // Pegar ponto no meio (índice 12 = ano 2027)
-                    const point1 = meta1.data[12]; // sem meta em 2027
-                    const point2 = meta2.data[12]; // com meta em 2027
+                    // Pegar ponto centralizado no eixo 2028 (índice 13)
+                    const point1 = meta1.data[13]; // sem meta em 2028
+                    const point2 = meta2.data[13]; // com meta em 2028
                     
                     if (point1 && point2 && point1.y && point2.y) {
-                        const x = (point1.x + point2.x) / 2;
+                        const x = point1.x;
                         const y = (point1.y + point2.y) / 2;
                         
                         ctx.save();
@@ -2240,9 +2240,9 @@
                             position: 'top',
                             labels: {
                                 usePointStyle: true,
-                                pointStyle: 'line',
-                                boxWidth: 40,
-                                boxHeight: 2,
+                                pointStyle: 'circle',
+                                boxWidth: 6,
+                                boxHeight: 6,
                                 font: { size: 11, weight: 'bold', family: 'Open Sans' },
                                 padding: 16
                             }
