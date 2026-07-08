@@ -1354,8 +1354,8 @@
                         <div class="bg-white p-6 rounded-md shadow-card border border-sistran-border lg:col-span-2">
                             <div class="flex items-center justify-between mb-4">
                                 <div>
-                                    <h3 class="font-bold text-base text-sistran-heading">Projeção de Curva de Óbitos e Vidas Salvas (SP)</h3>
-                                    <p class="text-xs text-sistran-body">Projeção sem plano vs. Trajetória com PSV-SP e vidas salvas acumuladas</p>
+                                    <h3 class="font-bold text-base text-sistran-heading">Projeção de Curva de Óbitos por Trânsito (SP)</h3>
+                                    <p class="text-xs text-sistran-body">Tendência sem plano vs. Trajetória projetada com PSV-SP (Visão Zero)</p>
                                 </div>
                                 <span class="bg-sistran-gold-surface text-sistran-gold px-3 py-1 rounded-pill text-xs font-semibold">Horizonte 2035</span>
                             </div>
@@ -2143,92 +2143,41 @@
             charts.chartTendencia = new Chart(ctxTendencia, {
                 type: 'line',
                 data: {
-                    labels: ['2024', '2025', '2026', '2027', '2028', '2029', '2030', '2031', '2032', '2033', '2034', '2035'],
+                    labels: ['2025', '2027', '2029', '2031', '2033', '2035'],
                     datasets: [
                         {
-                            label: 'Projeção Sem o Plano (Inércia)',
-                            data: [6122, 6200, 6280, 6360, 6440, 6520, 6600, 6680, 6760, 6840, 6920, 7000],
+                            label: 'Tendência Sem o Plano (Inércia)',
+                            data: [5410, 5630, 5800, 5950, 6100, 6250],
                             borderColor: '#262828',
-                            backgroundColor: 'rgba(38, 40, 40, 0.03)',
-                            borderDash: [6, 4],
-                            tension: 0.2,
-                            borderWidth: 2.5,
-                            pointRadius: 3,
-                            pointHoverRadius: 6,
-                            fill: false
+                            backgroundColor: 'rgba(38, 40, 40, 0.05)',
+                            borderDash: [5, 5],
+                            tension: 0.3,
+                            borderWidth: 2
                         },
                         {
-                            label: 'Trajetória com PSV-SP (Meta -50%)',
-                            data: [6122, 5810, 5500, 5100, 4650, 4150, 3600, 3100, 2650, 2250, 1900, 1600],
+                            label: 'Trajetória Alvo (PSV-SP Meta -50%)',
+                            data: [5410, 4200, 2705, 2300, 1900, 1350],
                             borderColor: '#C68B00',
-                            backgroundColor: 'rgba(198, 139, 0, 0.08)',
-                            tension: 0.2,
-                            borderWidth: 3,
-                            pointRadius: 4,
-                            pointHoverRadius: 7,
-                            pointBackgroundColor: '#C68B00',
-                            fill: false
-                        },
-                        {
-                            label: 'Vidas Salvas (acumulado estimado)',
-                            data: [0, 390, 1170, 2430, 4220, 6590, 9590, 13170, 17280, 21870, 26890, 32290],
-                            borderColor: '#1F8A4C',
-                            backgroundColor: 'rgba(31, 138, 76, 0.1)',
-                            tension: 0.2,
-                            borderWidth: 3,
-                            pointRadius: 4,
-                            pointHoverRadius: 7,
-                            pointBackgroundColor: '#1F8A4C',
+                            backgroundColor: 'rgba(198, 139, 0, 0.1)',
                             fill: true,
-                            yAxisID: 'y1'
+                            tension: 0.3,
+                            borderWidth: 3
                         }
                     ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    animation: {
-                        duration: 2000,
-                        easing: 'easeInOutQuart',
-                        delay: function(context) {
-                            return context.dataIndex * 100 + context.datasetIndex * 300;
-                        }
-                    },
-                    interaction: {
-                        intersect: false,
-                        mode: 'index'
-                    },
                     plugins: {
                         legend: {
                             position: 'top',
-                            labels: { boxWidth: 12, font: { size: 11, weight: 'bold', family: 'Open Sans' }, padding: 16 }
-                        },
-                        tooltip: {
-                            backgroundColor: '#262828',
-                            titleFont: { family: 'Open Sans', weight: '600' },
-                            bodyFont: { family: 'Open Sans' },
-                            padding: 12,
-                            cornerRadius: 8
+                            labels: { boxWidth: 12, font: { size: 11, weight: 'bold', family: 'Open Sans' } }
                         }
                     },
                     scales: {
-                        x: {
-                            grid: { color: 'rgba(0, 0, 0, 0.04)' },
-                            ticks: { font: { size: 11, family: 'Open Sans' } }
-                        },
                         y: {
-                            position: 'left',
-                            title: { display: true, text: 'Óbitos/ano', font: { size: 11, family: 'Open Sans', weight: '600' } },
                             grid: { color: 'rgba(0, 0, 0, 0.05)' },
-                            ticks: { font: { size: 10, family: 'Open Sans' } },
-                            min: 0
-                        },
-                        y1: {
-                            position: 'right',
-                            title: { display: true, text: 'Vidas Salvas (acumulado)', font: { size: 11, family: 'Open Sans', weight: '600' } },
-                            grid: { drawOnChartArea: false },
-                            ticks: { font: { size: 10, family: 'Open Sans' } },
-                            min: 0
+                            ticks: { font: { size: 10 } }
                         }
                     }
                 }
