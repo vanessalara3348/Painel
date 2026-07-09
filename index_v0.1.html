@@ -2173,7 +2173,7 @@
                 }
             };
 
-            // Plugin para linha vertical traço-ponto em 2026 (marco temporal)
+            // Plugin para linha vertical tracejada em 2026 (marco temporal)
             const marcoPSVPlugin = {
                 id: 'marcoPSV',
                 afterDraw: function(chart) {
@@ -2184,22 +2184,21 @@
                     // Índice 11 = ano 2026
                     const x = xAxis.getPixelForValue(11);
                     
-                    // Linha traço-ponto (dash-dot: traço longo, espaço, ponto, espaço)
                     ctx.save();
                     ctx.beginPath();
-                    ctx.setLineDash([8, 4, 2, 4]);
+                    ctx.setLineDash([5, 4]);
                     ctx.strokeStyle = '#1F8A4C';
                     ctx.lineWidth = 1.5;
                     ctx.moveTo(x, yAxis.top);
                     ctx.lineTo(x, yAxis.bottom);
                     ctx.stroke();
                     
-                    // Label "Instituição do PSV-SP" abaixo do eixo X, mesma cor dos labels do eixo
-                    ctx.font = '600 9px "Open Sans"';
-                    ctx.fillStyle = '#57595A';
+                    // Label "Instituição do PSV-SP"
+                    ctx.font = '600 10px "Open Sans"';
+                    ctx.fillStyle = '#1F8A4C';
                     ctx.textAlign = 'center';
-                    ctx.fillText('Instituição', x, yAxis.bottom + 24);
-                    ctx.fillText('do PSV-SP', x, yAxis.bottom + 34);
+                    ctx.fillText('Instituição', x, yAxis.top - 16);
+                    ctx.fillText('do PSV-SP', x, yAxis.top - 6);
                     ctx.restore();
                 }
             };
@@ -2256,7 +2255,7 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     layout: {
-                        padding: { bottom: 40 }
+                        padding: { top: 25 }
                     },
                     animation: {
                         duration: 2000,
@@ -2276,38 +2275,19 @@
                                 usePointStyle: true,
                                 pointStyleWidth: 40,
                                 font: { size: 11, weight: 'bold', family: 'Open Sans' },
-                                padding: 16,
-                                generateLabels: function(chart) {
-                                    const datasets = chart.data.datasets;
-                                    return datasets.map(function(dataset, i) {
-                                        return {
-                                            text: dataset.label,
-                                            fillStyle: dataset.borderColor,
-                                            strokeStyle: dataset.borderColor,
-                                            lineWidth: dataset.borderWidth,
-                                            lineDash: dataset.borderDash || [],
-                                            pointStyle: 'circle',
-                                            hidden: !chart.isDatasetVisible(i),
-                                            datasetIndex: i
-                                        };
-                                    });
-                                }
+                                padding: 16
                             }
                         },
                         tooltip: {
-                            z: 1000,
-                            backgroundColor: '#57595A',
-                            titleFont: { family: 'Open Sans', weight: '600', size: 12 },
-                            bodyFont: { family: 'Open Sans', size: 11 },
+                            z: 100,
+                            backgroundColor: '#262828',
+                            titleFont: { family: 'Open Sans', weight: '600' },
+                            bodyFont: { family: 'Open Sans' },
                             padding: 12,
                             cornerRadius: 8,
-                            usePointStyle: true,
                             callbacks: {
-                                labelPointStyle: function(context) {
-                                    return { pointStyle: 'circle', rotation: 0 };
-                                },
                                 label: function(context) {
-                                    return ' ' + context.dataset.label + ': ' + context.parsed.y + ' por 100 mil hab.';
+                                    return context.dataset.label + ': ' + context.parsed.y + ' por 100 mil hab.';
                                 }
                             }
                         }
