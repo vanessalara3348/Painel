@@ -657,6 +657,24 @@
                                     </div>
                                 </div>
 
+                                <!-- Estimativa de Vidas Salvas (mesmo gráfico do Acompanhamento) -->
+                                <div class="mt-6">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <div>
+                                            <h3 class="font-bold text-base text-sistran-heading">Estimativa de Vidas Salvas</h3>
+                                            <p class="text-xs text-sistran-body">Taxa de óbitos por 100 mil habitantes por ano – real, projetada a partir do cenário atual e da meta</p>
+                                        </div>
+                                        <span class="bg-sistran-gold-surface text-sistran-gold px-3 py-1 rounded-pill text-xs font-semibold">Horizonte 2030</span>
+                                    </div>
+                                    <div class="h-80 w-full">
+                                        <canvas id="chartVidasSalvasIntro"></canvas>
+                                    </div>
+                                    <p class="text-[11px] text-sistran-body leading-relaxed mt-4 border-t border-sistran-border pt-3">
+                                        <strong class="text-sistran-heading">Nota:</strong> Para a estimativa de vidas salvas, os valores anuais projetados foram obtidos multiplicando a diferença entre as duas taxas pela população estimada em cada ano, e dividindo esse valor por 100.000. Em 2030, por exemplo, a diferença entre as duas taxas (11,3) foi multiplicada pela população estimada para 2030 (49.315.046), e o resultado então foi dividido por 100 mil, obtendo o valor de 5.579.<br>
+                                        <strong class="text-sistran-heading">Fonte:</strong> Óbitos do Infosiga (conforme publicação dos dados abertos de maio de 2025); População do IBGE – Estimativas para o TCU (2025).
+                                    </p>
+                                </div>
+
                                 <!-- Dados Abertos e Documentos -->
                                 <div class="mt-6">
                                     <h3 class="text-base font-bold text-sistran-heading mb-4 flex items-center gap-2">
@@ -2325,6 +2343,101 @@
                     }
                 }
             });
+
+            // Gráfico Estimativa de Vidas Salvas na Introdução (réplica)
+            const ctxVidasIntro = document.getElementById('chartVidasSalvasIntro');
+            if (ctxVidasIntro) {
+                const vidasIntroTextPlugin = {
+                    id: 'vidasIntroText',
+                    beforeDraw: function(chart) {
+                        const ctx = chart.ctx;
+                        const meta1 = chart.getDatasetMeta(1);
+                        const meta2 = chart.getDatasetMeta(2);
+                        const point1 = meta1.data[13];
+                        const point2 = meta2.data[13];
+                        if (point1 && point2 && point1.y && point2.y) {
+                            const x = point1.x;
+                            const y = (point1.y + point2.y) / 2;
+                            ctx.save();
+                            ctx.font = 'bold 14px "Open Sans"';
+                            ctx.fillStyle = '#C68B00';
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+                            ctx.fillText('19 MIL', x, y - 8);
+                            ctx.fillText('VIDAS SALVAS', x, y + 8);
+                            ctx.restore();
+                        }
+                    }
+                };
+                const marcoIntroPlugin = {
+                    id: 'marcoIntro',
+                    beforeDraw: function(chart) {
+                        const ctx = chart.ctx;
+                        const xAxis = chart.scales.x;
+                        const yAxis = chart.scales.y;
+                        const x = xAxis.getPixelForValue(11);
+                        ctx.save();
+                        ctx.beginPath();
+                        ctx.setLineDash([8, 4, 2, 4]);
+                        ctx.strokeStyle = '#1F8A4C';
+                        ctx.lineWidth = 1.5;
+                        ctx.moveTo(x, yAxis.top);
+                        ctx.lineTo(x, yAxis.bottom);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                        ctx.font = '400 11px "Open Sans"';
+                        ctx.fillStyle = '#57595A';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('Instituição', x, yAxis.bottom + 30);
+                        ctx.fillText('do PSV-SP', x, yAxis.bottom + 44);
+                        ctx.restore();
+                    }
+                };
+                new Chart(ctxVidasIntro.getContext('2d'), {
+                    type: 'line',
+                    plugins: [vidasIntroTextPlugin, marcoIntroPlugin],
+                    data: {
+                        labels: ['2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030'],
+                        datasets: [
+                            {
+                                label: 'Taxa real',
+                                data: [14.2, 12.9, 12.0, 11.5, 11.3, 10.5, 10.4, 12.2, 12.4, 13.3, null, null, null, null, null, null],
+                                borderColor: '#262828',
+                                tension: 0.2, borderWidth: 3, pointRadius: 4, pointHoverRadius: 7,
+                                pointBackgroundColor: '#262828', fill: false, spanGaps: false
+                            },
+                            {
+                                label: 'Taxa projetada sem a meta',
+                                data: [null, null, null, null, null, null, null, null, null, 13.3, 13.7, 14.3, 14.9, 15.4, 16.0, 16.5],
+                                borderColor: '#B0B0B0', borderDash: [6, 4],
+                                tension: 0.2, borderWidth: 2.5, pointRadius: 4, pointHoverRadius: 6,
+                                pointBackgroundColor: '#B0B0B0', fill: false, spanGaps: false
+                            },
+                            {
+                                label: 'Taxa projetada com a meta',
+                                data: [null, null, null, null, null, null, null, null, null, 13.3, 12.0, 10.6, 9.3, 7.9, 6.6, 5.2],
+                                borderColor: '#C68B00', backgroundColor: 'rgba(198, 139, 0, 0.12)',
+                                tension: 0.2, borderWidth: 3, pointRadius: 4, pointHoverRadius: 7,
+                                pointBackgroundColor: '#C68B00', fill: '-1', spanGaps: false
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        layout: { padding: { bottom: 55 } },
+                        animation: { duration: 2000, easing: 'easeInOutQuart', delay: function(ctx) { return ctx.dataIndex * 80 + ctx.datasetIndex * 400; } },
+                        interaction: { intersect: false, mode: 'index' },
+                        plugins: {
+                            legend: { position: 'top', labels: { usePointStyle: true, pointStyle: 'circle', boxWidth: 8, boxHeight: 8, font: { size: 11, weight: '600', family: 'Open Sans' }, padding: 20 } },
+                            tooltip: { z: 9999, backgroundColor: '#57595A', titleColor: '#FFF', bodyColor: '#FFF', titleFont: { family: 'Open Sans', weight: '600', size: 11 }, bodyFont: { family: 'Open Sans', size: 11 }, padding: 10, cornerRadius: 6, displayColors: true, boxWidth: 8, boxHeight: 8, usePointStyle: true, callbacks: { title: function(t) { return t[0].label; }, labelPointStyle: function() { return { pointStyle: 'circle', rotation: 0 }; }, label: function(ctx) { if (ctx.parsed.y === null) return null; return ' ' + ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(1).replace('.', ','); } } }
+                        },
+                        scales: {
+                            x: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { font: { size: 11, family: 'Open Sans' } } },
+                            y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { font: { size: 10, family: 'Open Sans' } }, min: 0, max: 20 }
+                        }
+                    }
+                });
+            }
 
             const ctxProgresso = document.getElementById('chartProgressoFisico').getContext('2d');
             charts.chartProgresso = new Chart(ctxProgresso, {
