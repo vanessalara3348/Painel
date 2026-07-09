@@ -324,7 +324,7 @@
             <div class="h-16 flex items-center justify-between px-6 border-b border-sistran-border bg-white flex-shrink-0">
                 <div class="flex items-center gap-3 sidebar-full">
                     <img class="h-10 w-auto object-contain flex-shrink-0" src="https://www.cetran.sp.gov.br/CetranWeb/resources/img/hero/sistran.png" alt="SISTRAN SP" onerror="this.onerror=null; this.src='https://placehold.co/150x50/FFFFFF/262828?text=SISTRAN+SP';">
-                    <span class="text-section font-semibold text-sistran-heading tracking-tight leading-none border-l border-sistran-border pl-3">Sistran-SP</span>
+                    <span class="text-section font-semibold text-sistran-heading tracking-tight leading-none border-l border-sistran-border pl-3">Sistran.SP</span>
                 </div>
                 <!-- Botão recolher/expandir sidebar (visível apenas em desktop) -->
                 <button onclick="toggleSidebarCollapse()" class="hidden md:flex items-center justify-center w-7 h-7 rounded-full hover:bg-sistran-gold-surface transition-colors text-sistran-muted hover:text-sistran-gold" title="Recolher menu">
@@ -2148,7 +2148,7 @@
             // Plugin para exibir texto "19 MIL VIDAS SALVAS" entre as linhas de projeção
             const vidasSalvasTextPlugin = {
                 id: 'vidasSalvasText',
-                afterDraw: function(chart) {
+                beforeDraw: function(chart) {
                     const ctx = chart.ctx;
                     const meta1 = chart.getDatasetMeta(1); // Taxa sem meta
                     const meta2 = chart.getDatasetMeta(2); // Taxa com meta
@@ -2193,13 +2193,12 @@
                     ctx.stroke();
                     
                     // Label abaixo do eixo X, cor igual aos labels do eixo (#57595A)
-                    // Espaço --ss-space-2 (8px) entre "2026" e "Instituição do PSV-SP"
+                    // Espaço legível entre "2026" e "Instituição do PSV-SP"
                     ctx.setLineDash([]);
-                    ctx.font = '400 10px "Open Sans"';
+                    ctx.font = '400 9px "Open Sans"';
                     ctx.fillStyle = '#57595A';
                     ctx.textAlign = 'center';
-                    ctx.fillText('Instituição', x, yAxis.bottom + 20);
-                    ctx.fillText('do PSV-SP', x, yAxis.bottom + 32);
+                    ctx.fillText('Instituição do PSV-SP', x, yAxis.bottom + 28);
                     ctx.restore();
                 }
             };
@@ -2284,7 +2283,7 @@
                         tooltip: {
                             z: 9999,
                             enabled: true,
-                            backgroundColor: '#B0B0B0',
+                            backgroundColor: '#57595A',
                             titleColor: '#FFFFFF',
                             bodyColor: '#FFFFFF',
                             titleFont: { family: 'Open Sans', weight: '600', size: 11 },
