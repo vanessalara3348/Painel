@@ -2173,32 +2173,32 @@
                 }
             };
 
-            // Plugin para linha vertical tracejada em 2026 (marco temporal)
+            // Plugin para linha vertical traço-ponto verde em 2026
             const marcoPSVPlugin = {
                 id: 'marcoPSV',
                 afterDraw: function(chart) {
                     const ctx = chart.ctx;
                     const xAxis = chart.scales.x;
                     const yAxis = chart.scales.y;
+                    const x = xAxis.getPixelForValue(11); // índice 11 = 2026
                     
-                    // Índice 11 = ano 2026
-                    const x = xAxis.getPixelForValue(11);
-                    
+                    // Linha traço-ponto verde
                     ctx.save();
                     ctx.beginPath();
-                    ctx.setLineDash([5, 4]);
+                    ctx.setLineDash([8, 4, 2, 4]);
                     ctx.strokeStyle = '#1F8A4C';
                     ctx.lineWidth = 1.5;
                     ctx.moveTo(x, yAxis.top);
                     ctx.lineTo(x, yAxis.bottom);
                     ctx.stroke();
                     
-                    // Label "Instituição do PSV-SP"
-                    ctx.font = '600 10px "Open Sans"';
-                    ctx.fillStyle = '#1F8A4C';
+                    // Label abaixo do eixo X, cor igual aos labels do eixo (#57595A)
+                    ctx.setLineDash([]);
+                    ctx.font = '400 10px "Open Sans"';
+                    ctx.fillStyle = '#57595A';
                     ctx.textAlign = 'center';
-                    ctx.fillText('Instituição', x, yAxis.top - 16);
-                    ctx.fillText('do PSV-SP', x, yAxis.top - 6);
+                    ctx.fillText('Instituição', x, yAxis.bottom + 28);
+                    ctx.fillText('do PSV-SP', x, yAxis.bottom + 40);
                     ctx.restore();
                 }
             };
@@ -2255,7 +2255,7 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     layout: {
-                        padding: { top: 25 }
+                        padding: { bottom: 45 }
                     },
                     animation: {
                         duration: 2000,
@@ -2274,20 +2274,50 @@
                             labels: {
                                 usePointStyle: true,
                                 pointStyleWidth: 40,
-                                font: { size: 11, weight: 'bold', family: 'Open Sans' },
-                                padding: 16
+                                boxHeight: 7,
+                                font: { size: 11, weight: '600', family: 'Open Sans' },
+                                padding: 20,
+                                generateLabels: function(chart) {
+                                    return chart.data.datasets.map(function(ds, i) {
+                                        return {
+                                            text: ds.label,
+                                            fillStyle: ds.borderColor,
+                                            strokeStyle: ds.borderColor,
+                                            lineWidth: ds.borderWidth,
+                                            lineDash: ds.borderDash || [],
+                                            pointStyle: 'circle',
+                                            hidden: !chart.isDatasetVisible(i),
+                                            datasetIndex: i
+                                        };
+                                    });
+                                }
                             }
                         },
                         tooltip: {
-                            z: 100,
-                            backgroundColor: '#262828',
-                            titleFont: { family: 'Open Sans', weight: '600' },
-                            bodyFont: { family: 'Open Sans' },
+                            z: 9999,
+                            backgroundColor: '#57595A',
+                            titleColor: '#FFFFFF',
+                            bodyColor: '#FFFFFF',
+                            titleFont: { family: 'Open Sans', weight: '600', size: 12 },
+                            bodyFont: { family: 'Open Sans', size: 11 },
                             padding: 12,
                             cornerRadius: 8,
+                            boxPadding: 6,
+                            usePointStyle: true,
                             callbacks: {
+                                labelPointStyle: function() {
+                                    return { pointStyle: 'circle', rotation: 0 };
+                                },
                                 label: function(context) {
-                                    return context.dataset.label + ': ' + context.parsed.y + ' por 100 mil hab.';
+                                    return ' ' + context.dataset.label + ': ' + context.parsed.y + ' por 100 mil hab.';
+                                },
+                                labelColor: function(context) {
+                                    return {
+                                        borderColor: context.dataset.borderColor,
+                                        backgroundColor: context.dataset.borderColor,
+                                        borderWidth: 2,
+                                        borderRadius: 4
+                                    };
                                 }
                             }
                         }
