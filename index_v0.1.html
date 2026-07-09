@@ -2193,12 +2193,13 @@
                     ctx.stroke();
                     
                     // Texto em duas linhas, mesmo tamanho dos labels do eixo X (11px)
+                    // Posicionado abaixo do "2026" com espaçamento legível
                     ctx.setLineDash([]);
                     ctx.font = '400 11px "Open Sans"';
                     ctx.fillStyle = '#57595A';
                     ctx.textAlign = 'center';
-                    ctx.fillText('Instituição', x, yAxis.bottom + 26);
-                    ctx.fillText('do PSV-SP', x, yAxis.bottom + 40);
+                    ctx.fillText('Instituição', x, yAxis.bottom + 30);
+                    ctx.fillText('do PSV-SP', x, yAxis.bottom + 44);
                     ctx.restore();
                 }
             };
@@ -2255,7 +2256,7 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     layout: {
-                        padding: { bottom: 50 }
+                        padding: { bottom: 55 }
                     },
                     animation: {
                         duration: 2000,
@@ -2303,7 +2304,7 @@
                                 },
                                 label: function(context) {
                                     if (context.parsed.y === null) return null;
-                                    return ' ' + context.dataset.label + ': ' + context.parsed.y;
+                                    return ' ' + context.dataset.label + ': ' + context.parsed.y.toFixed(1).replace('.', ',');
                                 }
                             }
                         }
@@ -2312,12 +2313,7 @@
                         x: {
                             grid: { color: 'rgba(0, 0, 0, 0.04)' },
                             ticks: {
-                                font: { size: 11, family: 'Open Sans' },
-                                callback: function(value, index) {
-                                    // Oculta o label "2026" para não sobrepor "Instituição do PSV-SP"
-                                    if (index === 11) return '';
-                                    return this.getLabelForValue(value);
-                                }
+                                font: { size: 11, family: 'Open Sans' }
                             }
                         },
                         y: {
