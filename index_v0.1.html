@@ -500,7 +500,7 @@
                                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                     <!-- Card IMPACTO -->
                                     <div class="bg-amber-50 border border-amber-200 rounded-md p-5 shadow-subtle hover:shadow-hover hover:-translate-y-0.5 transition duration-card flex flex-col">
-                                        <p class="text-sm font-extrabold text-sistran-heading uppercase tracking-wider mb-4 flex items-center gap-1.5"><i data-lucide="trending-down" class="w-5 h-5"></i>Impacto</p>
+                                        <p class="text-sm font-extrabold text-sistran-gold uppercase tracking-wider mb-4 flex items-center gap-1.5"><i data-lucide="trending-down" class="w-5 h-5"></i>Impacto</p>
                                         <div class="flex-1 flex flex-col items-center justify-center min-h-[120px]">
                                             <h3 class="text-4xl font-extrabold text-sistran-heading" id="card-impacto-valor">-5.1%</h3>
                                             <p class="text-xs text-sistran-heading text-center mt-2">
@@ -516,7 +516,7 @@
                                     </div>
                                     <!-- Card DESEMPENHO -->
                                     <div class="bg-amber-50 border border-amber-200 rounded-md p-5 shadow-subtle hover:shadow-hover hover:-translate-y-0.5 transition duration-card flex flex-col">
-                                        <p class="text-sm font-extrabold text-sistran-heading uppercase tracking-wider mb-4 flex items-center gap-1.5"><i data-lucide="activity" class="w-5 h-5"></i>Desempenho</p>
+                                        <p class="text-sm font-extrabold text-sistran-gold uppercase tracking-wider mb-4 flex items-center gap-1.5"><i data-lucide="activity" class="w-5 h-5"></i>Desempenho</p>
                                         <div class="flex-1 flex flex-col items-center justify-center min-h-[120px]">
                                             <h3 class="text-4xl font-extrabold text-sistran-heading">58.1%</h3>
                                             <span class="text-xs font-semibold text-sistran-ink mt-1 inline-block">Regular</span>
@@ -532,7 +532,7 @@
                                     
                                     <!-- Card IMPLEMENTAÇÃO -->
                                     <div class="bg-amber-50 border border-amber-200 rounded-md p-5 shadow-subtle hover:shadow-hover hover:-translate-y-0.5 transition duration-card flex flex-col">
-                                        <p class="text-sm font-extrabold text-sistran-heading uppercase tracking-wider mb-4 flex items-center gap-1.5"><i data-lucide="check-square" class="w-5 h-5"></i>Implementação</p>
+                                        <p class="text-sm font-extrabold text-sistran-gold uppercase tracking-wider mb-4 flex items-center gap-1.5"><i data-lucide="check-square" class="w-5 h-5"></i>Implementação</p>
                                         <div class="flex-1 flex flex-col items-center justify-center min-h-[120px]">
                                             <h3 class="text-4xl font-extrabold text-sistran-heading" id="card-imp-ratio">1 / 15</h3>
                                             <div class="flex items-center justify-center gap-3 mt-2">
@@ -683,42 +683,95 @@
                                     </h3>
                                     <!-- Botões estilo Infosiga - grade de cards com ícone Material Symbols -->
                                     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
-                                        <a href="#" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all text-center group">
+                                        <button onclick="toggleSecao('secao-dados-abertos')" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all text-center group">
                                             <div class="ds-icon-badge group-hover:scale-105 transition-transform">
                                                 <span class="material-symbols-outlined">database</span>
                                             </div>
                                             <span class="text-xs font-semibold text-sistran-heading">Dados Abertos</span>
-                                        </a>
-                                        <a href="#" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all text-center group">
+                                        </button>
+                                        <button onclick="toggleSecao('secao-normas')" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all text-center group">
                                             <div class="ds-icon-badge group-hover:scale-105 transition-transform">
                                                 <span class="material-symbols-outlined">gavel</span>
                                             </div>
                                             <span class="text-xs font-semibold text-sistran-heading">Normas e Regulações</span>
-                                        </a>
-                                        <a href="#" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all text-center group">
+                                        </button>
+                                        <button onclick="toggleSecao('secao-glossario')" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all text-center group">
                                             <div class="ds-icon-badge group-hover:scale-105 transition-transform">
                                                 <span class="material-symbols-outlined">menu_book</span>
                                             </div>
                                             <span class="text-xs font-semibold text-sistran-heading">Glossário</span>
-                                        </a>
-                                        <a href="#" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all text-center group">
+                                        </button>
+                                        <button onclick="toggleSecao('secao-faq')" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all text-center group">
                                             <div class="ds-icon-badge group-hover:scale-105 transition-transform">
                                                 <span class="material-symbols-outlined">help</span>
                                             </div>
                                             <span class="text-xs font-semibold text-sistran-heading">Perguntas Frequentes</span>
-                                        </a>
-                                        <button onclick="togglePublicacoes()" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all text-center group">
+                                        </button>
+                                        <button onclick="toggleSecao('secao-publicacoes')" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all text-center group">
                                             <div class="ds-icon-badge group-hover:scale-105 transition-transform">
                                                 <span class="material-symbols-outlined">description</span>
                                             </div>
                                             <span class="text-xs font-semibold text-sistran-heading">Publicações</span>
                                         </button>
-                                        <a href="#" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all text-center group">
+                                        <button onclick="toggleSecao('secao-github')" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all text-center group">
                                             <div class="ds-icon-badge group-hover:scale-105 transition-transform">
                                                 <i class="fa-brands fa-github text-sistran-gold" style="font-size: 28px;"></i>
                                             </div>
                                             <span class="text-xs font-semibold text-sistran-heading">Github</span>
-                                        </a>
+                                        </button>
+                                    </div>
+
+                                    <!-- Seção Dados Abertos -->
+                                    <div id="secao-dados-abertos" class="hidden">
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                                            <a href="#" class="bg-white border border-sistran-border rounded-lg p-4 hover:shadow-hover transition group flex items-start gap-4">
+                                                <div class="w-10 h-10 bg-sistran-gold/10 rounded-full flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-sistran-gold" style="font-size:20px;">download</span></div>
+                                                <div><h4 class="text-[11px] font-bold text-sistran-heading mb-1">Base de Óbitos (CSV)</h4><p class="text-[10px] text-sistran-body">Dados consolidados de óbitos no trânsito paulista de 2015 a 2025.</p><p class="text-[9px] text-sistran-muted mt-1">Atualizado em Mai/2025 • CSV (2.1 MB)</p></div>
+                                            </a>
+                                            <a href="#" class="bg-white border border-sistran-border rounded-lg p-4 hover:shadow-hover transition group flex items-start gap-4">
+                                                <div class="w-10 h-10 bg-sistran-gold/10 rounded-full flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-sistran-gold" style="font-size:20px;">download</span></div>
+                                                <div><h4 class="text-[11px] font-bold text-sistran-heading mb-1">Base de Sinistros (CSV)</h4><p class="text-[10px] text-sistran-body">Registros de sinistros com localização e tipologia, período 2020-2025.</p><p class="text-[9px] text-sistran-muted mt-1">Atualizado em Mai/2025 • CSV (5.8 MB)</p></div>
+                                            </a>
+                                            <a href="#" class="bg-white border border-sistran-border rounded-lg p-4 hover:shadow-hover transition group flex items-start gap-4">
+                                                <div class="w-10 h-10 bg-sistran-gold/10 rounded-full flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-sistran-gold" style="font-size:20px;">download</span></div>
+                                                <div><h4 class="text-[11px] font-bold text-sistran-heading mb-1">Indicadores por Município (XLSX)</h4><p class="text-[10px] text-sistran-body">Taxas de mortalidade viária dos 645 municípios paulistas.</p><p class="text-[9px] text-sistran-muted mt-1">Atualizado em Abr/2025 • XLSX (1.3 MB)</p></div>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <!-- Seção Normas e Regulações -->
+                                    <div id="secao-normas" class="hidden">
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                                            <a href="#" class="bg-white border border-sistran-border rounded-lg p-4 hover:shadow-hover transition group flex items-start gap-4">
+                                                <div class="w-10 h-10 bg-sistran-gold/10 rounded-full flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-sistran-gold" style="font-size:20px;">gavel</span></div>
+                                                <div><h4 class="text-[11px] font-bold text-sistran-heading mb-1">Decreto nº 70.551/2026</h4><p class="text-[10px] text-sistran-body">Institui o Plano de Segurança Viária do Estado de São Paulo (PSV-SP 2025-2035).</p><p class="text-[9px] text-sistran-muted mt-1">Publicado em Jan/2026 • PDF</p></div>
+                                            </a>
+                                            <a href="#" class="bg-white border border-sistran-border rounded-lg p-4 hover:shadow-hover transition group flex items-start gap-4">
+                                                <div class="w-10 h-10 bg-sistran-gold/10 rounded-full flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-sistran-gold" style="font-size:20px;">gavel</span></div>
+                                                <div><h4 class="text-[11px] font-bold text-sistran-heading mb-1">Resolução CETRAN-SP nº 12/2025</h4><p class="text-[10px] text-sistran-body">Estabelece diretrizes de monitoramento e validação dos indicadores do PSV-SP.</p><p class="text-[9px] text-sistran-muted mt-1">Publicado em Nov/2025 • PDF</p></div>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <!-- Seção Glossário -->
+                                    <div id="secao-glossario" class="hidden">
+                                        <div class="bg-white border border-sistran-border rounded-lg p-5 mt-4 space-y-3">
+                                            <div class="border-b border-sistran-border pb-2"><strong class="text-xs text-sistran-heading">PSV-SP</strong><p class="text-[11px] text-sistran-body">Plano de Segurança Viária do Estado de São Paulo (2025-2035).</p></div>
+                                            <div class="border-b border-sistran-border pb-2"><strong class="text-xs text-sistran-heading">SISTRAN-SP</strong><p class="text-[11px] text-sistran-body">Sistema Estadual de Trânsito de São Paulo.</p></div>
+                                            <div class="border-b border-sistran-border pb-2"><strong class="text-xs text-sistran-heading">Infosiga</strong><p class="text-[11px] text-sistran-body">Sistema de informações gerenciais de acidentes de trânsito do Estado de São Paulo.</p></div>
+                                            <div class="border-b border-sistran-border pb-2"><strong class="text-xs text-sistran-heading">PNATRANS</strong><p class="text-[11px] text-sistran-body">Plano Nacional de Redução de Mortes e Lesões no Trânsito.</p></div>
+                                            <div><strong class="text-xs text-sistran-heading">Visão Zero</strong><p class="text-[11px] text-sistran-body">Abordagem que considera inaceitável qualquer morte ou lesão grave no trânsito.</p></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Seção Perguntas Frequentes -->
+                                    <div id="secao-faq" class="hidden">
+                                        <div class="bg-white border border-sistran-border rounded-lg p-5 mt-4 space-y-4">
+                                            <div><strong class="text-xs text-sistran-heading">O que é o PSV-SP?</strong><p class="text-[11px] text-sistran-body mt-1">O Plano de Segurança Viária do Estado de São Paulo é o instrumento que orienta a política estadual de trânsito para o período de 2025 a 2035, com meta de reduzir em 50% as mortes até 2030.</p></div>
+                                            <div><strong class="text-xs text-sistran-heading">Qual a meta principal?</strong><p class="text-[11px] text-sistran-body mt-1">Reduzir em 50% o número de óbitos no trânsito paulista até 2030, conforme alinhamento com a ONU e o PNATRANS.</p></div>
+                                            <div><strong class="text-xs text-sistran-heading">Como os dados são coletados?</strong><p class="text-[11px] text-sistran-body mt-1">Os dados de óbitos são consolidados pelo sistema Infosiga, a partir de registros de boletins de ocorrência e declarações de óbito.</p></div>
+                                            <div><strong class="text-xs text-sistran-heading">Como acompanhar o progresso?</strong><p class="text-[11px] text-sistran-body mt-1">O progresso pode ser acompanhado por meio deste painel (SIMO), que apresenta indicadores de impacto, desempenho e implementação.</p></div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -766,6 +819,20 @@
                                     </div>
 
                                 </div><!-- fecha secao-publicacoes -->
+
+                                <!-- Seção Github -->
+                                <div id="secao-github" class="hidden">
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                                        <a href="#" class="bg-white border border-sistran-border rounded-lg p-4 hover:shadow-hover transition group flex items-start gap-4">
+                                            <div class="w-10 h-10 bg-sistran-gold/10 rounded-full flex items-center justify-center flex-shrink-0"><i class="fa-brands fa-github text-sistran-gold" style="font-size:20px;"></i></div>
+                                            <div><h4 class="text-[11px] font-bold text-sistran-heading mb-1">Repositório SIMO</h4><p class="text-[10px] text-sistran-body">Código-fonte do painel de monitoramento do PSV-SP.</p><p class="text-[9px] text-sistran-muted mt-1">github.com/sistran-sp/simo</p></div>
+                                        </a>
+                                        <a href="#" class="bg-white border border-sistran-border rounded-lg p-4 hover:shadow-hover transition group flex items-start gap-4">
+                                            <div class="w-10 h-10 bg-sistran-gold/10 rounded-full flex items-center justify-center flex-shrink-0"><i class="fa-brands fa-github text-sistran-gold" style="font-size:20px;"></i></div>
+                                            <div><h4 class="text-[11px] font-bold text-sistran-heading mb-1">Scripts de Análise</h4><p class="text-[10px] text-sistran-body">Notebooks e scripts R/Python para processamento dos dados do Infosiga.</p><p class="text-[9px] text-sistran-muted mt-1">github.com/sistran-sp/analises</p></div>
+                                        </a>
+                                    </div>
+                                </div>
 
                             </div>
                         </div>
@@ -3208,7 +3275,18 @@
         }
 
         function togglePublicacoes() {
-            const secao = document.getElementById('secao-publicacoes');
+            toggleSecao('secao-publicacoes');
+        }
+
+        function toggleSecao(id) {
+            // Oculta todas as seções de Dados Abertos
+            const secoes = ['secao-dados-abertos', 'secao-normas', 'secao-glossario', 'secao-faq', 'secao-publicacoes', 'secao-github'];
+            secoes.forEach(function(secId) {
+                const el = document.getElementById(secId);
+                if (el && secId !== id) el.classList.add('hidden');
+            });
+            // Toggle da seção clicada
+            const secao = document.getElementById(id);
             if (secao) {
                 secao.classList.toggle('hidden');
                 if (!secao.classList.contains('hidden')) {
