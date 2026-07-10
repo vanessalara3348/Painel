@@ -1764,7 +1764,8 @@
                 const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
                 
                 const tempDataset = [];
-                for (let i = 1; i < rows.length; i++) {
+                let lastEixo = '', lastObj = '', lastAcao = '', lastProd = '';
+                for (let i = 2; i < rows.length; i++) {
                     const row = rows[i];
                     if (!row || row.length === 0) continue;
                     
@@ -1778,12 +1779,24 @@
                     const colH = row[7] ? String(row[7]).trim() : ''; 
                     const colL = row[11] ? String(row[11]).trim() : ''; 
                     
-                    if (colA && colC && colE && colG) {
+                    // Herda valores da linha anterior quando células estão vazias (planilha com mesclagem)
+                    const eixoKey = (colA && colB) ? `${colA} - ${colB}` : (colA ? colA : lastEixo);
+                    const objKey = (colC && colD) ? `${colC} - ${colD}` : (colC ? colC : lastObj);
+                    const acaoKey = (colE && colF) ? `${colE} - ${colF}` : (colE ? colE : lastAcao);
+                    const prodKey = (colG && colH) ? `${colG} - ${colH}` : (colG ? colG : lastProd);
+                    
+                    if (eixoKey) lastEixo = eixoKey;
+                    if (objKey) lastObj = objKey;
+                    if (acaoKey) lastAcao = acaoKey;
+                    if (prodKey) lastProd = prodKey;
+                    
+                    // Inclui a linha se pelo menos o eixo estiver definido
+                    if (lastEixo) {
                         tempDataset.push({
-                            eixoKey: `${colA} - ${colB}`,
-                            objKey: `${colC} - ${colD}`,
-                            acaoKey: `${colE} - ${colF}`,
-                            prodKey: `${colG} - ${colH}`,
+                            eixoKey: lastEixo,
+                            objKey: lastObj || "Objetivo não especificado",
+                            acaoKey: lastAcao || "Ação não especificada",
+                            prodKey: lastProd || "Produto não especificado",
                             indicador: colL || "Métrica não especificada"
                         });
                     }
