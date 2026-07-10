@@ -1764,6 +1764,7 @@
                 const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
                 
                 const tempDataset = [];
+                let lastEixo = '', lastObj = '', lastAcao = '', lastProd = '';
                 for (let i = 1; i < rows.length; i++) {
                     const row = rows[i];
                     if (!row || row.length === 0) continue;
@@ -1778,12 +1779,23 @@
                     const colH = row[7] ? String(row[7]).trim() : ''; 
                     const colL = row[11] ? String(row[11]).trim() : ''; 
                     
-                    if (colA && colC && colE && colG) {
+                    // Herda valores da linha anterior quando células estão vazias (mesclagem)
+                    const eixoKey = (colA || colB) ? `${colA} - ${colB}`.replace(/^ - | - $/g, '') : lastEixo;
+                    const objKey = (colC || colD) ? `${colC} - ${colD}`.replace(/^ - | - $/g, '') : lastObj;
+                    const acaoKey = (colE || colF) ? `${colE} - ${colF}`.replace(/^ - | - $/g, '') : lastAcao;
+                    const prodKey = (colG || colH) ? `${colG} - ${colH}`.replace(/^ - | - $/g, '') : lastProd;
+                    
+                    if (eixoKey) lastEixo = eixoKey;
+                    if (objKey) lastObj = objKey;
+                    if (acaoKey) lastAcao = acaoKey;
+                    if (prodKey) lastProd = prodKey;
+                    
+                    if (lastEixo) {
                         tempDataset.push({
-                            eixoKey: `${colA} - ${colB}`,
-                            objKey: `${colC} - ${colD}`,
-                            acaoKey: `${colE} - ${colF}`,
-                            prodKey: `${colG} - ${colH}`,
+                            eixoKey: lastEixo,
+                            objKey: lastObj || "Objetivo não especificado",
+                            acaoKey: lastAcao || "Ação não especificada",
+                            prodKey: lastProd || "Produto não especificado",
                             indicador: colL || "Métrica não especificada"
                         });
                     }
