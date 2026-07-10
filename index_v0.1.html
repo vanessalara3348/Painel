@@ -1808,6 +1808,10 @@
                 }
                 console.log('Registros lidos:', tempDataset.length);
                 console.log('Eixos únicos:', [...new Set(tempDataset.map(d => d.eixoKey))]);
+                if (tempDataset.length > 0) {
+                    console.log('Primeiro registro:', JSON.stringify(tempDataset[0]));
+                    console.log('Último registro:', JSON.stringify(tempDataset[tempDataset.length-1]));
+                }
                 
                 if (tempDataset.length > 0) {
                     psvSpreadsheetData = tempDataset;
@@ -2930,11 +2934,14 @@
 
         function buildCascadingDropdowns() {
             const uniqueEixes = [...new Set(psvSpreadsheetData.map(item => item.eixoKey))].filter(Boolean);
+            // Ordena por número do eixo (extrai número de "Eixo N - ...")
             uniqueEixes.sort((a, b) => {
-                const numA = parseInt(a.split(' - ')[0]) || 0;
-                const numB = parseInt(b.split(' - ')[0]) || 0;
+                const numA = parseInt(a.replace(/\D/g, '')) || 0;
+                const numB = parseInt(b.replace(/\D/g, '')) || 0;
                 return numA - numB;
             });
+            
+            console.log('buildCascadingDropdowns - Eixos disponíveis:', uniqueEixes);
 
             createSearchableSelect('ss-eixo', 'Selecione ou pesquise o Eixo Temático...', handleEixoChange, false);
             createSearchableSelect('ss-objetivo', 'Selecione o Eixo Temático primeiro...', handleObjetivoChange, true);
@@ -2961,6 +2968,8 @@
             const selectedEixo = wEixo._value;
             const selectEixo = document.getElementById('form-coleta-eixo');
             selectEixo.value = selectedEixo;
+            
+            console.log('handleEixoChange - Eixo selecionado:', selectedEixo);
 
             if (!selectedEixo) {
                 setSearchableOptions('ss-objetivo', [], 'Selecione o Eixo Temático primeiro...', true);
@@ -2971,6 +2980,7 @@
             }
 
             const filteredObjs = [...new Set(psvSpreadsheetData.filter(item => item.eixoKey === selectedEixo).map(item => item.objKey))].filter(Boolean);
+            console.log('handleEixoChange - Objetivos filtrados:', filteredObjs);
             setSearchableOptions('ss-objetivo', filteredObjs, 'Selecione ou pesquise o Objetivo Estratégico...', false);
             setSearchableOptions('ss-acao', [], 'Selecione o Objetivo Estratégico primeiro...', true);
             setSearchableOptions('ss-produto', [], 'Selecione a Ação primeiro...', true);
