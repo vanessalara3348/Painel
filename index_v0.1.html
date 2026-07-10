@@ -1764,14 +1764,14 @@
                 const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
                 
                 const tempDataset = [];
-                // Todas as células estão preenchidas - leitura direta sem herança
                 // Linha 1 = cabeçalho (i=0), dados a partir da linha 2 (i=1)
+                // Todas as células preenchidas até linha 366
                 console.log('Total de linhas no Excel:', rows.length);
                 for (let i = 1; i < rows.length; i++) {
                     const row = rows[i];
                     if (!row || row.length === 0) continue;
                     
-                    // Lê todas as colunas como string, tratando null/undefined
+                    // Lê colunas como string
                     const colA = (row[0] !== undefined && row[0] !== null) ? String(row[0]).trim() : '';
                     const colB = (row[1] !== undefined && row[1] !== null) ? String(row[1]).trim() : '';
                     const colC = (row[2] !== undefined && row[2] !== null) ? String(row[2]).trim() : '';
@@ -1782,14 +1782,19 @@
                     const colH = (row[7] !== undefined && row[7] !== null) ? String(row[7]).trim() : '';
                     const colL = (row[11] !== undefined && row[11] !== null) ? String(row[11]).trim() : '';
                     
-                    // Pula linhas completamente vazias
-                    if (!colA && !colB && !colC && !colD) continue;
+                    // Pula linhas vazias
+                    if (!colA && !colB) continue;
                     
-                    // Concatenação direta: "ColA - ColB"
-                    const eixo = colA && colB ? `${colA} - ${colB}` : (colA || colB);
-                    const obj = colC && colD ? `${colC} - ${colD}` : (colC || colD);
-                    const acao = colE && colF ? `${colE} - ${colF}` : (colE || colF);
-                    const prod = colG && colH ? `${colG} - ${colH}` : (colG || colH);
+                    // Eixo: "Eixo " + ColA + " - " + ColB
+                    const eixo = colA && colB ? `Eixo ${colA} - ${colB}` : '';
+                    // Objetivo: ColC + " - " + ColD (ex: "1.1 - Fortalecimento da governança...")
+                    const obj = colC && colD ? `${colC} - ${colD}` : '';
+                    // Ação: ColE + " - " + ColF (ex: "1.1.1 - Consolidar o Sistran-SP...")
+                    const acao = colE && colF ? `${colE} - ${colF}` : '';
+                    // Produto: ColG + " - " + ColH (ex: "1.1.1.1 - Publicação do regimento...")
+                    const prod = colG && colH ? `${colG} - ${colH}` : '';
+                    // Indicador: ColL
+                    const indicador = colL;
                     
                     if (eixo) {
                         tempDataset.push({
@@ -1797,12 +1802,12 @@
                             objKey: obj,
                             acaoKey: acao,
                             prodKey: prod,
-                            indicador: colL
+                            indicador: indicador
                         });
                     }
                 }
-                console.log('Registros lidos do Excel:', tempDataset.length);
-                console.log('Eixos únicos:', [...new Set(tempDataset.map(d => d.eixoKey))].length);
+                console.log('Registros lidos:', tempDataset.length);
+                console.log('Eixos únicos:', [...new Set(tempDataset.map(d => d.eixoKey))]);
                 
                 if (tempDataset.length > 0) {
                     psvSpreadsheetData = tempDataset;
