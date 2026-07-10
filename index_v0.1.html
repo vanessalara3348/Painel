@@ -309,6 +309,75 @@
             color: var(--ss-gold);
             font-size: 28px;
         }
+
+        /* ===== Searchable Dropdown Component ===== */
+        .search-select-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        .search-select-wrapper input.search-select-input {
+            width: 100%;
+            background: var(--ss-surface-muted);
+            border: 1px solid var(--ss-border);
+            border-radius: 4px;
+            font-size: 13px;
+            padding: 10px 32px 10px 10px;
+            color: var(--ss-text-heading);
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .search-select-wrapper input.search-select-input:focus {
+            outline: none;
+            border-color: var(--ss-gold);
+            box-shadow: 0 0 0 1px var(--ss-gold);
+        }
+        .search-select-wrapper input.search-select-input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .search-select-wrapper .search-select-arrow {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: var(--ss-text-muted);
+            font-size: 12px;
+        }
+        .search-select-wrapper .search-select-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            background: white;
+            border: 1px solid var(--ss-border);
+            border-radius: 4px;
+            box-shadow: var(--ss-shadow-card);
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 2px;
+        }
+        .search-select-wrapper .search-select-dropdown.open {
+            display: block;
+        }
+        .search-select-wrapper .search-select-option {
+            padding: 8px 12px;
+            font-size: 12px;
+            color: var(--ss-text-body);
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+        .search-select-wrapper .search-select-option:hover {
+            background: var(--ss-gold-surface);
+            color: var(--ss-text-heading);
+        }
+        .search-select-wrapper .search-select-option.no-results {
+            color: var(--ss-text-muted);
+            font-style: italic;
+            cursor: default;
+        }
     </style>
 </head>
 <body class="bg-white antialiased custom-scrollbar h-screen overflow-hidden">
@@ -1255,41 +1324,36 @@
                                     <!-- Eixo Temático -->
                                     <div>
                                         <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Eixo Temático *</label>
-                                        <select id="form-coleta-eixo" onchange="handleEixoChange()" class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-heading font-medium focus:outline-none focus:ring-1 focus:ring-sistran-gold" required>
-                                            <option value="">Carregando eixos...</option>
-                                        </select>
+                                        <div class="search-select-wrapper" id="ss-eixo"></div>
+                                        <select id="form-coleta-eixo" class="hidden" required></select>
                                     </div>
 
                                     <!-- Objetivo Estratégico -->
                                     <div>
                                         <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Objetivo Estratégico *</label>
-                                        <select id="form-coleta-objetivo" onchange="handleObjetivoChange()" class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-heading font-medium focus:outline-none focus:ring-1 focus:ring-sistran-gold disabled:opacity-50" required disabled>
-                                            <option value="">Selecione o Eixo Temático primeiro...</option>
-                                        </select>
+                                        <div class="search-select-wrapper" id="ss-objetivo"></div>
+                                        <select id="form-coleta-objetivo" class="hidden" required disabled></select>
                                     </div>
 
                                     <!-- Ação -->
                                     <div>
                                         <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Ação *</label>
-                                        <select id="form-coleta-acao" onchange="handleAcaoChange()" class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-heading font-medium focus:outline-none focus:ring-1 focus:ring-sistran-gold disabled:opacity-50" required disabled>
-                                            <option value="">Selecione o Objetivo Estratégico primeiro...</option>
-                                        </select>
+                                        <div class="search-select-wrapper" id="ss-acao"></div>
+                                        <select id="form-coleta-acao" class="hidden" required disabled></select>
                                     </div>
 
                                     <!-- Produto -->
                                     <div>
                                         <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Produto *</label>
-                                        <select id="form-coleta-produto" onchange="handleProdutoChange()" class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-heading font-medium focus:outline-none focus:ring-1 focus:ring-sistran-gold disabled:opacity-50" required disabled>
-                                            <option value="">Selecione a Ação primeiro...</option>
-                                        </select>
+                                        <div class="search-select-wrapper" id="ss-produto"></div>
+                                        <select id="form-coleta-produto" class="hidden" required disabled></select>
                                     </div>
 
                                     <!-- Indicador -->
                                     <div>
                                         <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Indicador *</label>
-                                        <select id="form-coleta-indicador" class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-heading font-medium focus:outline-none focus:ring-1 focus:ring-sistran-gold disabled:opacity-50" required disabled>
-                                            <option value="">Selecione o Produto primeiro...</option>
-                                        </select>
+                                        <div class="search-select-wrapper" id="ss-indicador"></div>
+                                        <select id="form-coleta-indicador" class="hidden" required disabled></select>
                                     </div>
 
                                     <!-- Ano de Referência & Valor do Resultado -->
@@ -2746,33 +2810,125 @@
             lucide.createIcons();
         }
 
-        function buildCascadingDropdowns() {
-            const selectEixo = document.getElementById('form-coleta-eixo');
-            const selectObjetivo = document.getElementById('form-coleta-objetivo');
-            const selectAcao = document.getElementById('form-coleta-acao');
-            const selectProduto = document.getElementById('form-coleta-produto');
-            const selectIndicador = document.getElementById('form-coleta-indicador');
+        // ===== Searchable Select Component =====
+        function normalizeText(text) {
+            return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+        }
 
+        function createSearchableSelect(wrapperId, placeholder, onChangeCallback, disabled) {
+            const wrapper = document.getElementById(wrapperId);
+            if (!wrapper) return;
+            wrapper.innerHTML = '';
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'search-select-input';
+            input.placeholder = placeholder;
+            input.disabled = !!disabled;
+            input.setAttribute('autocomplete', 'off');
+
+            const arrow = document.createElement('i');
+            arrow.className = 'fa-solid fa-chevron-down search-select-arrow';
+
+            const dropdown = document.createElement('div');
+            dropdown.className = 'search-select-dropdown';
+
+            wrapper.appendChild(input);
+            wrapper.appendChild(arrow);
+            wrapper.appendChild(dropdown);
+
+            wrapper._options = [];
+            wrapper._value = '';
+            wrapper._input = input;
+            wrapper._dropdown = dropdown;
+            wrapper._onChangeCallback = onChangeCallback;
+
+            input.addEventListener('focus', function() {
+                dropdown.classList.add('open');
+                input.select();
+                renderOptions(wrapper, input.value);
+            });
+            input.addEventListener('input', function() {
+                dropdown.classList.add('open');
+                renderOptions(wrapper, input.value);
+            });
+            document.addEventListener('click', function(e) {
+                if (!wrapper.contains(e.target)) {
+                    dropdown.classList.remove('open');
+                    // Restore display text if value set
+                    if (wrapper._value && input.value !== wrapper._value) {
+                        input.value = wrapper._value;
+                    }
+                }
+            });
+        }
+
+        function renderOptions(wrapper, query) {
+            const dropdown = wrapper._dropdown;
+            const normalized = normalizeText(query);
+            dropdown.innerHTML = '';
+
+            const filtered = wrapper._options.filter(opt => {
+                if (!query) return true;
+                return normalizeText(opt).includes(normalized);
+            });
+
+            if (filtered.length === 0) {
+                const div = document.createElement('div');
+                div.className = 'search-select-option no-results';
+                div.textContent = 'Nenhum resultado encontrado';
+                dropdown.appendChild(div);
+                return;
+            }
+
+            filtered.forEach(opt => {
+                const div = document.createElement('div');
+                div.className = 'search-select-option';
+                div.textContent = opt;
+                div.addEventListener('click', function() {
+                    wrapper._value = opt;
+                    wrapper._input.value = opt;
+                    wrapper._dropdown.classList.remove('open');
+                    // Sync hidden select
+                    const selectId = wrapper.id.replace('ss-', 'form-coleta-');
+                    const select = document.getElementById(selectId);
+                    if (select) select.value = opt;
+                    if (wrapper._onChangeCallback) wrapper._onChangeCallback();
+                });
+                dropdown.appendChild(div);
+            });
+        }
+
+        function setSearchableOptions(wrapperId, options, placeholder, disabled) {
+            const wrapper = document.getElementById(wrapperId);
+            if (!wrapper._input) return;
+            wrapper._options = options;
+            wrapper._value = '';
+            wrapper._input.value = '';
+            wrapper._input.placeholder = placeholder;
+            wrapper._input.disabled = !!disabled;
+        }
+
+        function buildCascadingDropdowns() {
             const uniqueEixes = [...new Set(psvSpreadsheetData.map(item => item.eixoKey))].filter(Boolean);
-            
             uniqueEixes.sort((a, b) => {
                 const numA = parseInt(a.split(' - ')[0]) || 0;
                 const numB = parseInt(b.split(' - ')[0]) || 0;
                 return numA - numB;
             });
 
-            selectEixo.innerHTML = '<option value="">Selecione o Eixo Temático...</option>';
-            uniqueEixes.forEach(eixo => {
-                const opt = document.createElement('option');
-                opt.value = eixo;
-                opt.textContent = eixo;
-                selectEixo.appendChild(opt);
-            });
+            createSearchableSelect('ss-eixo', 'Selecione ou pesquise o Eixo Temático...', handleEixoChange, false);
+            createSearchableSelect('ss-objetivo', 'Selecione o Eixo Temático primeiro...', handleObjetivoChange, true);
+            createSearchableSelect('ss-acao', 'Selecione o Objetivo Estratégico primeiro...', handleAcaoChange, true);
+            createSearchableSelect('ss-produto', 'Selecione a Ação primeiro...', handleProdutoChange, true);
+            createSearchableSelect('ss-indicador', 'Selecione o Produto primeiro...', null, true);
 
-            resetSelect(selectObjetivo, 'Selecione o Objetivo Estratégico...');
-            resetSelect(selectAcao, 'Selecione a Ação...');
-            resetSelect(selectProduto, 'Selecione o Produto...');
-            resetSelect(selectIndicador, 'Selecione o Indicador...');
+            const wEixo = document.getElementById('ss-eixo');
+            wEixo._options = uniqueEixes;
+
+            // Sync hidden selects
+            const selectEixo = document.getElementById('form-coleta-eixo');
+            selectEixo.innerHTML = '<option value=""></option>';
+            uniqueEixes.forEach(e => { const o = document.createElement('option'); o.value = e; o.textContent = e; selectEixo.appendChild(o); });
         }
 
         function resetSelect(selectEl, placeholder) {
@@ -2781,139 +2937,88 @@
         }
 
         function handleEixoChange() {
+            const wEixo = document.getElementById('ss-eixo');
+            const selectedEixo = wEixo._value;
             const selectEixo = document.getElementById('form-coleta-eixo');
-            const selectObjetivo = document.getElementById('form-coleta-objetivo');
-            const selectAcao = document.getElementById('form-coleta-acao');
-            const selectProduto = document.getElementById('form-coleta-produto');
-            const selectIndicador = document.getElementById('form-coleta-indicador');
+            selectEixo.value = selectedEixo;
 
-            const selectedEixo = selectEixo.value;
             if (!selectedEixo) {
-                resetSelect(selectObjetivo, 'Selecione o Objetivo Estratégico...');
-                resetSelect(selectAcao, 'Selecione a Ação...');
-                resetSelect(selectProduto, 'Selecione o Produto...');
-                resetSelect(selectIndicador, 'Selecione o Indicador...');
+                setSearchableOptions('ss-objetivo', [], 'Selecione o Eixo Temático primeiro...', true);
+                setSearchableOptions('ss-acao', [], 'Selecione o Objetivo Estratégico primeiro...', true);
+                setSearchableOptions('ss-produto', [], 'Selecione a Ação primeiro...', true);
+                setSearchableOptions('ss-indicador', [], 'Selecione o Produto primeiro...', true);
                 return;
             }
 
-            const filteredObjs = [...new Set(psvSpreadsheetData
-                .filter(item => item.eixoKey === selectedEixo)
-                .map(item => item.objKey)
-            )].filter(Boolean);
-
-            selectObjetivo.innerHTML = '<option value="">Selecione o Objetivo Estratégico...</option>';
-            filteredObjs.forEach(obj => {
-                const opt = document.createElement('option');
-                opt.value = obj;
-                opt.textContent = obj;
-                selectObjetivo.appendChild(opt);
-            });
-            selectObjetivo.disabled = false;
-
-            resetSelect(selectAcao, 'Selecione a Ação...');
-            resetSelect(selectProduto, 'Selecione o Produto...');
-            resetSelect(selectIndicador, 'Selecione o Indicador...');
+            const filteredObjs = [...new Set(psvSpreadsheetData.filter(item => item.eixoKey === selectedEixo).map(item => item.objKey))].filter(Boolean);
+            setSearchableOptions('ss-objetivo', filteredObjs, 'Selecione ou pesquise o Objetivo Estratégico...', false);
+            setSearchableOptions('ss-acao', [], 'Selecione o Objetivo Estratégico primeiro...', true);
+            setSearchableOptions('ss-produto', [], 'Selecione a Ação primeiro...', true);
+            setSearchableOptions('ss-indicador', [], 'Selecione o Produto primeiro...', true);
         }
 
         function handleObjetivoChange() {
-            const selectEixo = document.getElementById('form-coleta-eixo');
-            const selectObjetivo = document.getElementById('form-coleta-objetivo');
-            const selectAcao = document.getElementById('form-coleta-acao');
-            const selectProduto = document.getElementById('form-coleta-produto');
-            const selectIndicador = document.getElementById('form-coleta-indicador');
+            const wEixo = document.getElementById('ss-eixo');
+            const wObj = document.getElementById('ss-objetivo');
+            const selectedEixo = wEixo._value;
+            const selectedObj = wObj._value;
 
-            const selectedEixo = selectEixo.value;
-            const selectedObj = selectObjetivo.value;
             if (!selectedObj) {
-                resetSelect(selectAcao, 'Selecione a Ação...');
-                resetSelect(selectProduto, 'Selecione o Produto...');
-                resetSelect(selectIndicador, 'Selecione o Indicador...');
+                setSearchableOptions('ss-acao', [], 'Selecione o Objetivo Estratégico primeiro...', true);
+                setSearchableOptions('ss-produto', [], 'Selecione a Ação primeiro...', true);
+                setSearchableOptions('ss-indicador', [], 'Selecione o Produto primeiro...', true);
                 return;
             }
 
-            const filteredAcoes = [...new Set(psvSpreadsheetData
-                .filter(item => item.eixoKey === selectedEixo && item.objKey === selectedObj)
-                .map(item => item.acaoKey)
-            )].filter(Boolean);
-
-            selectAcao.innerHTML = '<option value="">Selecione a Ação...</option>';
-            filteredAcoes.forEach(acao => {
-                const opt = document.createElement('option');
-                opt.value = acao;
-                opt.textContent = acao;
-                selectAcao.appendChild(opt);
-            });
-            selectAcao.disabled = false;
-
-            resetSelect(selectProduto, 'Selecione o Produto...');
-            resetSelect(selectIndicador, 'Selecione o Indicador...');
+            const filteredAcoes = [...new Set(psvSpreadsheetData.filter(item => item.eixoKey === selectedEixo && item.objKey === selectedObj).map(item => item.acaoKey))].filter(Boolean);
+            setSearchableOptions('ss-acao', filteredAcoes, 'Selecione ou pesquise a Ação...', false);
+            setSearchableOptions('ss-produto', [], 'Selecione a Ação primeiro...', true);
+            setSearchableOptions('ss-indicador', [], 'Selecione o Produto primeiro...', true);
         }
 
         function handleAcaoChange() {
-            const selectEixo = document.getElementById('form-coleta-eixo');
-            const selectObjetivo = document.getElementById('form-coleta-objetivo');
-            const selectAcao = document.getElementById('form-coleta-acao');
-            const selectProduto = document.getElementById('form-coleta-produto');
-            const selectIndicador = document.getElementById('form-coleta-indicador');
+            const wEixo = document.getElementById('ss-eixo');
+            const wObj = document.getElementById('ss-objetivo');
+            const wAcao = document.getElementById('ss-acao');
+            const selectedEixo = wEixo._value;
+            const selectedObj = wObj._value;
+            const selectedAcao = wAcao._value;
 
-            const selectedEixo = selectEixo.value;
-            const selectedObj = selectObjetivo.value;
-            const selectedAcao = selectAcao.value;
             if (!selectedAcao) {
-                resetSelect(selectProduto, 'Selecione o Produto...');
-                resetSelect(selectIndicador, 'Selecione o Indicador...');
+                setSearchableOptions('ss-produto', [], 'Selecione a Ação primeiro...', true);
+                setSearchableOptions('ss-indicador', [], 'Selecione o Produto primeiro...', true);
                 return;
             }
 
-            const filteredProds = [...new Set(psvSpreadsheetData
-                .filter(item => item.eixoKey === selectedEixo && item.objKey === selectedObj && item.acaoKey === selectedAcao)
-                .map(item => item.prodKey)
-            )].filter(Boolean);
-
-            selectProduto.innerHTML = '<option value="">Selecione o Produto...</option>';
-            filteredProds.forEach(prod => {
-                const opt = document.createElement('option');
-                opt.value = prod;
-                opt.textContent = prod;
-                selectProduto.appendChild(opt);
-            });
-            selectProduto.disabled = false;
-
-            resetSelect(selectIndicador, 'Selecione o Indicador...');
+            const filteredProds = [...new Set(psvSpreadsheetData.filter(item => item.eixoKey === selectedEixo && item.objKey === selectedObj && item.acaoKey === selectedAcao).map(item => item.prodKey))].filter(Boolean);
+            setSearchableOptions('ss-produto', filteredProds, 'Selecione ou pesquise o Produto...', false);
+            setSearchableOptions('ss-indicador', [], 'Selecione o Produto primeiro...', true);
         }
 
         function handleProdutoChange() {
-            const selectEixo = document.getElementById('form-coleta-eixo');
-            const selectObjetivo = document.getElementById('form-coleta-objetivo');
-            const selectAcao = document.getElementById('form-coleta-acao');
-            const selectProduto = document.getElementById('form-coleta-produto');
-            const selectIndicador = document.getElementById('form-coleta-indicador');
+            const wEixo = document.getElementById('ss-eixo');
+            const wObj = document.getElementById('ss-objetivo');
+            const wAcao = document.getElementById('ss-acao');
+            const wProd = document.getElementById('ss-produto');
+            const selectedEixo = wEixo._value;
+            const selectedObj = wObj._value;
+            const selectedAcao = wAcao._value;
+            const selectedProd = wProd._value;
 
-            const selectedEixo = selectEixo.value;
-            const selectedObj = selectObjetivo.value;
-            const selectedAcao = selectAcao.value;
-            const selectedProd = selectProduto.value;
             if (!selectedProd) {
-                resetSelect(selectIndicador, 'Selecione o Indicador...');
+                setSearchableOptions('ss-indicador', [], 'Selecione o Produto primeiro...', true);
                 return;
             }
 
-            const filteredInds = [...new Set(psvSpreadsheetData
-                .filter(item => item.eixoKey === selectedEixo && item.objKey === selectedObj && item.acaoKey === selectedAcao && item.prodKey === selectedProd)
-                .map(item => item.indicador)
-            )].filter(Boolean);
-
-            selectIndicador.innerHTML = '<option value="">Selecione o Indicador...</option>';
-            filteredInds.forEach(ind => {
-                const opt = document.createElement('option');
-                opt.value = ind;
-                opt.textContent = ind;
-                selectIndicador.appendChild(opt);
-            });
-            selectIndicador.disabled = false;
+            const filteredInds = [...new Set(psvSpreadsheetData.filter(item => item.eixoKey === selectedEixo && item.objKey === selectedObj && item.acaoKey === selectedAcao && item.prodKey === selectedProd).map(item => item.indicador))].filter(Boolean);
+            setSearchableOptions('ss-indicador', filteredInds, 'Selecione ou pesquise o Indicador...', false);
 
             if (filteredInds.length === 1) {
-                selectIndicador.value = filteredInds[0];
+                const wInd = document.getElementById('ss-indicador');
+                wInd._value = filteredInds[0];
+                wInd._input.value = filteredInds[0];
+                const selectInd = document.getElementById('form-coleta-indicador');
+                if (selectInd) selectInd.value = filteredInds[0];
             }
         }
 
