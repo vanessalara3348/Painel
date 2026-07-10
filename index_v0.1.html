@@ -1751,12 +1751,22 @@
 
         async function loadSpreadsheetData() {
             try {
-                let response = await fetch('Formulario_cascata.xlsx');
-                if (!response.ok) {
-                    throw new Error("Não foi possível acessar a planilha local de monitoramento.");
-                }
+                // Usa XMLHttpRequest em vez de fetch para funcionar em file:// (sem servidor)
+                const arrayBuffer = await new Promise(function(resolve, reject) {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('GET', 'Formulario_cascata.xlsx', true);
+                    xhr.responseType = 'arraybuffer';
+                    xhr.onload = function() {
+                        if (xhr.status === 200 || xhr.status === 0) { // status 0 = file://
+                            resolve(xhr.response);
+                        } else {
+                            reject(new Error('Erro ao carregar: ' + xhr.status));
+                        }
+                    };
+                    xhr.onerror = function() { reject(new Error('Erro de rede/CORS')); };
+                    xhr.send();
+                });
                 
-                const arrayBuffer = await response.arrayBuffer();
                 const data = new Uint8Array(arrayBuffer);
                 const workbook = XLSX.read(data, { type: 'array' });
                 const firstSheetName = workbook.SheetNames[0];
