@@ -1311,21 +1311,20 @@
                                         </div>
                                     </div>
 
-                                    <!-- Link Comprobatório -->
+                                    <!-- Documento(s) Comprobatório(s) -->
                                     <div>
-                                        <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Link para o Documento Comprobatório *</label>
-                                        <input type="text" id="form-coleta-link" placeholder="Escrita livre (ex: https://sei.sp.gov.br/processo/12345)" class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-body focus:outline-none focus:ring-1 focus:ring-sistran-gold" required>
+                                        <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Documento(s) Comprobatório(s) *</label>
                                     </div>
 
                                     <div>
-                                        <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Upload de Arquivos Comprobatórios (PDF, JPEG, PNG, TIFF) *</label>
+                                        <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Upload de Arquivos Comprobatórios (PDF, JPEG, PNG, TIFF)</label>
                                         <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-sistran-border border-dashed rounded-md bg-sistran-surface-muted hover:bg-zinc-50 transition relative">
                                             <div class="space-y-1 text-center">
                                                 <i class="fa-solid fa-cloud-arrow-up text-3xl text-sistran-gold mb-2 block"></i>
                                                 <div class="flex text-xs text-sistran-body justify-center">
                                                     <label for="form-coleta-file" class="relative cursor-pointer bg-white rounded-md font-semibold text-sistran-gold hover:text-sistran-heading focus-within:outline-none">
                                                         <span>Carregar arquivo comprovatório</span>
-                                                        <input id="form-coleta-file" name="form-coleta-file" type="file" accept=".pdf, .jpeg, .jpg, .png, .tiff" class="sr-only" required onchange="handleFileChange(event)">
+                                                        <input id="form-coleta-file" name="form-coleta-file" type="file" accept=".pdf, .jpeg, .jpg, .png, .tiff" class="sr-only" onchange="handleFileChange(event)">
                                                     </label>
                                                 </div>
                                                 <p class="text-[10px] text-sistran-muted">PDF, JPEG, PNG ou TIFF de até 15MB</p>
@@ -1334,10 +1333,15 @@
                                         </div>
                                     </div>
 
-                                    <!-- Descrição e Justificativa -->
                                     <div>
-                                        <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Descrição e Justificativa do Produto</label>
-                                        <textarea id="form-coleta-descricao" rows="3" placeholder="Insira o resumo técnico qualitativo e a justificativa para a conformidade do produto de segurança viária..." class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-body focus:outline-none focus:ring-1 focus:ring-sistran-gold"></textarea>
+                                        <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Caso seja necessário enviar arquivos maiores que 15MB, forneça um link para uma pasta compartilhada:</label>
+                                        <input type="text" id="form-coleta-link" placeholder="Ex: https://drive.google.com/drive/folders/..." class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-body focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                    </div>
+
+                                    <!-- Observações -->
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Observações</label>
+                                        <textarea id="form-coleta-descricao" rows="3" placeholder="Insira observações adicionais, se necessário..." class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-body focus:outline-none focus:ring-1 focus:ring-sistran-gold"></textarea>
                                     </div>
 
                                     <button type="submit" class="w-full bg-sistran-yellow hover:bg-sistran-yellow-hover text-sistran-ink font-bold py-3 rounded-pill text-xs transition duration-150 flex items-center justify-center gap-2 shadow-sm">
@@ -3027,8 +3031,8 @@
             const link = document.getElementById('form-coleta-link').value;
             const descricao = document.getElementById('form-coleta-descricao').value;
 
-            if (!pontoFocalFile) {
-                showNotification("Erro!", "Por favor, anexe o arquivo de referência.", "rose");
+            if (!pontoFocalFile && !link) {
+                showNotification("Erro!", "Por favor, anexe um arquivo ou forneça um link para a pasta compartilhada.", "rose");
                 return;
             }
 
