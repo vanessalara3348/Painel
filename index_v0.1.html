@@ -1468,7 +1468,7 @@
                         </div>
 
                         <!-- SUB-ABA: Histórico de Produtos Enviados -->
-                        <div id="sub-tab-coleta-historico" class="coleta-sub-content hidden bg-white rounded-md shadow-card border border-sistran-border p-6 max-w-5xl mx-auto">
+                        <div id="sub-tab-coleta-historico" class="coleta-sub-content hidden bg-white rounded-md shadow-card border border-sistran-border p-6 max-w-full mx-auto">
                             <div class="mb-4">
                                 <h2 class="text-2xl font-bold text-sistran-heading flex items-center gap-2.5">
                                     <span class="w-8 h-8 bg-sistran-ink rounded-full flex items-center justify-center flex-shrink-0">
@@ -1476,18 +1476,27 @@
                                     </span>
                                     Histórico de Produtos Enviados
                                 </h2>
-                                <p class="text-xs text-sistran-body mt-2">Acompanhe o status dos produtos enviados.</p>
+                                <p class="text-xs text-sistran-body mt-2">Acompanhe o andamento regulatório das suas submissões de conformidade. Todas as versões (originais e revisadas) são mantidas no histórico.</p>
                             </div>
 
                             <div class="overflow-x-auto border border-sistran-border rounded-md">
-                                <table class="w-full text-left text-xs border-collapse">
+                                <table class="w-full text-left text-xs border-collapse min-w-[1400px]">
                                     <thead>
                                         <tr class="bg-sistran-surface-muted text-sistran-heading font-bold border-b border-sistran-border">
-                                            <th class="p-3 w-28">ID Único</th>
-                                            <th class="p-3">Código / Produto</th>
-                                            <th class="p-3">Resumo da Submissão</th>
-                                            <th class="p-3">Data de Envio</th>
-                                            <th class="p-3 text-right">Status do Recebimento</th>
+                                            <th class="p-3 w-20">ID</th>
+                                            <th class="p-3">Eixo Temático</th>
+                                            <th class="p-3">Objetivo Estratégico</th>
+                                            <th class="p-3">Ação</th>
+                                            <th class="p-3">Produto</th>
+                                            <th class="p-3">Indicador</th>
+                                            <th class="p-3 w-16">Ano Ref.</th>
+                                            <th class="p-3">Valor do Resultado</th>
+                                            <th class="p-3 w-20">Anexos</th>
+                                            <th class="p-3">Link</th>
+                                            <th class="p-3 w-24">Data de Envio</th>
+                                            <th class="p-3 w-24">Status</th>
+                                            <th class="p-3 w-32">Atualização</th>
+                                            <th class="p-3 w-28">Data de Atualização</th>
                                         </tr>
                                     </thead>
                                     <tbody id="coleta-historico-tbody" class="divide-y divide-gray-100">
@@ -1717,6 +1726,7 @@
         let currentPontoFocal = null;
         let pontoFocalFile = null;
         let charts = {};
+        let editandoSubmissaoId = null;
         
         // Controle de estados para trilha de navegação (Breadcrumbs)
         let activePublicSubTab = 'introducao';
@@ -1818,15 +1828,20 @@
                     responsavel: "Fulano de Tal",
                     cargo: "Gestor Público",
                     eixo: "Eixo 3 - Vias Seguras",
+                    objetivo: "OE 3.1 - Infraestrutura Viária Tolerante",
+                    acao: "AC 3.1.1 - Eliminar pontos críticos em rodovias estaduais",
                     codProd: "3.1.1.1",
                     produto: "Faixas elevadas e moderação de velocidade na SP-055",
                     indicador: "Intervenções executadas",
                     valor: "14",
                     horizonte: "2026",
+                    anexos: "relatorio_faixas_elevadas.pdf",
                     evidencia: "https://www.sei.sp.gov.br/processo-faixas-elevadas",
                     descricao: "Implantação de faixas elevadas em locais de alta travessia de pedestres.",
                     data: "10/06/2026",
-                    status: "Recebido"
+                    status: "Recebido",
+                    revisado: false,
+                    dataAtualizacao: null
                 }
             ]
         };
@@ -3307,7 +3322,26 @@
                 return;
             }
 
-            const idSeteDigitos = Math.floor(1000000 + Math.random() * 9000000);
+            let idSeteDigitos;
+            const isEdicao = editandoSubmissaoId !== null;
+
+            if (isEdicao) {
+                idSeteDigitos = editandoSubmissaoId;
+                
+                // Encontra a entrada original (a versão ativa com esse ID que não foi revisada)
+                const originalIdx = mockDatabase.acoes.findIndex(a => a.id === idSeteDigitos && !a.revisado);
+                if (originalIdx !== -1) {
+                    // Marca a versão original como "Revisado pelo usuário" e desativa o botão
+                    mockDatabase.acoes[originalIdx].status = "Revisado pelo usuário";
+                    mockDatabase.acoes[originalIdx].revisado = true;
+                    mockDatabase.acoes[originalIdx].dataAtualizacao = new Date().toLocaleDateString('pt-BR');
+                }
+                
+                // Reset do estado de edição
+                editandoSubmissaoId = null;
+            } else {
+                idSeteDigitos = Math.floor(1000000 + Math.random() * 9000000);
+            }
 
             const novoProduto = {
                 id: idSeteDigitos,
@@ -3315,15 +3349,20 @@
                 responsavel: currentPontoFocal.nome,
                 cargo: currentPontoFocal.cargo,
                 eixo: txtEixo,
+                objetivo: rowObjetivoVal,
+                acao: rowAcaoVal,
                 codProd: txtProd.split(' - ')[0],
                 produto: txtProd.includes(' - ') ? txtProd.split(' - ')[1] : txtProd,
                 indicador: valIndicador,
                 valor: valor,
                 horizonte: anoRef,
+                anexos: pontoFocalFile ? pontoFocalFile.name : "",
                 evidencia: link,
                 descricao: descricao || "Relatório técnico analítico e comprovação das colunas pactuadas.",
                 data: new Date().toLocaleDateString('pt-BR'),
-                status: "Recebido"
+                status: "Recebido",
+                revisado: false,
+                dataAtualizacao: null
             };
 
             mockDatabase.acoes.unshift(novoProduto);
@@ -3352,7 +3391,11 @@
             pontoFocalFile = null;
             document.getElementById('file-upload-name').textContent = "";
 
-            showNotification("Produto Enviado!", `O produto #${idSeteDigitos} foi recebido com sucesso e aguarda validação.`, "emerald");
+            if (isEdicao) {
+                showNotification("Produto Atualizado!", `O produto #${idSeteDigitos} foi revisado e reenviado com sucesso. A versão anterior foi marcada como 'Revisado pelo usuário'.`, "emerald");
+            } else {
+                showNotification("Produto Enviado!", `O produto #${idSeteDigitos} foi recebido com sucesso e aguarda validação.`, "emerald");
+            }
 
             updateUIStats();
             renderColetaHistorico();
@@ -3370,38 +3413,190 @@
             const minhasAcoes = mockDatabase.acoes.filter(a => a.orgao === currentPontoFocal.orgao);
 
             if (minhasAcoes.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-sistran-muted font-medium">Nenhum produto enviado para este órgão.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="14" class="p-4 text-center text-sistran-muted font-medium">Nenhum produto enviado para este órgão.</td></tr>`;
                 return;
             }
 
-            minhasAcoes.forEach(acao => {
+            // Ordena por ID (agrupa versões do mesmo ID) e data de envio (mais recente primeiro)
+            const sorted = [...minhasAcoes].sort((a, b) => {
+                if (a.id === b.id) {
+                    // Versões mais recentes primeiro (por data de envio)
+                    return b.data.localeCompare(a.data);
+                }
+                return b.id - a.id;
+            });
+
+            sorted.forEach((acao, idx) => {
+                // Status badge
                 let statusBadge = "";
                 if (acao.status === "Recebido") {
                     statusBadge = `<span class="bg-blue-50 text-blue-600 border border-blue-100 px-2 py-0.5 rounded font-bold text-[10px]">Recebido</span>`;
                 } else if (acao.status === "Em Análise") {
-                    statusBadge = `<span class="bg-amber-50 text-amber-500 border border-amber-200 px-2 py-0.5 rounded font-bold text-[10px]"><i class="fa-solid fa-spinner animate-spin text-[8px] mr-1"></i>Em Análise</span>`;
+                    statusBadge = `<span class="bg-amber-50 text-amber-500 border border-amber-200 px-2 py-0.5 rounded font-bold text-[10px]">Em Análise</span>`;
                 } else if (acao.status === "Aprovado") {
-                    statusBadge = `<span class="bg-emerald-50 text-emerald-600 border border-emerald-200 px-2 py-0.5 rounded font-bold text-[10px]"><i class="fa-solid fa-check mr-1"></i>Aprovado</span>`;
+                    statusBadge = `<span class="bg-emerald-50 text-emerald-600 border border-emerald-200 px-2 py-0.5 rounded font-bold text-[10px]">Aprovado</span>`;
                 } else if (acao.status === "Reprovado") {
-                    statusBadge = `<span class="bg-rose-50 text-sistran-error border border-rose-200 px-2 py-0.5 rounded font-bold text-[10px]"><i class="fa-solid fa-xmark mr-1"></i>Reprovado</span>`;
+                    statusBadge = `<span class="bg-rose-50 text-sistran-error border border-rose-200 px-2 py-0.5 rounded font-bold text-[10px]">Reprovado</span>`;
+                } else if (acao.status === "Revisado pelo usuário") {
+                    statusBadge = `<span class="bg-purple-50 text-purple-600 border border-purple-200 px-2 py-0.5 rounded font-bold text-[10px]">Revisado pelo usuário</span>`;
                 }
 
+                // Botão Editar Submissão - inativo se revisado === true
+                let editarBtn = "";
+                if (acao.revisado) {
+                    editarBtn = `<button disabled class="bg-gray-200 text-gray-400 font-bold text-[10px] px-3 py-1.5 rounded-pill cursor-not-allowed opacity-60" title="Este produto já foi revisado">
+                        <i class="fa-solid fa-pen-to-square mr-1"></i>Editar Submissão
+                    </button>`;
+                } else {
+                    editarBtn = `<button onclick="editarSubmissao(${idx})" class="bg-sistran-yellow hover:bg-sistran-yellow-hover text-sistran-ink font-bold text-[10px] px-3 py-1.5 rounded-pill transition duration-150" title="Editar e resubmeter este produto">
+                        <i class="fa-solid fa-pen-to-square mr-1"></i>Editar Submissão
+                    </button>`;
+                }
+
+                // Anexos display
+                const anexosDisplay = acao.anexos 
+                    ? `<span class="text-sistran-heading font-medium"><i class="fa-solid fa-paperclip mr-1 text-sistran-gold"></i>${acao.anexos}</span>` 
+                    : `<span class="text-sistran-muted">—</span>`;
+
+                // Link display
+                const linkDisplay = acao.evidencia 
+                    ? `<a href="${acao.evidencia}" target="_blank" class="text-sistran-gold hover:underline font-semibold truncate block max-w-[120px]" title="${acao.evidencia}"><i class="fa-solid fa-link mr-1"></i>Acessar</a>` 
+                    : `<span class="text-sistran-muted">—</span>`;
+
+                // Data de Atualização
+                const dataAtualizacao = acao.dataAtualizacao || "—";
+
+                // Row highlighting for revised entries
+                const rowClass = acao.revisado 
+                    ? 'hover:bg-purple-50/50 border-b border-gray-100 transition-colors bg-purple-50/20' 
+                    : 'hover:bg-gray-50 border-b border-gray-100 transition-colors';
+
                 const tr = `
-                    <tr class="hover:bg-gray-50 border-b border-gray-100 transition-colors">
+                    <tr class="${rowClass}">
                         <td class="p-3 font-bold text-sistran-gold">#${acao.id}</td>
-                        <td class="p-3">
-                            <span class="block font-bold text-[10px] text-sistran-muted">${acao.codProd || 'Produto'}</span>
-                            <span class="font-medium text-sistran-heading leading-tight">${acao.produto}</span>
-                        </td>
-                        <td class="p-3 text-sistran-body">
-                            Métrica: <strong>${acao.valor}</strong> • Link: <a href="${acao.evidencia}" target="_blank" class="text-sistran-gold hover:underline font-semibold">Acessar Documento</a>
-                        </td>
+                        <td class="p-3 text-sistran-body text-[10px] max-w-[150px]">${acao.eixo || '—'}</td>
+                        <td class="p-3 text-sistran-body text-[10px] max-w-[150px]">${acao.objetivo || '—'}</td>
+                        <td class="p-3 text-sistran-body text-[10px] max-w-[150px]">${acao.acao || '—'}</td>
+                        <td class="p-3 font-medium text-sistran-heading text-[10px] max-w-[150px]">${acao.produto || '—'}</td>
+                        <td class="p-3 text-sistran-body text-[10px] max-w-[130px]">${acao.indicador || '—'}</td>
+                        <td class="p-3 font-semibold text-sistran-heading text-center">${acao.horizonte || '—'}</td>
+                        <td class="p-3 font-semibold text-sistran-gold">${acao.valor || '—'}</td>
+                        <td class="p-3 text-[10px]">${anexosDisplay}</td>
+                        <td class="p-3 text-[10px]">${linkDisplay}</td>
                         <td class="p-3 font-semibold text-sistran-heading">${acao.data}</td>
-                        <td class="p-3 text-right">${statusBadge}</td>
+                        <td class="p-3">${statusBadge}</td>
+                        <td class="p-3 text-center">${editarBtn}</td>
+                        <td class="p-3 text-sistran-body text-center">${dataAtualizacao}</td>
                     </tr>
                 `;
                 tbody.innerHTML += tr;
             });
+        }
+
+        // Variável editandoSubmissaoId já declarada no topo do script
+
+        function editarSubmissao(sortedIndex) {
+            // Recupera as ações filtradas pelo órgão e ordenadas (mesma lógica do render)
+            const minhasAcoes = mockDatabase.acoes.filter(a => a.orgao === currentPontoFocal.orgao);
+            const sorted = [...minhasAcoes].sort((a, b) => {
+                if (a.id === b.id) return b.data.localeCompare(a.data);
+                return b.id - a.id;
+            });
+
+            const acao = sorted[sortedIndex];
+            if (!acao || acao.revisado) return;
+
+            // Armazena o ID da submissão sendo editada
+            editandoSubmissaoId = acao.id;
+
+            // Navega para o formulário
+            selectColetaSubitem('formulario');
+
+            // Preenche os campos do formulário com os dados existentes
+            setTimeout(() => {
+                // Preencher Eixo
+                const wEixo = document.getElementById('ss-eixo');
+                if (wEixo && acao.eixo) {
+                    wEixo._value = acao.eixo;
+                    wEixo._input.value = acao.eixo;
+                    const selectEixo = document.getElementById('form-coleta-eixo');
+                    if (selectEixo) selectEixo.value = acao.eixo;
+                    handleEixoChange();
+                }
+
+                setTimeout(() => {
+                    // Preencher Objetivo
+                    const wObj = document.getElementById('ss-objetivo');
+                    if (wObj && acao.objetivo) {
+                        wObj._value = acao.objetivo;
+                        wObj._input.value = acao.objetivo;
+                        const selectObj = document.getElementById('form-coleta-objetivo');
+                        if (selectObj) selectObj.value = acao.objetivo;
+                        handleObjetivoChange();
+                    }
+
+                    setTimeout(() => {
+                        // Preencher Ação
+                        const wAcao = document.getElementById('ss-acao');
+                        if (wAcao && acao.acao) {
+                            wAcao._value = acao.acao;
+                            wAcao._input.value = acao.acao;
+                            const selectAcao = document.getElementById('form-coleta-acao');
+                            if (selectAcao) selectAcao.value = acao.acao;
+                            handleAcaoChange();
+                        }
+
+                        setTimeout(() => {
+                            // Preencher Produto
+                            const wProd = document.getElementById('ss-produto');
+                            const prodFullText = acao.codProd && acao.produto ? `${acao.codProd} - ${acao.produto}` : acao.produto;
+                            if (wProd && prodFullText) {
+                                // Tentar achar no options ou usar o texto completo
+                                const matchedProd = wProd._options.find(opt => opt.includes(acao.codProd)) || prodFullText;
+                                wProd._value = matchedProd;
+                                wProd._input.value = matchedProd;
+                                const selectProd = document.getElementById('form-coleta-produto');
+                                if (selectProd) selectProd.value = matchedProd;
+                                handleProdutoChange();
+                            }
+
+                            setTimeout(() => {
+                                // Preencher Indicador
+                                const wInd = document.getElementById('ss-indicador');
+                                if (wInd && acao.indicador) {
+                                    const matchedInd = wInd._options.find(opt => opt.includes(acao.indicador)) || acao.indicador;
+                                    wInd._value = matchedInd;
+                                    wInd._input.value = matchedInd;
+                                    const selectInd = document.getElementById('form-coleta-indicador');
+                                    if (selectInd) selectInd.value = matchedInd;
+                                }
+
+                                // Preencher Ano e Valor
+                                const anoSelect = document.getElementById('form-coleta-ano');
+                                if (anoSelect && acao.horizonte) anoSelect.value = acao.horizonte;
+
+                                const valorInput = document.getElementById('form-coleta-valor');
+                                if (valorInput && acao.valor) valorInput.value = acao.valor;
+
+                                // Preencher Link
+                                const linkInput = document.getElementById('form-coleta-link');
+                                if (linkInput && acao.evidencia) linkInput.value = acao.evidencia;
+
+                                // Preencher Observações
+                                const descInput = document.getElementById('form-coleta-descricao');
+                                if (descInput && acao.descricao) descInput.value = acao.descricao;
+
+                                // Mostrar aviso de edição
+                                showNotification(
+                                    "Modo de Edição", 
+                                    `Você está editando a submissão #${acao.id}. Faça as alterações e submeta novamente.`, 
+                                    "warning"
+                                );
+                            }, 100);
+                        }, 100);
+                    }, 100);
+                }, 100);
+            }, 200);
         }
 
         function renderValidationCards() {
