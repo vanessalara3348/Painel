@@ -1480,7 +1480,7 @@
                             </div>
 
                             <div class="overflow-x-auto border border-sistran-border rounded-md">
-                                <table class="w-full text-left text-xs border-collapse min-w-[1400px]">
+                                <table class="w-full text-left text-xs border-collapse min-w-[1300px]">
                                     <thead>
                                         <tr class="bg-sistran-surface-muted text-sistran-heading font-bold border-b border-sistran-border">
                                             <th class="p-3 w-20">ID</th>
@@ -1496,7 +1496,6 @@
                                             <th class="p-3 w-24">Data de Envio</th>
                                             <th class="p-3 w-24">Status</th>
                                             <th class="p-3 w-32">Atualização</th>
-                                            <th class="p-3 w-28">Data de Atualização</th>
                                         </tr>
                                     </thead>
                                     <tbody id="coleta-historico-tbody" class="divide-y divide-gray-100">
@@ -1840,8 +1839,7 @@
                     descricao: "Implantação de faixas elevadas em locais de alta travessia de pedestres.",
                     data: "10/06/2026",
                     status: "Recebido",
-                    revisado: false,
-                    dataAtualizacao: null
+                    revisado: false
                 }
             ]
         };
@@ -3334,7 +3332,6 @@
                     // Marca a versão original como "Revisado pelo usuário" e desativa o botão
                     mockDatabase.acoes[originalIdx].status = "Revisado pelo usuário";
                     mockDatabase.acoes[originalIdx].revisado = true;
-                    mockDatabase.acoes[originalIdx].dataAtualizacao = new Date().toLocaleDateString('pt-BR');
                 }
                 
                 // Reset do estado de edição
@@ -3361,8 +3358,7 @@
                 descricao: descricao || "Relatório técnico analítico e comprovação das colunas pactuadas.",
                 data: new Date().toLocaleDateString('pt-BR'),
                 status: "Recebido",
-                revisado: false,
-                dataAtualizacao: null
+                revisado: false
             };
 
             mockDatabase.acoes.unshift(novoProduto);
@@ -3413,7 +3409,7 @@
             const minhasAcoes = mockDatabase.acoes.filter(a => a.orgao === currentPontoFocal.orgao);
 
             if (minhasAcoes.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="14" class="p-4 text-center text-sistran-muted font-medium">Nenhum produto enviado para este órgão.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="13" class="p-4 text-center text-sistran-muted font-medium">Nenhum produto enviado para este órgão.</td></tr>`;
                 return;
             }
 
@@ -3463,8 +3459,21 @@
                     ? `<a href="${acao.evidencia}" target="_blank" class="text-sistran-gold hover:underline font-semibold truncate block max-w-[120px]" title="${acao.evidencia}"><i class="fa-solid fa-link mr-1"></i>Acessar</a>` 
                     : `<span class="text-sistran-muted">—</span>`;
 
-                // Data de Atualização
-                const dataAtualizacao = acao.dataAtualizacao || "—";
+                // Extrair apenas o texto descritivo (sem o código numérico) para cada campo
+                // Formato esperado: "Eixo N - Nome" → "Nome" | "1.1 - Texto" → "Texto"
+                function extractDescricao(val) {
+                    if (!val) return '—';
+                    const parts = val.split(' - ');
+                    if (parts.length > 1) {
+                        return parts.slice(1).join(' - ');
+                    }
+                    return val;
+                }
+
+                const eixoDisplay = extractDescricao(acao.eixo);
+                const objetivoDisplay = extractDescricao(acao.objetivo);
+                const acaoDisplay = extractDescricao(acao.acao);
+                const produtoDisplay = acao.produto || extractDescricao(acao.codProd);
 
                 // Row highlighting for revised entries
                 const rowClass = acao.revisado 
@@ -3474,10 +3483,10 @@
                 const tr = `
                     <tr class="${rowClass}">
                         <td class="p-3 font-bold text-sistran-gold">#${acao.id}</td>
-                        <td class="p-3 text-sistran-body text-[10px] max-w-[150px]">${acao.eixo || '—'}</td>
-                        <td class="p-3 text-sistran-body text-[10px] max-w-[150px]">${acao.objetivo || '—'}</td>
-                        <td class="p-3 text-sistran-body text-[10px] max-w-[150px]">${acao.acao || '—'}</td>
-                        <td class="p-3 font-medium text-sistran-heading text-[10px] max-w-[150px]">${acao.produto || '—'}</td>
+                        <td class="p-3 text-sistran-body text-[10px] max-w-[150px]">${eixoDisplay}</td>
+                        <td class="p-3 text-sistran-body text-[10px] max-w-[150px]">${objetivoDisplay}</td>
+                        <td class="p-3 text-sistran-body text-[10px] max-w-[150px]">${acaoDisplay}</td>
+                        <td class="p-3 font-medium text-sistran-heading text-[10px] max-w-[150px]">${produtoDisplay}</td>
                         <td class="p-3 text-sistran-body text-[10px] max-w-[130px]">${acao.indicador || '—'}</td>
                         <td class="p-3 font-semibold text-sistran-heading text-center">${acao.horizonte || '—'}</td>
                         <td class="p-3 font-semibold text-sistran-gold">${acao.valor || '—'}</td>
@@ -3486,7 +3495,6 @@
                         <td class="p-3 font-semibold text-sistran-heading">${acao.data}</td>
                         <td class="p-3">${statusBadge}</td>
                         <td class="p-3 text-center">${editarBtn}</td>
-                        <td class="p-3 text-sistran-body text-center">${dataAtualizacao}</td>
                     </tr>
                 `;
                 tbody.innerHTML += tr;
