@@ -1260,6 +1260,34 @@
                 <!-- ==================== AMBIENTE 1: MONITORAMENTO E VALIDAÇÃO ==================== -->
                 <section id="tab-validacao" class="space-y-6 hidden">
 
+                    <!-- Login de acesso restrito para Monitoramento -->
+                    <div id="validacao-auth-container" class="bg-white border border-sistran-border rounded-md p-8 max-w-md mx-auto shadow-card space-y-6">
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-sistran-gold-surface text-sistran-gold rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i class="fa-solid fa-lock text-xl"></i>
+                            </div>
+                            <h3 class="font-bold text-sistran-heading text-base">Acesso Restrito - Monitoramento e Validação</h3>
+                            <p class="text-xs text-sistran-body mt-1">Identifique-se para acessar o ambiente de monitoramento e validação de entregas do PSV-SP.</p>
+                        </div>
+                        <div class="space-y-4 text-xs">
+                            <div>
+                                <label class="block font-bold text-sistran-heading mb-1 uppercase text-[10px]">Selecione o Perfil Simulado *</label>
+                                <select id="auth-perfil-validacao" class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm p-3 font-medium text-sistran-heading focus:ring-1 focus:ring-sistran-gold focus:outline-none">
+                                    <option value="fulano">Fulano de Tal (Órgão) - Gestor Público</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block font-bold text-sistran-heading mb-1 uppercase text-[10px]">Senha de Acesso</label>
+                                <input type="password" value="••••••••" readonly class="w-full bg-gray-100 border border-sistran-border rounded-sm p-2.5 text-zinc-500 cursor-not-allowed">
+                            </div>
+                            <button onclick="handleRestrictedLogin('validacao')" class="w-full bg-sistran-yellow hover:bg-sistran-yellow-hover text-sistran-ink font-bold py-3 rounded-pill transition duration-150 flex items-center justify-center gap-2 text-xs">
+                                <i class="fa-solid fa-right-to-bracket"></i> Autenticar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Conteúdo protegido -->
+                    <div id="validacao-content" class="hidden">
                     <div class="bg-white rounded-md shadow-card border border-sistran-border p-6">
                         <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6">
                             <div>
@@ -1285,6 +1313,7 @@
                             <!-- Preenchido via Javascript -->
                         </div>
                     </div>
+                    </div><!-- fecha validacao-content -->
                 </section>
 
                 <!-- ==================== AMBIENTE 2: COLETA DE DADOS ==================== -->
@@ -1460,6 +1489,35 @@
 
                 <!-- ==================== AMBIENTE 3: ACOMPANHAMENTO E CONSULTA DOS RESULTADOS ==================== -->
                 <section id="tab-dashboard" class="space-y-6 hidden">
+
+                    <!-- Login de acesso restrito para Acompanhamento -->
+                    <div id="dashboard-auth-container" class="bg-white border border-sistran-border rounded-md p-8 max-w-md mx-auto shadow-card space-y-6">
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-sistran-gold-surface text-sistran-gold rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i class="fa-solid fa-lock text-xl"></i>
+                            </div>
+                            <h3 class="font-bold text-sistran-heading text-base">Acesso Restrito - Acompanhamento e Consulta</h3>
+                            <p class="text-xs text-sistran-body mt-1">Identifique-se para acessar o ambiente de acompanhamento e consulta dos resultados do PSV-SP.</p>
+                        </div>
+                        <div class="space-y-4 text-xs">
+                            <div>
+                                <label class="block font-bold text-sistran-heading mb-1 uppercase text-[10px]">Selecione o Perfil Simulado *</label>
+                                <select id="auth-perfil-dashboard" class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm p-3 font-medium text-sistran-heading focus:ring-1 focus:ring-sistran-gold focus:outline-none">
+                                    <option value="fulano">Fulano de Tal (Órgão) - Gestor Público</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block font-bold text-sistran-heading mb-1 uppercase text-[10px]">Senha de Acesso</label>
+                                <input type="password" value="••••••••" readonly class="w-full bg-gray-100 border border-sistran-border rounded-sm p-2.5 text-zinc-500 cursor-not-allowed">
+                            </div>
+                            <button onclick="handleRestrictedLogin('dashboard')" class="w-full bg-sistran-yellow hover:bg-sistran-yellow-hover text-sistran-ink font-bold py-3 rounded-pill transition duration-150 flex items-center justify-center gap-2 text-xs">
+                                <i class="fa-solid fa-right-to-bracket"></i> Autenticar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Conteúdo protegido -->
+                    <div id="dashboard-content" class="hidden">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
                         <!-- KPI 2: Sinistros Acumulados -->
@@ -1558,6 +1616,7 @@
                             </div>
                         </div>
                     </div>
+                    </div><!-- fecha dashboard-content -->
                 </section>
 
             </div>
@@ -3087,6 +3146,21 @@
             }
         }
 
+        function handleRestrictedLogin(area) {
+            // Usa o mesmo perfil simulado para login em qualquer área restrita
+            if (!currentPontoFocal) {
+                handleColetaLogin();
+            }
+            // Mostra o conteúdo protegido da área
+            if (area === 'validacao') {
+                document.getElementById('validacao-auth-container').classList.add('hidden');
+                document.getElementById('validacao-content').classList.remove('hidden');
+            } else if (area === 'dashboard') {
+                document.getElementById('dashboard-auth-container').classList.add('hidden');
+                document.getElementById('dashboard-content').classList.remove('hidden');
+            }
+        }
+
         function handleColetaLogin() {
             const mockSel = document.getElementById('auth-perfil-mock').value;
             currentPontoFocal = perfisPF[mockSel];
@@ -3132,6 +3206,12 @@
             document.getElementById('profile-orgao').textContent = "—";
             document.getElementById('profile-access-type').textContent = "Acesso Público";
             document.getElementById('profile-role').textContent = "Público Geral";
+
+            // Resetar áreas restritas - mostrar login novamente
+            document.getElementById('validacao-auth-container').classList.remove('hidden');
+            document.getElementById('validacao-content').classList.add('hidden');
+            document.getElementById('dashboard-auth-container').classList.remove('hidden');
+            document.getElementById('dashboard-content').classList.add('hidden');
 
             const indicator = document.getElementById('login-indicator');
             indicator.classList.remove('bg-emerald-500');
