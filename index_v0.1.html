@@ -506,18 +506,34 @@
                 </div>
 
                 <div class="flex items-center gap-2 md:gap-4 flex-shrink-0">
-                    <!-- Indicação de login apenas no canto superior direito -->
-                    <div class="flex items-center gap-2 md:gap-3">
-                        <div class="text-right hidden sm:block">
-                            <p class="text-[10px] text-sistran-muted uppercase font-bold tracking-wider">Acesso Ponto Focal</p>
-                            <span id="user-badge" class="text-xs font-semibold text-sistran-textHeading bg-sistran-surface-muted px-2.5 py-1 rounded-full border border-sistran-border">Visitante Público</span>
-                        </div>
-                        <button onclick="toggleLoginIndicatorClick()" class="p-1 hover:bg-slate-100 rounded-full transition-colors relative" title="Perfil / Sair">
+                    <!-- Perfil do usuário - botão com dropdown -->
+                    <div class="relative">
+                        <button onclick="toggleProfileMenu()" class="p-1 hover:bg-slate-100 rounded-full transition-colors relative" title="Perfil">
                             <div class="w-9 h-9 rounded-full bg-sistran-yellow text-sistran-ink flex items-center justify-center font-bold text-sm shadow relative">
                                 <span id="avatar-initials">VP</span>
                                 <span id="login-indicator" class="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
                             </div>
                         </button>
+                        <!-- Menu dropdown do perfil -->
+                        <div id="profile-dropdown" class="hidden absolute right-0 top-12 w-64 bg-white border border-sistran-border rounded-md shadow-card z-50 overflow-hidden">
+                            <div class="p-5 text-center border-b border-sistran-border">
+                                <div class="w-16 h-16 rounded-full bg-sistran-yellow text-sistran-ink flex items-center justify-center font-bold text-xl mx-auto mb-3 shadow">
+                                    <span id="profile-initials">VP</span>
+                                </div>
+                                <p id="profile-name" class="text-sm font-bold text-sistran-heading">Visitante</p>
+                                <p id="profile-orgao" class="text-xs text-sistran-body">—</p>
+                                <span id="profile-access-type" class="inline-block mt-2 text-[10px] font-bold uppercase tracking-wider text-sistran-gold bg-sistran-gold-surface px-2.5 py-1 rounded-pill">Acesso Público</span>
+                                <p id="profile-role" class="text-[10px] text-sistran-muted mt-1">Público Geral</p>
+                            </div>
+                            <div class="py-2">
+                                <button class="w-full flex items-center gap-3 px-5 py-2.5 text-xs text-sistran-body hover:bg-sistran-surface-muted transition text-left">
+                                    <i class="fa-solid fa-user text-sistran-gold w-4"></i> Dados Pessoais
+                                </button>
+                                <button onclick="handleProfileLogout()" id="profile-logout-btn" class="w-full flex items-center gap-3 px-5 py-2.5 text-xs text-rose-500 hover:bg-rose-50 transition text-left">
+                                    <i class="fa-solid fa-right-from-bracket w-4"></i> Sair
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -1314,10 +1330,6 @@
                                         <h3 class="font-bold text-base text-sistran-heading">Formulário de Submissão de Produto</h3>
                                         <p class="text-xs text-sistran-body">Selecione os campos baseados na estrutura oficial decenal do PSV-SP. Os campos estão estruturados em cascata de acordo com a planilha de monitoramento.</p>
                                     </div>
-                                    <!-- Botão de desconectar discreto e muito funcional para o fluxo de logout -->
-                                    <button onclick="handleColetaLogout()" class="text-rose-500 hover:text-rose-700 font-bold text-xs uppercase flex items-center gap-1.5 transition">
-                                        <i class="fa-solid fa-power-off"></i> Sair da Área Restrita
-                                    </button>
                                 </div>
 
                                 <form id="form-coleta-dados" class="space-y-4" onsubmit="handleFormSubmitColeta(event)">
@@ -1422,9 +1434,7 @@
                                     <h3 class="font-bold text-sm text-sistran-heading">Histórico de Produtos Enviados</h3>
                                     <p class="text-xs text-sistran-body">Acompanhe o andamento regulatório das suas submissões de conformidade.</p>
                                 </div>
-                                <button onclick="handleColetaLogout()" class="text-rose-500 hover:text-rose-700 font-bold text-xs uppercase flex items-center gap-1.5 transition">
-                                    <i class="fa-solid fa-power-off"></i> Sair da Área Restrita
-                                </button>
+                                <div></div>
                             </div>
 
                             <div class="overflow-x-auto border border-sistran-border rounded-md">
@@ -1955,14 +1965,29 @@
         }
 
         function toggleLoginIndicatorClick() {
+            toggleProfileMenu();
+        }
+
+        function toggleProfileMenu() {
+            const dropdown = document.getElementById('profile-dropdown');
+            if (dropdown) dropdown.classList.toggle('hidden');
+        }
+
+        function handleProfileLogout() {
+            toggleProfileMenu();
             if (currentPontoFocal) {
-                if (confirm("Deseja encerrar a sessão do Ponto Focal fictício 'Fulano de Tal'?")) {
-                    handleColetaLogout();
-                }
-            } else {
-                toggleLoginModal();
+                handleColetaLogout();
             }
         }
+
+        // Fecha menu ao clicar fora
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('profile-dropdown');
+            const btn = e.target.closest('[onclick*="toggleProfileMenu"]');
+            if (dropdown && !dropdown.contains(e.target) && !btn) {
+                dropdown.classList.add('hidden');
+            }
+        });
 
         function switchTab(tabId) {
             document.querySelectorAll('main section').forEach(sec => sec.classList.add('hidden'));
@@ -3067,9 +3092,13 @@
             currentPontoFocal = perfisPF[mockSel];
 
             if (currentPontoFocal) {
-                // Atualização visual do estado logado única no topo superior direito
-                document.getElementById('user-badge').textContent = `${currentPontoFocal.nome} (${currentPontoFocal.orgao})`;
+                // Atualização visual do estado logado no perfil dropdown
                 document.getElementById('avatar-initials').textContent = currentPontoFocal.iniciais;
+                document.getElementById('profile-initials').textContent = currentPontoFocal.iniciais;
+                document.getElementById('profile-name').textContent = currentPontoFocal.nome;
+                document.getElementById('profile-orgao').textContent = currentPontoFocal.orgao;
+                document.getElementById('profile-access-type').textContent = 'Acesso Restrito';
+                document.getElementById('profile-role').textContent = 'Ponto Focal';
 
                 document.getElementById('coleta-auth-container').classList.add('hidden');
                 document.getElementById('coleta-form-container').classList.remove('hidden');
@@ -3096,9 +3125,13 @@
             document.getElementById('file-upload-name').textContent = "";
             document.getElementById('form-coleta-dados').reset();
             
-            // Restabelece estado "Visitante Público" na indicação única superior direita
-            document.getElementById('user-badge').textContent = "Visitante Público";
+            // Restabelece estado "Visitante Público" no perfil dropdown
             document.getElementById('avatar-initials').textContent = "VP";
+            document.getElementById('profile-initials').textContent = "VP";
+            document.getElementById('profile-name').textContent = "Visitante";
+            document.getElementById('profile-orgao').textContent = "—";
+            document.getElementById('profile-access-type').textContent = "Acesso Público";
+            document.getElementById('profile-role').textContent = "Público Geral";
 
             const indicator = document.getElementById('login-indicator');
             indicator.classList.remove('bg-emerald-500');
