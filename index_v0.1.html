@@ -1476,14 +1476,19 @@
 
                         <!-- SUB-ABA: Histórico de Produtos Enviados -->
                         <div id="sub-tab-coleta-historico" class="coleta-sub-content hidden bg-white rounded-md shadow-card border border-sistran-border p-6 max-w-full mx-auto">
-                            <div class="mb-4">
-                                <h2 class="text-2xl font-bold text-sistran-heading flex items-center gap-2.5">
-                                    <span class="w-8 h-8 bg-sistran-ink rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i data-lucide="history" class="w-5 h-5 text-sistran-yellow"></i>
-                                    </span>
-                                    Histórico de Produtos Enviados
-                                </h2>
-                                <p class="text-xs text-sistran-body mt-2">Acompanhe o andamento regulatório das suas submissões de conformidade. Todas as versões (originais e revisadas) são mantidas no histórico.</p>
+                            <div class="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                <div>
+                                    <h2 class="text-2xl font-bold text-sistran-heading flex items-center gap-2.5">
+                                        <span class="w-8 h-8 bg-sistran-ink rounded-full flex items-center justify-center flex-shrink-0">
+                                            <i data-lucide="history" class="w-5 h-5 text-sistran-yellow"></i>
+                                        </span>
+                                        Histórico de Produtos Enviados
+                                    </h2>
+                                    <p class="text-xs text-sistran-body mt-2">Acompanhe o andamento regulatório das suas submissões de conformidade. Todas as versões (originais e revisadas) são mantidas no histórico.</p>
+                                </div>
+                                <button onclick="exportHistoricoXLSX()" class="bg-white border-2 border-sistran-gold hover:bg-sistran-gold-surface text-sistran-ink font-bold py-2 px-4 rounded-pill text-xs flex items-center gap-1.5 transition flex-shrink-0">
+                                    <i data-lucide="download" class="w-4 h-4"></i> Exportar Histórico (.xlsx)
+                                </button>
                             </div>
 
                             <div class="overflow-x-auto border border-sistran-border rounded-md">
@@ -1837,7 +1842,7 @@
                     objetivo: "OE 3.1 - Infraestrutura Viária Tolerante",
                     acao: "AC 3.1.1 - Eliminar pontos críticos em rodovias estaduais",
                     codProd: "3.1.1.1",
-                    produto: "Faixas elevadas e moderação de velocidade na SP-055",
+                    produto: "3.1.1.1 - Faixas elevadas e moderação de velocidade na SP-055",
                     indicador: "Intervenções executadas",
                     valor: "14",
                     horizonte: "2026",
@@ -3356,7 +3361,7 @@
                 objetivo: rowObjetivoVal,
                 acao: rowAcaoVal,
                 codProd: txtProd.split(' - ')[0],
-                produto: txtProd.includes(' - ') ? txtProd.split(' - ')[1] : txtProd,
+                produto: txtProd,
                 indicador: valIndicador,
                 valor: valor,
                 horizonte: anoRef,
@@ -3463,24 +3468,14 @@
 
                 // Link display
                 const linkDisplay = acao.evidencia 
-                    ? `<a href="${acao.evidencia}" target="_blank" class="text-sistran-gold hover:underline font-semibold truncate block max-w-[120px]" title="${acao.evidencia}"><i class="fa-solid fa-link mr-1"></i>Acessar</a>` 
+                    ? `<a href="${acao.evidencia}" target="_blank" class="text-sistran-gold hover:underline font-semibold truncate block max-w-[150px]" title="${acao.evidencia}"><i class="fa-solid fa-link mr-1"></i>Acessar</a>` 
                     : `<span class="text-sistran-muted">—</span>`;
 
-                // Extrair apenas o texto descritivo (sem o código numérico) para cada campo
-                // Formato esperado: "Eixo N - Nome" → "Nome" | "1.1 - Texto" → "Texto"
-                function extractDescricao(val) {
-                    if (!val) return '—';
-                    const parts = val.split(' - ');
-                    if (parts.length > 1) {
-                        return parts.slice(1).join(' - ');
-                    }
-                    return val;
-                }
-
-                const eixoDisplay = extractDescricao(acao.eixo);
-                const objetivoDisplay = extractDescricao(acao.objetivo);
-                const acaoDisplay = extractDescricao(acao.acao);
-                const produtoDisplay = acao.produto || extractDescricao(acao.codProd);
+                // Exibe os mesmos valores preenchidos no formulário (sem extração de código)
+                const eixoDisplay = acao.eixo || '—';
+                const objetivoDisplay = acao.objetivo || '—';
+                const acaoDisplay = acao.acao || '—';
+                const produtoDisplay = acao.produto || '—';
 
                 // Row highlighting for revised entries
                 const rowClass = acao.revisado 
@@ -3490,11 +3485,11 @@
                 const tr = `
                     <tr class="${rowClass}">
                         <td class="p-3 font-bold text-sistran-gold">#${acao.id}</td>
-                        <td class="p-3 text-sistran-body text-[10px] max-w-[150px]">${eixoDisplay}</td>
-                        <td class="p-3 text-sistran-body text-[10px] max-w-[150px]">${objetivoDisplay}</td>
-                        <td class="p-3 text-sistran-body text-[10px] max-w-[150px]">${acaoDisplay}</td>
-                        <td class="p-3 font-medium text-sistran-heading text-[10px] max-w-[150px]">${produtoDisplay}</td>
-                        <td class="p-3 text-sistran-body text-[10px] max-w-[130px]">${acao.indicador || '—'}</td>
+                        <td class="p-3 text-sistran-body text-[10px] max-w-[180px]">${eixoDisplay}</td>
+                        <td class="p-3 text-sistran-body text-[10px] max-w-[180px]">${objetivoDisplay}</td>
+                        <td class="p-3 text-sistran-body text-[10px] max-w-[180px]">${acaoDisplay}</td>
+                        <td class="p-3 font-medium text-sistran-heading text-[10px] max-w-[180px]">${produtoDisplay}</td>
+                        <td class="p-3 text-sistran-body text-[10px] max-w-[150px]">${acao.indicador || '—'}</td>
                         <td class="p-3 font-semibold text-sistran-heading text-center">${acao.horizonte || '—'}</td>
                         <td class="p-3 font-semibold text-sistran-gold">${acao.valor || '—'}</td>
                         <td class="p-3 text-[10px]">${anexosDisplay}</td>
@@ -3509,6 +3504,69 @@
         }
 
         // Variável editandoSubmissaoId já declarada no topo do script
+
+        function exportHistoricoXLSX() {
+            if (!currentPontoFocal) {
+                showNotification("Erro!", "Faça login para exportar o histórico.", "rose");
+                return;
+            }
+
+            const minhasAcoes = mockDatabase.acoes.filter(a => a.orgao === currentPontoFocal.orgao);
+
+            if (minhasAcoes.length === 0) {
+                showNotification("Aviso", "Nenhum produto no histórico para exportar.", "warning");
+                return;
+            }
+
+            // Ordena da mesma forma que a tabela
+            const sorted = [...minhasAcoes].sort((a, b) => {
+                if (a.id === b.id) return b.data.localeCompare(a.data);
+                return b.id - a.id;
+            });
+
+            // Monta os dados para a planilha
+            const dados = sorted.map(acao => ({
+                'ID': acao.id,
+                'Eixo Temático': acao.eixo || '',
+                'Objetivo Estratégico': acao.objetivo || '',
+                'Ação': acao.acao || '',
+                'Produto': acao.produto || '',
+                'Indicador': acao.indicador || '',
+                'Ano de Referência': acao.horizonte || '',
+                'Valor do Resultado': acao.valor || '',
+                'Anexos': acao.anexos || '',
+                'Link': acao.evidencia || '',
+                'Data de Envio': acao.data || '',
+                'Status': acao.status || ''
+            }));
+
+            // Usa SheetJS (XLSX) para gerar o arquivo
+            const ws = XLSX.utils.json_to_sheet(dados);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Histórico de Produtos');
+
+            // Ajusta largura das colunas
+            ws['!cols'] = [
+                { wch: 10 },  // ID
+                { wch: 35 },  // Eixo
+                { wch: 40 },  // Objetivo
+                { wch: 40 },  // Ação
+                { wch: 45 },  // Produto
+                { wch: 35 },  // Indicador
+                { wch: 12 },  // Ano
+                { wch: 18 },  // Valor
+                { wch: 25 },  // Anexos
+                { wch: 40 },  // Link
+                { wch: 14 },  // Data Envio
+                { wch: 20 }   // Status
+            ];
+
+            // Gera o download
+            const dataAtual = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
+            XLSX.writeFile(wb, `Historico_Produtos_PSV-SP_${dataAtual}.xlsx`);
+
+            showToast("Histórico exportado com sucesso!");
+        }
 
         function editarSubmissao(sortedIndex) {
             // Recupera as ações filtradas pelo órgão e ordenadas (mesma lógica do render)
@@ -3564,10 +3622,9 @@
                         setTimeout(() => {
                             // Preencher Produto
                             const wProd = document.getElementById('ss-produto');
-                            const prodFullText = acao.codProd && acao.produto ? `${acao.codProd} - ${acao.produto}` : acao.produto;
-                            if (wProd && prodFullText) {
-                                // Tentar achar no options ou usar o texto completo
-                                const matchedProd = wProd._options.find(opt => opt.includes(acao.codProd)) || prodFullText;
+                            if (wProd && acao.produto) {
+                                // Usa o valor exato armazenado no histórico
+                                const matchedProd = wProd._options.find(opt => opt === acao.produto) || wProd._options.find(opt => opt.includes(acao.codProd)) || acao.produto;
                                 wProd._value = matchedProd;
                                 wProd._input.value = matchedProd;
                                 const selectProd = document.getElementById('form-coleta-produto');
