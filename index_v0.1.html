@@ -3315,12 +3315,19 @@
             const selectProduto = document.getElementById('form-coleta-produto');
             const selectIndicador = document.getElementById('form-coleta-indicador');
 
-            const txtEixo = selectEixo.value;
-            const txtProd = selectProduto.value;
-            const valIndicador = selectIndicador.value;
+            // Lê os valores diretamente dos wrappers searchable-select (fonte real dos dados)
+            const wEixo = document.getElementById('ss-eixo');
+            const wObj = document.getElementById('ss-objetivo');
+            const wAcao = document.getElementById('ss-acao');
+            const wProd = document.getElementById('ss-produto');
+            const wInd = document.getElementById('ss-indicador');
 
-            const rowObjetivoVal = selectObjetivo.value;
-            const rowAcaoVal = selectAcao.value;
+            const txtEixo = (wEixo && wEixo._value) ? wEixo._value : selectEixo.value;
+            const txtProd = (wProd && wProd._value) ? wProd._value : selectProduto.value;
+            const valIndicador = (wInd && wInd._value) ? wInd._value : selectIndicador.value;
+
+            const rowObjetivoVal = (wObj && wObj._value) ? wObj._value : selectObjetivo.value;
+            const rowAcaoVal = (wAcao && wAcao._value) ? wAcao._value : selectAcao.value;
 
             const anoRef = document.getElementById('form-coleta-ano').value;
             const valor = document.getElementById('form-coleta-valor').value;
@@ -3329,6 +3336,12 @@
 
             if (!pontoFocalFile && !link) {
                 showNotification("Erro!", "Por favor, anexe um arquivo ou forneça um link para a pasta compartilhada.", "rose");
+                return;
+            }
+
+            // Valida que os campos cascata foram preenchidos
+            if (!txtEixo || !rowObjetivoVal || !rowAcaoVal || !txtProd || !valIndicador) {
+                showNotification("Erro!", "Preencha todos os campos obrigatórios do formulário (Eixo, Objetivo, Ação, Produto e Indicador).", "rose");
                 return;
             }
 
