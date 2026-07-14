@@ -1491,6 +1491,28 @@
                                 </button>
                             </div>
 
+                            <!-- Filtros do Histórico -->
+                            <div class="flex flex-wrap gap-3 mb-4">
+                                <div>
+                                    <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Filtrar por Eixo Temático</label>
+                                    <select id="filtro-historico-eixo" onchange="renderColetaHistorico()" class="bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs px-3 py-2 text-sistran-body focus:outline-none focus:ring-1 focus:ring-sistran-gold min-w-[200px]">
+                                        <option value="todos">Todos os Eixos</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Filtrar por Ano</label>
+                                    <select id="filtro-historico-ano" onchange="renderColetaHistorico()" class="bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs px-3 py-2 text-sistran-body focus:outline-none focus:ring-1 focus:ring-sistran-gold min-w-[120px]">
+                                        <option value="todos">Todos</option>
+                                        <option value="2025">2025</option>
+                                        <option value="2026">2026</option>
+                                        <option value="2027">2027</option>
+                                        <option value="2028">2028</option>
+                                        <option value="2029">2029</option>
+                                        <option value="2030">2030</option>
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="overflow-x-auto border border-sistran-border rounded-md">
                                 <table class="w-full text-left text-xs border-collapse min-w-[1300px]">
                                     <thead>
@@ -1849,7 +1871,7 @@
                     anexos: "relatorio_faixas_elevadas.pdf",
                     evidencia: "https://www.sei.sp.gov.br/processo-faixas-elevadas",
                     descricao: "Implantação de faixas elevadas em locais de alta travessia de pedestres.",
-                    data: "10/06/2026",
+                    data: "10/06/2026 14:32",
                     status: "Recebido",
                     revisado: false
                 }
@@ -3381,7 +3403,7 @@
                 anexos: pontoFocalFile ? pontoFocalFile.name : "",
                 evidencia: link,
                 descricao: descricao || "Relatório técnico analítico e comprovação das colunas pactuadas.",
-                data: new Date().toLocaleDateString('pt-BR'),
+                data: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
                 status: "Recebido",
                 revisado: false
             };
@@ -3438,10 +3460,42 @@
                 return;
             }
 
+            // Popula filtro de Eixo Temático dinamicamente
+            const filtroEixoSelect = document.getElementById('filtro-historico-eixo');
+            if (filtroEixoSelect) {
+                const eixosUnicos = [...new Set(minhasAcoes.map(a => a.eixo).filter(Boolean))];
+                const valorAtual = filtroEixoSelect.value;
+                filtroEixoSelect.innerHTML = '<option value="todos">Todos os Eixos</option>';
+                eixosUnicos.forEach(eixo => {
+                    const opt = document.createElement('option');
+                    opt.value = eixo;
+                    opt.textContent = eixo;
+                    filtroEixoSelect.appendChild(opt);
+                });
+                filtroEixoSelect.value = valorAtual || 'todos';
+            }
+
+            // Aplica filtros
+            const filtroEixo = filtroEixoSelect ? filtroEixoSelect.value : 'todos';
+            const filtroAnoSelect = document.getElementById('filtro-historico-ano');
+            const filtroAno = filtroAnoSelect ? filtroAnoSelect.value : 'todos';
+
+            let filtradas = [...minhasAcoes];
+            if (filtroEixo !== 'todos') {
+                filtradas = filtradas.filter(a => a.eixo === filtroEixo);
+            }
+            if (filtroAno !== 'todos') {
+                filtradas = filtradas.filter(a => a.horizonte === filtroAno);
+            }
+
+            if (filtradas.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="13" class="p-4 text-center text-sistran-muted font-medium">Nenhum produto encontrado com os filtros selecionados.</td></tr>`;
+                return;
+            }
+
             // Ordena por ID (agrupa versões do mesmo ID) e data de envio (mais recente primeiro)
-            const sorted = [...minhasAcoes].sort((a, b) => {
+            const sorted = [...filtradas].sort((a, b) => {
                 if (a.id === b.id) {
-                    // Versões mais recentes primeiro (por data de envio)
                     return b.data.localeCompare(a.data);
                 }
                 return b.id - a.id;
@@ -3462,10 +3516,13 @@
                     statusBadge = `<span class="bg-purple-50 text-purple-600 border border-purple-200 px-2 py-0.5 rounded font-bold text-[10px]">Revisado pelo usuário</span>`;
                 }
 
-                // Botão Editar Submissão - inativo se revisado === true
+                // Botão Editar Submissão - inativo se revisado, aprovado ou reprovado
                 let editarBtn = "";
-                if (acao.revisado) {
-                    editarBtn = `<button disabled class="bg-gray-200 text-gray-400 font-bold text-[10px] px-3 py-1.5 rounded-pill cursor-not-allowed opacity-60" title="Este produto já foi revisado">
+                if (acao.revisado || acao.status === "Aprovado" || acao.status === "Reprovado") {
+                    let titleMsg = "Este produto já foi revisado";
+                    if (acao.status === "Aprovado") titleMsg = "Produto aprovado — não é possível editar";
+                    if (acao.status === "Reprovado") titleMsg = "Produto reprovado — não é possível editar";
+                    editarBtn = `<button disabled class="bg-gray-200 text-gray-400 font-bold text-[10px] px-3 py-1.5 rounded-pill cursor-not-allowed opacity-60" title="${titleMsg}">
                         <i class="fa-solid fa-pen-to-square mr-1"></i>Editar Submissão
                     </button>`;
                 } else {
@@ -3590,7 +3647,7 @@
             });
 
             const acao = sorted[sortedIndex];
-            if (!acao || acao.revisado) return;
+            if (!acao || acao.revisado || acao.status === "Aprovado" || acao.status === "Reprovado") return;
 
             // Armazena o ID da submissão sendo editada
             editandoSubmissaoId = acao.id;
