@@ -3414,8 +3414,136 @@
                 return;
             }
 
-            pontoFocalFile = file;
-            nameEl.textContent = `✓ ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB) pronto para envio.`;
+            // Validação de integridade: arquivo vazio
+            if (file.size === 0) {
+                showNotification("Erro!", "O arquivo está vazio (0 bytes). Por favor, envie um arquivo válido.", "rose");
+                event.target.value = '';
+                pontoFocalFile = null;
+                return;
+            }
+
+            // Validação de integridade: magic bytes (assinatura do formato)
+            nameEl.textContent = "Verificando integridade do arquivo...";
+            nameEl.className = "text-xs font-bold text-amber-500 mt-2";
+
+            validarIntegridadeArquivo(file).then(function(resultado) {
+                if (resultado.valido) {
+                    pontoFocalFile = file;
+                    pontoFocalFileIntegridade = 'ok';
+                    nameEl.textContent = `✓ ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB) — Integridade verificada.`;
+                    nameEl.className = "text-xs font-bold text-emerald-600 mt-2";
+                } else {
+                    pontoFocalFile = null;
+                    pontoFocalFileIntegridade = 'corrompido';
+                    event.target.value = '';
+                    nameEl.textContent = `✗ ${file.name} — ${resultado.motivo}`;
+                    nameEl.className = "text-xs font-bold text-sistran-error mt-2";
+                    showNotification("Arquivo Rejeitado!", resultado.motivo, "rose");
+                }
+            });
+        }
+
+        // Variável para rastrear integridade do arquivo
+        let pontoFocalFileIntegridade = null;
+
+        // Validação de integridade do arquivo via magic bytes e renderização
+        function validarIntegridadeArquivo(file) {
+            return new Promise(function(resolve) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const arrayBuffer = e.target.result;
+                    const bytes = new Uint8Array(arrayBuffer);
+
+                    // Verifica arquivo muito pequeno (possivelmente corrompido)
+                    if (bytes.length < 4) {
+                        resolve({ valido: false, motivo: "Arquivo muito pequeno para ser válido. Possível corrupção." });
+                        return;
+                    }
+
+                    const ext = file.name.split('.').pop().toLowerCase();
+
+                    // Magic bytes por formato
+                    const magicBytes = {
+                        pdf: [0x25, 0x50, 0x44, 0x46],   // %PDF
+                        jpg: [0xFF, 0xD8, 0xFF],           // JPEG SOI
+                        jpeg: [0xFF, 0xD8, 0xFF],          // JPEG SOI
+                        png: [0x89, 0x50, 0x4E, 0x47],    // .PNG
+                        tiff: null                          // TIFF tem 2 variantes
+                    };
+
+                    // TIFF: pode começar com II (little-endian) ou MM (big-endian)
+                    const isTiff = (bytes[0] === 0x49 && bytes[1] === 0x49 && bytes[2] === 0x2A && bytes[3] === 0x00) ||
+                                   (bytes[0] === 0x4D && bytes[1] === 0x4D && bytes[2] === 0x00 && bytes[3] === 0x2A);
+
+                    if (ext === 'tiff' || ext === 'tif') {
+                        if (!isTiff) {
+                            resolve({ valido: false, motivo: "Arquivo TIFF corrompido ou com formato inválido. A assinatura do arquivo não corresponde ao formato TIFF." });
+                            return;
+                        }
+                        resolve({ valido: true });
+                        return;
+                    }
+
+                    // Verifica magic bytes para PDF, JPG, PNG
+                    const expected = magicBytes[ext];
+                    if (expected) {
+                        let match = true;
+                        for (let i = 0; i < expected.length; i++) {
+                            if (bytes[i] !== expected[i]) {
+                                match = false;
+                                break;
+                            }
+                        }
+                        if (!match) {
+                            const formatNames = { pdf: 'PDF', jpg: 'JPEG', jpeg: 'JPEG', png: 'PNG' };
+                            resolve({ valido: false, motivo: `Arquivo corrompido ou com formato inválido. O conteúdo não corresponde a um arquivo ${formatNames[ext]} legítimo.` });
+                            return;
+                        }
+                    }
+
+                    // Validação adicional para imagens: tentar renderizar
+                    if (['jpg', 'jpeg', 'png'].includes(ext)) {
+                        const blob = new Blob([arrayBuffer], { type: file.type });
+                        const url = URL.createObjectURL(blob);
+                        const img = new Image();
+                        img.onload = function() {
+                            URL.revokeObjectURL(url);
+                            if (img.width === 0 || img.height === 0) {
+                                resolve({ valido: false, motivo: "Imagem corrompida: dimensões inválidas (0x0 pixels)." });
+                            } else {
+                                resolve({ valido: true });
+                            }
+                        };
+                        img.onerror = function() {
+                            URL.revokeObjectURL(url);
+                            resolve({ valido: false, motivo: "Imagem corrompida: não foi possível renderizar o arquivo. O conteúdo pode estar danificado." });
+                        };
+                        img.src = url;
+                        return;
+                    }
+
+                    // PDF: verificação adicional — buscar %%EOF no final
+                    if (ext === 'pdf') {
+                        // Verifica se há pelo menos %%EOF nos últimos 1024 bytes
+                        const tailSize = Math.min(1024, bytes.length);
+                        const tail = new TextDecoder().decode(bytes.slice(bytes.length - tailSize));
+                        if (!tail.includes('%%EOF')) {
+                            resolve({ valido: false, motivo: "Arquivo PDF possivelmente corrompido: marcador de fim de arquivo (%%EOF) não encontrado." });
+                            return;
+                        }
+                        resolve({ valido: true });
+                        return;
+                    }
+
+                    resolve({ valido: true });
+                };
+
+                reader.onerror = function() {
+                    resolve({ valido: false, motivo: "Não foi possível ler o arquivo. O arquivo pode estar corrompido ou inacessível." });
+                };
+
+                reader.readAsArrayBuffer(file);
+            });
         }
 
         function handleFormSubmitColeta(event) {
@@ -3505,6 +3633,31 @@
 
             mockDatabase.acoes.unshift(novoProduto);
 
+            // === TRIAGEM AUTOMÁTICA PÓS-ENVIO ===
+            // Simula validação automática do sistema sobre o arquivo enviado
+            // Em produção, isso seria feito por um serviço backend com validação profunda
+            let triagemAutomaticaReprovada = false;
+            let motivoTriagem = "";
+
+            if (pontoFocalFile) {
+                // Verifica se o arquivo passou na validação de integridade
+                if (pontoFocalFileIntegridade === 'corrompido') {
+                    triagemAutomaticaReprovada = true;
+                    motivoTriagem = "Triagem automática: arquivo comprobatório identificado como corrompido ou com formato inválido.";
+                }
+                // Simula verificação de tamanho mínimo (arquivos suspeitamente pequenos)
+                else if (pontoFocalFile.size < 1024) { // menos de 1KB
+                    triagemAutomaticaReprovada = true;
+                    motivoTriagem = "Triagem automática: arquivo comprobatório com tamanho insuficiente (menor que 1KB). Possível arquivo vazio ou inválido.";
+                }
+            }
+
+            if (triagemAutomaticaReprovada) {
+                novoProduto.status = "Reprovado";
+                novoProduto.motivoReprovacao = motivoTriagem;
+                showNotification("Produto Reprovado Automaticamente!", motivoTriagem, "rose");
+            }
+
             const originalItem = dbImplementacao.find(item => item.cod === novoProduto.codProd);
             if (originalItem) {
                 originalItem.status = "Em andamento";
@@ -3527,11 +3680,13 @@
             document.getElementById('form-coleta-dados').reset();
             buildCascadingDropdowns();
             pontoFocalFile = null;
+            pontoFocalFileIntegridade = null;
             document.getElementById('file-upload-name').textContent = "";
+            document.getElementById('file-upload-name').className = "text-xs font-bold text-emerald-600 mt-2";
 
             if (isEdicao) {
                 showNotification("Produto Atualizado!", `O produto #${idSeteDigitos} foi revisado e reenviado com sucesso. A versão anterior foi marcada como 'Revisado pelo usuário'.`, "emerald");
-            } else {
+            } else if (!triagemAutomaticaReprovada) {
                 showNotification("Produto Enviado!", `O produto #${idSeteDigitos} foi recebido com sucesso e aguarda validação.`, "emerald");
             }
 
