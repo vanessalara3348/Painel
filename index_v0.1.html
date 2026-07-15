@@ -4291,65 +4291,87 @@
             }
 
             filtradas.forEach(acao => {
-                let workflowBtn = "";
-                let reprovarBtn = "";
                 let cardColor = "bg-white";
+                let headerBtn = "";
+                let accordionContent = "";
 
                 if (acao.status === "Recebido") {
                     cardColor = "bg-blue-50/20 border-blue-200";
-                    workflowBtn = `
-                        <button onclick="changeProductStatus(${acao.id}, 'Em Análise')" class="flex-1 md:flex-none bg-amber-400 hover:bg-amber-500 text-sistran-ink font-bold text-xs px-5 py-2.5 rounded-pill transition duration-150 flex items-center justify-center gap-1.5 shadow-sm">
+                    headerBtn = `
+                        <button onclick="toggleValidacaoAccordion('vacc-${acao.id}')" class="bg-amber-400 hover:bg-amber-500 text-sistran-ink font-bold text-xs px-5 py-2.5 rounded-pill transition duration-150 shadow-sm">
                             Iniciar Análise
                         </button>
                     `;
-                    reprovarBtn = "";
                 } else if (acao.status === "Em Análise") {
                     cardColor = "bg-amber-50/20 border-amber-200";
-                    workflowBtn = `
-                        <button onclick="changeProductStatus(${acao.id}, 'Aprovado')" class="flex-1 md:flex-none bg-[#10B981] text-white hover:bg-emerald-600 font-bold text-xs px-5 py-2.5 rounded-pill transition duration-150 flex items-center justify-center gap-1.5 shadow-sm">
-                            <i class="fa-solid fa-check"></i> Aprovar Produto
-                        </button>
-                    `;
-                    reprovarBtn = `
-                        <button onclick="reprovarComMotivo(${acao.id})" class="flex-1 md:flex-none bg-rose-500 text-white hover:bg-rose-600 font-bold text-xs px-5 py-2.5 rounded-pill transition duration-150 flex items-center justify-center gap-1.5">
-                            <i class="fa-solid fa-xmark"></i> Reprovar
+                    headerBtn = `
+                        <button onclick="toggleValidacaoAccordion('vacc-${acao.id}')" class="bg-amber-100 text-amber-700 border border-amber-300 font-bold text-xs px-4 py-2 rounded-pill transition duration-150">
+                            <i data-lucide="chevron-down" class="w-3 h-3 inline"></i> Ver Detalhes
                         </button>
                     `;
                 }
 
-                const card = `
-                    <div class="border rounded-md p-6 hover:shadow-subtle transition flex flex-col md:flex-row justify-between gap-6 ${cardColor}" id="card-${acao.id}">
-                        <div class="space-y-3 flex-1 text-xs">
-                            <div class="flex items-center gap-2 flex-wrap">
-                                <span class="bg-sistran-ink text-white text-[10px] font-bold uppercase px-2.5 py-1 rounded-sm">${acao.orgao}</span>
-                                <span class="text-sistran-muted font-medium"><i class="fa-regular fa-clock mr-1"></i>Enviado em ${acao.data}</span>
-                                <span class="border text-[10px] font-bold uppercase px-2 py-0.5 rounded-sm bg-sistran-gold-surface text-sistran-gold border-sistran-yellow">${acao.eixo}</span>
-                                <span class="text-zinc-400">ID: <strong>#${acao.id}</strong></span>
+                // Conteúdo accordion (painel expansível - padrão "Desempenho de Metas por Eixo")
+                accordionContent = `
+                    <div id="vacc-${acao.id}" class="hidden border-t border-sistran-border bg-white p-5 space-y-4">
+                        <p class="text-[11px] text-sistran-muted uppercase font-bold tracking-wider">Detalhes da Submissão</p>
+                        <div class="space-y-3 text-xs">
+                            <p class="text-sistran-body leading-relaxed bg-sistran-surface-muted border border-sistran-border p-3 rounded"><strong class="text-sistran-heading">Descrição/Observações:</strong> ${acao.descricao}</p>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div class="p-3 bg-gray-50 rounded-md"><span class="text-sistran-muted font-medium block mb-0.5">Indicador:</span><strong class="text-sistran-heading">${acao.indicador}</strong></div>
+                                <div class="p-3 bg-gray-50 rounded-md"><span class="text-sistran-muted font-medium block mb-0.5">Valor do Resultado:</span><strong class="text-sistran-gold">${acao.valor}</strong></div>
+                                <div class="p-3 bg-gray-50 rounded-md"><span class="text-sistran-muted font-medium block mb-0.5">Ano de Referência:</span><strong class="text-sistran-heading">${acao.horizonte || '—'}</strong></div>
                             </div>
-                            <div>
-                                <h4 class="font-bold text-sistran-heading text-sm leading-snug">${acao.produto}</h4>
-                                <p class="text-sistran-muted mt-1">Responsável: <strong>${acao.responsavel} (${acao.cargo || 'Ponto Focal'})</strong></p>
-                            </div>
-                            <p class="text-sistran-body leading-relaxed bg-sistran-surface-muted border border-sistran-border p-3 rounded">${acao.descricao}</p>
-                            
-                            <div class="flex gap-4">
-                                <div><span class="text-sistran-muted font-medium">Indicador:</span> <strong class="text-sistran-heading">${acao.indicador}</strong></div>
-                                <div><span class="text-sistran-muted font-medium">Resultado:</span> <strong class="text-sistran-gold">${acao.valor}</strong></div>
-                            </div>
-
                             <a href="${acao.evidencia}" target="_blank" class="inline-flex items-center gap-1.5 text-sistran-gold hover:underline font-semibold transition">
-                                <i class="fa-solid fa-file-pdf"></i> Ver Documento de Evidência Técnica (A2)
+                                <i class="fa-solid fa-file-pdf"></i> Ver Documento de Evidência Técnica
                             </a>
                         </div>
-
-                        <div class="flex md:flex-col justify-end gap-3 self-center w-full md:w-auto">
-                            ${workflowBtn}
-                            ${reprovarBtn}
+                        <div class="flex gap-3 pt-3 border-t border-sistran-border">
+                            <button onclick="confirmarValidacao(${acao.id}, 'Aprovado')" class="bg-[#10B981] text-white hover:bg-emerald-600 font-bold text-xs px-5 py-2.5 rounded-pill transition duration-150 flex items-center gap-1.5 shadow-sm">
+                                <i class="fa-solid fa-check"></i> Aprovar
+                            </button>
+                            <button onclick="abrirReprovacao(${acao.id})" class="bg-rose-500 text-white hover:bg-rose-600 font-bold text-xs px-5 py-2.5 rounded-pill transition duration-150 flex items-center gap-1.5">
+                                <i class="fa-solid fa-xmark"></i> Reprovar
+                            </button>
                         </div>
+                        <!-- Campo de motivo da reprovação (accordion interno - inicialmente oculto) -->
+                        <div id="reprovacao-motivo-${acao.id}" class="hidden border-t border-sistran-border pt-4 space-y-3">
+                            <p class="text-xs font-bold text-sistran-heading flex items-center gap-2"><i class="fa-solid fa-comment-dots text-rose-500"></i> Motivo da Reprovação</p>
+                            <textarea id="motivo-texto-${acao.id}" rows="3" placeholder="Descreva o motivo da reprovação..." class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-body focus:outline-none focus:ring-1 focus:ring-sistran-gold"></textarea>
+                            <button onclick="confirmarValidacao(${acao.id}, 'Reprovado')" class="bg-rose-500 text-white hover:bg-rose-600 font-bold text-xs px-4 py-2 rounded-pill transition duration-150 flex items-center gap-1.5">
+                                <i class="fa-solid fa-paper-plane"></i> Confirmar Reprovação
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                const card = `
+                    <div class="border rounded-md overflow-hidden hover:shadow-subtle transition ${cardColor}" id="card-${acao.id}">
+                        <!-- Cabeçalho do card (sempre visível) -->
+                        <div class="p-5 flex flex-col md:flex-row justify-between gap-4">
+                            <div class="space-y-2 flex-1 text-xs">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span class="bg-sistran-ink text-white text-[10px] font-bold uppercase px-2.5 py-1 rounded-sm">${acao.orgao}</span>
+                                    <span class="text-sistran-muted font-medium"><i class="fa-regular fa-clock mr-1"></i>Enviado em ${acao.data}</span>
+                                    <span class="border text-[10px] font-bold uppercase px-2 py-0.5 rounded-sm bg-sistran-gold-surface text-sistran-gold border-sistran-yellow">${acao.eixo}</span>
+                                    <span class="text-zinc-400">ID: <strong>#${acao.id}</strong></span>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-sistran-heading text-sm leading-snug">${acao.produto}</h4>
+                                    <p class="text-sistran-muted mt-1">Responsável: <strong>${acao.responsavel} (${acao.cargo || 'Ponto Focal'})</strong></p>
+                                </div>
+                            </div>
+                            <div class="flex items-center self-start md:self-center">
+                                ${headerBtn}
+                            </div>
+                        </div>
+                        <!-- Painel expansível (accordion - padrão Desempenho de Metas por Eixo) -->
+                        ${accordionContent}
                     </div>
                 `;
                 container.innerHTML += card;
             });
+            if (window.lucide) lucide.createIcons();
         }
 
         function changeProductStatus(id, novoStatus, motivoReprovacao) {
@@ -4389,6 +4411,55 @@
                 return;
             }
             changeProductStatus(id, 'Reprovado', motivo.trim());
+        }
+
+        // === Funções do Card Accordion de Validação ===
+        function toggleValidacaoAccordion(accId) {
+            const element = document.getElementById(accId);
+            if (!element) return;
+            if (element.classList.contains('hidden')) {
+                element.classList.remove('hidden');
+                // Muda o status para "Em Análise" ao expandir pela primeira vez
+                const idMatch = accId.replace('vacc-', '');
+                const acao = mockDatabase.acoes.find(a => a.id == idMatch);
+                if (acao && acao.status === 'Recebido') {
+                    acao.status = 'Em Análise';
+                    updateUIStats();
+                    if (currentPontoFocal) renderColetaHistorico();
+                }
+            } else {
+                element.classList.add('hidden');
+            }
+        }
+
+        function abrirReprovacao(id) {
+            const motivoDiv = document.getElementById('reprovacao-motivo-' + id);
+            if (motivoDiv) {
+                motivoDiv.classList.toggle('hidden');
+            }
+        }
+
+        function confirmarValidacao(id, novoStatus) {
+            // Se reprovado, valida o motivo
+            if (novoStatus === 'Reprovado') {
+                const motivoEl = document.getElementById('motivo-texto-' + id);
+                const motivo = motivoEl ? motivoEl.value.trim() : '';
+                if (!motivo) {
+                    showNotification("Erro!", "O motivo da reprovação é obrigatório.", "rose");
+                    return;
+                }
+                // Abre janela de confirmação
+                if (!confirm('Confirmar reprovação do produto #' + id + '?\n\nMotivo: ' + motivo + '\n\nClique OK para Enviar Atualização do Status.')) {
+                    return;
+                }
+                changeProductStatus(id, 'Reprovado', motivo);
+            } else {
+                // Aprovação - abre janela de confirmação
+                if (!confirm('Confirmar aprovação do produto #' + id + '?\n\nClique OK para Enviar Atualização do Status.')) {
+                    return;
+                }
+                changeProductStatus(id, 'Aprovado');
+            }
         }
 
         // === SUBMENU MONITORAMENTO E VALIDAÇÃO ===
