@@ -466,13 +466,30 @@
                 </button>
 
                 <!-- 4. Monitoramento e Validação (Ambiente Restrito) -->
-                <button onclick="switchTab('validacao')" id="nav-validacao" class="w-full flex items-center justify-between px-3 py-2.5 rounded-md text-sistran-body hover:bg-zinc-100 transition duration-150 text-left">
-                    <div class="flex items-center gap-3 flex-1">
-                        <i class="fa-solid fa-shield-halved text-lg w-5 flex-shrink-0 text-sistran-body"></i>
-                        <span class="tab-title text-xs font-bold text-sistran-heading">Monitoramento e Validação</span>
+                <div class="space-y-1">
+                    <button onclick="toggleValidacaoSubmenu()" id="nav-validacao" class="w-full flex items-center justify-between px-3 py-2.5 rounded-md text-sistran-body hover:bg-zinc-100 transition duration-150 text-left">
+                        <div class="flex items-center gap-3 flex-1">
+                            <i class="fa-solid fa-shield-halved text-lg w-5 flex-shrink-0 text-sistran-body"></i>
+                            <span class="tab-title text-xs font-bold text-sistran-heading">Monitoramento e Validação</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span id="badge-validar" class="bg-sistran-yellow text-sistran-ink font-bold px-1.5 py-0.2 rounded text-[9px]">1</span>
+                            <i id="chevron-validacao" class="fa-solid fa-chevron-down text-xs transition-transform duration-200 text-sistran-muted"></i>
+                        </div>
+                    </button>
+                    
+                    <!-- Submenu colapsável para Monitoramento e Validação -->
+                    <div id="submenu-validacao" class="hidden pl-6 space-y-1 overflow-hidden transition-all duration-300 border-l-2 border-sistran-border ml-5 mt-1">
+                        <button onclick="selectValidacaoSubitem('validacao')" id="subitem-validacao" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-medium text-sistran-body hover:bg-zinc-100 hover:text-sistran-heading transition-colors text-left">
+                            <i data-lucide="shield-check" class="w-4 h-4 text-sistran-muted flex-shrink-0"></i>
+                            <span>Validação</span>
+                        </button>
+                        <button onclick="selectValidacaoSubitem('produtos-validados')" id="subitem-produtos-validados" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-medium text-sistran-body hover:bg-zinc-100 hover:text-sistran-heading transition-colors text-left">
+                            <i data-lucide="history" class="w-4 h-4 text-sistran-muted flex-shrink-0"></i>
+                            <span>Produtos Validados</span>
+                        </button>
                     </div>
-                    <span id="badge-validar" class="bg-sistran-yellow text-sistran-ink font-bold px-1.5 py-0.2 rounded text-[9px] ml-1">1</span>
-                </button>
+                </div>
 
                 <!-- Seção de Contato -->
                 <p class="px-3 text-xs font-extrabold text-sistran-gold uppercase tracking-wider mt-6 mb-3 border-b border-sistran-border pb-1">Contato</p>
@@ -1293,7 +1310,10 @@
                     </div>
 
                     <!-- Conteúdo protegido -->
-                    <div id="validacao-content" class="hidden">
+                    <div id="validacao-content" class="hidden space-y-6">
+
+                    <!-- SUB-ABA: Validação de Produtos -->
+                    <div id="sub-tab-validacao-validacao" class="validacao-sub-content">
                     <div class="bg-white rounded-md shadow-card border border-sistran-border p-6">
                         <div class="mb-6">
                             <div>
@@ -1359,6 +1379,86 @@
                             <!-- Preenchido via Javascript -->
                         </div>
                     </div>
+                    </div><!-- fecha sub-tab-validacao-validacao -->
+
+                    <!-- SUB-ABA: Produtos Validados (Histórico) -->
+                    <div id="sub-tab-validacao-produtos-validados" class="validacao-sub-content hidden">
+                        <div class="bg-white rounded-md shadow-card border border-sistran-border p-6">
+                            <div class="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                <div>
+                                    <h2 class="text-2xl font-bold text-sistran-heading flex items-center gap-2.5">
+                                        <span class="w-8 h-8 bg-sistran-ink rounded-full flex items-center justify-center flex-shrink-0">
+                                            <i data-lucide="history" class="w-5 h-5 text-sistran-yellow"></i>
+                                        </span>
+                                        Produtos Validados
+                                    </h2>
+                                    <p class="text-xs text-sistran-body mt-2">Histórico de todos os produtos que foram aprovados ou reprovados.</p>
+                                </div>
+                                <button onclick="exportProdutosValidadosXLSX()" class="bg-white border-2 border-sistran-gold hover:bg-sistran-gold-surface text-sistran-ink font-bold py-2 px-4 rounded-pill text-xs flex items-center gap-1.5 transition flex-shrink-0">
+                                    <i data-lucide="download" class="w-4 h-4"></i> Exportar (.xlsx)
+                                </button>
+                            </div>
+
+                            <!-- Filtros dos Produtos Validados -->
+                            <div class="bg-gray-50 p-4 rounded-md border border-sistran-border mb-4">
+                                <p class="text-xs font-bold text-sistran-heading mb-3 flex items-center gap-2">
+                                    <i data-lucide="filter" class="w-4 h-4 text-sistran-gold"></i>
+                                    Filtros
+                                </p>
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-sistran-body mb-1">Status</label>
+                                        <select id="filtro-validados-status" onchange="renderProdutosValidados()" class="w-full text-xs p-2.5 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                            <option value="todos">Todos</option>
+                                            <option value="Aprovado">Aprovados</option>
+                                            <option value="Reprovado">Reprovados</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-sistran-body mb-1">Eixo Temático</label>
+                                        <select id="filtro-validados-eixo" onchange="renderProdutosValidados()" class="w-full text-xs p-2.5 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                            <option value="todos">Todos os Eixos</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-sistran-body mb-1">Ano de Referência</label>
+                                        <select id="filtro-validados-ano" onchange="renderProdutosValidados()" class="w-full text-xs p-2.5 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                            <option value="todos">Todos</option>
+                                            <option value="2025">2025</option>
+                                            <option value="2026">2026</option>
+                                            <option value="2027">2027</option>
+                                            <option value="2028">2028</option>
+                                            <option value="2029">2029</option>
+                                            <option value="2030">2030</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="overflow-x-auto border border-sistran-border rounded-md">
+                                <table class="w-full text-left text-xs border-collapse min-w-[1100px]">
+                                    <thead>
+                                        <tr class="bg-sistran-surface-muted text-sistran-heading font-bold border-b border-sistran-border">
+                                            <th class="p-3 w-20">ID</th>
+                                            <th class="p-3">Eixo Temático</th>
+                                            <th class="p-3">Produto</th>
+                                            <th class="p-3">Órgão</th>
+                                            <th class="p-3">Indicador</th>
+                                            <th class="p-3 w-16">Ano</th>
+                                            <th class="p-3">Valor</th>
+                                            <th class="p-3 w-28">Data de Envio</th>
+                                            <th class="p-3 w-24">Status</th>
+                                            <th class="p-3">Motivo da Reprovação</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="validados-historico-tbody" class="divide-y divide-gray-100">
+                                        <!-- Preenchido via Javascript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div><!-- fecha sub-tab-validacao-produtos-validados -->
+
                     </div><!-- fecha validacao-content -->
                 </section>
 
@@ -2138,7 +2238,9 @@
                 'desempenho': 'Desempenho',
                 'implementacao': 'Implementação',
                 'formulario': 'Formulário de Submissão',
-                'historico': 'Histórico de Produtos'
+                'historico': 'Histórico de Produtos',
+                'validacao-sub': 'Validação',
+                'produtos-validados': 'Produtos Validados'
             };
 
             let html = '';
@@ -2185,6 +2287,10 @@
                 sessaoValidacao = null;
                 document.getElementById('validacao-auth-container').classList.remove('hidden');
                 document.getElementById('validacao-content').classList.add('hidden');
+                const submenuVal = document.getElementById('submenu-validacao');
+                const chevronVal = document.getElementById('chevron-validacao');
+                if (submenuVal) submenuVal.classList.add('hidden');
+                if (chevronVal) chevronVal.classList.remove('rotate-180');
             }
             
             // Reseta sessão de Acompanhamento e Consulta
@@ -3309,6 +3415,14 @@
                 if (sessaoValidacao) {
                     document.getElementById('validacao-auth-container').classList.add('hidden');
                     document.getElementById('validacao-content').classList.remove('hidden');
+
+                    // Abre submenu no sidebar
+                    const submenu = document.getElementById('submenu-validacao');
+                    const chevron = document.getElementById('chevron-validacao');
+                    if (submenu) submenu.classList.remove('hidden');
+                    if (chevron) chevron.classList.add('rotate-180');
+
+                    selectValidacaoSubitem('validacao');
                     showNotification("Acesso Autorizado", `Logado como ${sessaoValidacao.nome} (${sessaoValidacao.cargo}).`, "emerald");
                 }
             } else if (area === 'dashboard') {
@@ -4185,7 +4299,7 @@
                     cardColor = "bg-blue-50/20 border-blue-200";
                     workflowBtn = `
                         <button onclick="changeProductStatus(${acao.id}, 'Em Análise')" class="flex-1 md:flex-none bg-amber-400 hover:bg-amber-500 text-sistran-ink font-bold text-xs px-5 py-2.5 rounded-pill transition duration-150 flex items-center justify-center gap-1.5 shadow-sm">
-                            <i class="fa-solid fa-spinner animate-spin text-[10px]"></i> Iniciar Análise
+                            Iniciar Análise
                         </button>
                     `;
                     reprovarBtn = "";
@@ -4275,6 +4389,181 @@
                 return;
             }
             changeProductStatus(id, 'Reprovado', motivo.trim());
+        }
+
+        // === SUBMENU MONITORAMENTO E VALIDAÇÃO ===
+        let activeValidacaoSubTab = 'validacao';
+
+        function toggleValidacaoSubmenu() {
+            const submenu = document.getElementById('submenu-validacao');
+            const chevron = document.getElementById('chevron-validacao');
+
+            if (sessaoValidacao === null) {
+                switchTab('validacao');
+                if (submenu) submenu.classList.add('hidden');
+                if (chevron) chevron.classList.remove('rotate-180');
+            } else {
+                if (submenu.classList.contains('hidden')) {
+                    submenu.classList.remove('hidden');
+                    chevron.classList.add('rotate-180');
+                    switchTab('validacao');
+                    selectValidacaoSubitem('validacao');
+                } else {
+                    submenu.classList.add('hidden');
+                    chevron.classList.remove('rotate-180');
+                }
+            }
+        }
+
+        function selectValidacaoSubitem(subTabId) {
+            switchTab('validacao');
+
+            // Oculta todas as sub-abas
+            document.querySelectorAll('.validacao-sub-content').forEach(el => {
+                el.classList.add('hidden');
+            });
+            const targetSub = document.getElementById(`sub-tab-validacao-${subTabId}`);
+            if (targetSub) targetSub.classList.remove('hidden');
+
+            activeValidacaoSubTab = subTabId;
+            updateBreadcrumbs('validacao', subTabId === 'validacao' ? 'validacao-sub' : 'produtos-validados');
+
+            // Highlight no submenu
+            document.querySelectorAll('#submenu-validacao button').forEach(btn => {
+                btn.classList.remove('bg-sistran-gold-surface', 'text-sistran-gold', 'font-semibold');
+                btn.classList.add('text-sistran-body');
+                const icon = btn.querySelector('svg') || btn.querySelector('i');
+                if (icon) { icon.classList.remove('text-sistran-gold'); icon.classList.add('text-sistran-muted'); }
+            });
+
+            const activeBtn = document.getElementById(`subitem-${subTabId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-sistran-gold-surface', 'text-sistran-gold', 'font-semibold');
+                activeBtn.classList.remove('text-sistran-body');
+                const icon = activeBtn.querySelector('svg') || activeBtn.querySelector('i');
+                if (icon) { icon.classList.add('text-sistran-gold'); icon.classList.remove('text-sistran-muted'); }
+            }
+
+            // Abre submenu se necessário
+            const submenu = document.getElementById('submenu-validacao');
+            const chevron = document.getElementById('chevron-validacao');
+            if (submenu && submenu.classList.contains('hidden')) {
+                submenu.classList.remove('hidden');
+                if (chevron) chevron.classList.add('rotate-180');
+            }
+
+            if (subTabId === 'produtos-validados') {
+                renderProdutosValidados();
+            }
+        }
+
+        function renderProdutosValidados() {
+            const tbody = document.getElementById('validados-historico-tbody');
+            if (!tbody) return;
+            tbody.innerHTML = "";
+
+            // Filtra produtos já validados (Aprovado ou Reprovado)
+            const validados = mockDatabase.acoes.filter(a => a.status === 'Aprovado' || a.status === 'Reprovado');
+
+            if (validados.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="10" class="p-4 text-center text-sistran-muted font-medium">Nenhum produto validado ainda.</td></tr>`;
+                return;
+            }
+
+            // Popula filtro de Eixo dinamicamente
+            const filtroEixoSelect = document.getElementById('filtro-validados-eixo');
+            if (filtroEixoSelect) {
+                const eixosUnicos = [...new Set(validados.map(a => a.eixo).filter(Boolean))];
+                const valorAtual = filtroEixoSelect.value;
+                filtroEixoSelect.innerHTML = '<option value="todos">Todos os Eixos</option>';
+                eixosUnicos.forEach(eixo => {
+                    const opt = document.createElement('option');
+                    opt.value = eixo;
+                    opt.textContent = eixo;
+                    filtroEixoSelect.appendChild(opt);
+                });
+                filtroEixoSelect.value = valorAtual || 'todos';
+            }
+
+            // Aplica filtros
+            const filtroStatus = document.getElementById('filtro-validados-status') ? document.getElementById('filtro-validados-status').value : 'todos';
+            const filtroEixo = filtroEixoSelect ? filtroEixoSelect.value : 'todos';
+            const filtroAno = document.getElementById('filtro-validados-ano') ? document.getElementById('filtro-validados-ano').value : 'todos';
+
+            let filtrados = [...validados];
+            if (filtroStatus !== 'todos') filtrados = filtrados.filter(a => a.status === filtroStatus);
+            if (filtroEixo !== 'todos') filtrados = filtrados.filter(a => a.eixo === filtroEixo);
+            if (filtroAno !== 'todos') filtrados = filtrados.filter(a => a.horizonte === filtroAno);
+
+            if (filtrados.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="10" class="p-4 text-center text-sistran-muted font-medium">Nenhum produto encontrado com os filtros selecionados.</td></tr>`;
+                return;
+            }
+
+            filtrados.sort((a, b) => b.id - a.id);
+
+            filtrados.forEach(acao => {
+                let statusBadge = '';
+                if (acao.status === 'Aprovado') {
+                    statusBadge = `<span class="bg-emerald-50 text-emerald-600 border border-emerald-200 px-2 py-0.5 rounded font-bold text-[10px]">Aprovado</span>`;
+                } else {
+                    statusBadge = `<span class="bg-rose-50 text-sistran-error border border-rose-200 px-2 py-0.5 rounded font-bold text-[10px]">Reprovado</span>`;
+                }
+
+                const motivo = acao.motivoReprovacao || '—';
+
+                const tr = `
+                    <tr class="hover:bg-gray-50 border-b border-gray-100 transition-colors">
+                        <td class="p-3 font-bold text-sistran-gold">#${acao.id}</td>
+                        <td class="p-3 text-sistran-body text-[10px] max-w-[150px]">${acao.eixo || '—'}</td>
+                        <td class="p-3 font-medium text-sistran-heading text-[10px] max-w-[180px]">${acao.produto || '—'}</td>
+                        <td class="p-3 text-sistran-body text-[10px]">${acao.orgao || '—'}</td>
+                        <td class="p-3 text-sistran-body text-[10px] max-w-[130px]">${acao.indicador || '—'}</td>
+                        <td class="p-3 font-semibold text-sistran-heading text-center">${acao.horizonte || '—'}</td>
+                        <td class="p-3 font-semibold text-sistran-gold">${acao.valor || '—'}</td>
+                        <td class="p-3 font-semibold text-sistran-heading">${acao.data || '—'}</td>
+                        <td class="p-3">${statusBadge}</td>
+                        <td class="p-3 text-sistran-body text-[10px] max-w-[200px]">${motivo}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += tr;
+            });
+        }
+
+        function exportProdutosValidadosXLSX() {
+            const validados = mockDatabase.acoes.filter(a => a.status === 'Aprovado' || a.status === 'Reprovado');
+
+            if (validados.length === 0) {
+                showNotification("Aviso", "Nenhum produto validado para exportar.", "warning");
+                return;
+            }
+
+            const dados = validados.map(acao => ({
+                'ID': acao.id,
+                'Eixo Temático': acao.eixo || '',
+                'Produto': acao.produto || '',
+                'Órgão': acao.orgao || '',
+                'Indicador': acao.indicador || '',
+                'Ano de Referência': acao.horizonte || '',
+                'Valor do Resultado': acao.valor || '',
+                'Data de Envio': acao.data || '',
+                'Status': acao.status || '',
+                'Motivo da Reprovação': acao.motivoReprovacao || ''
+            }));
+
+            const ws = XLSX.utils.json_to_sheet(dados);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Produtos Validados');
+
+            ws['!cols'] = [
+                { wch: 10 }, { wch: 35 }, { wch: 45 }, { wch: 20 },
+                { wch: 35 }, { wch: 12 }, { wch: 18 }, { wch: 18 },
+                { wch: 14 }, { wch: 40 }
+            ];
+
+            const dataAtual = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
+            XLSX.writeFile(wb, `Produtos_Validados_PSV-SP_${dataAtual}.xlsx`);
+            showToast("Produtos validados exportados com sucesso!");
         }
 
         function openModalDetails(index) {
