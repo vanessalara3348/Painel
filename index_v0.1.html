@@ -2323,6 +2323,8 @@
             const chevronPublico = document.getElementById('chevron-publico');
             const submenuColeta = document.getElementById('submenu-coleta');
             const chevronColeta = document.getElementById('chevron-coleta');
+            const submenuValidacao = document.getElementById('submenu-validacao');
+            const chevronValidacao = document.getElementById('chevron-validacao');
 
             if (tabId !== 'publico') {
                 if (submenuPublico) submenuPublico.classList.add('hidden');
@@ -2338,6 +2340,16 @@
                 if (submenuColeta) submenuColeta.classList.add('hidden');
                 if (chevronColeta) chevronColeta.classList.remove('rotate-180');
                 document.querySelectorAll('#submenu-coleta button').forEach(btn => {
+                    btn.classList.remove('bg-sistran-gold-surface', 'text-sistran-gold', 'font-semibold');
+                    btn.classList.add('text-sistran-body');
+                    const icon = btn.querySelector('svg') || btn.querySelector('i');
+                    if (icon) { icon.classList.remove('text-sistran-gold'); icon.classList.add('text-sistran-muted'); }
+                });
+            }
+            if (tabId !== 'validacao') {
+                if (submenuValidacao) submenuValidacao.classList.add('hidden');
+                if (chevronValidacao) chevronValidacao.classList.remove('rotate-180');
+                document.querySelectorAll('#submenu-validacao button').forEach(btn => {
                     btn.classList.remove('bg-sistran-gold-surface', 'text-sistran-gold', 'font-semibold');
                     btn.classList.add('text-sistran-body');
                     const icon = btn.querySelector('svg') || btn.querySelector('i');
