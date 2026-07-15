@@ -1295,7 +1295,7 @@
                     <!-- Conteúdo protegido -->
                     <div id="validacao-content" class="hidden">
                     <div class="bg-white rounded-md shadow-card border border-sistran-border p-6">
-                        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6">
+                        <div class="mb-6">
                             <div>
                                 <h2 class="text-2xl font-bold text-sistran-heading flex items-center gap-2.5">
                                     <span class="w-8 h-8 bg-sistran-ink rounded-full flex items-center justify-center flex-shrink-0">
@@ -1305,18 +1305,53 @@
                                 </h2>
                                 <p class="text-xs text-sistran-body mt-2">Revise os detalhes, documentos comprobatórios e aprove para o Painel Geral</p>
                             </div>
-                            <div class="flex gap-2">
-                                <select id="filtro-eixo-validacao" onchange="renderValidationCards()" class="bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs px-3 py-2 text-sistran-body focus:outline-none focus:ring-1 focus:ring-sistran-gold">
-                                    <option value="todos" selected>Todos os Eixos</option>
-                                    <option value="Eixo 1">Gestão da Segurança</option>
-                                    <option value="Eixo 2">Gestão da Informação</option>
-                                    <option value="Eixo 3">Vias Seguras</option>
-                                    <option value="Eixo 4">Educação</option>
-                                    <option value="Eixo 5">Comunicação</option>
-                                    <option value="Eixo 6">Fiscalização</option>
-                                    <option value="Eixo 7">Veículos Seguros</option>
-                                    <option value="Eixo 8">Atendimento</option>
-                                </select>
+                        </div>
+
+                        <!-- Filtros da Validação - padrão Impacto -->
+                        <div class="bg-gray-50 p-4 rounded-md border border-sistran-border mb-6">
+                            <p class="text-xs font-bold text-sistran-heading mb-3 flex items-center gap-2">
+                                <i data-lucide="filter" class="w-4 h-4 text-sistran-gold"></i>
+                                Filtros de Validação
+                            </p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-sistran-body mb-1">Órgão Responsável</label>
+                                    <select id="filtro-orgao-validacao" onchange="renderValidationCards()" class="w-full text-xs p-2.5 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                        <option value="todos">Todos os Órgãos</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-sistran-body mb-1">Município</label>
+                                    <select id="filtro-municipio-validacao" onchange="renderValidationCards()" class="w-full text-xs p-2.5 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                        <option value="todos">Todos os Municípios</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-sistran-body mb-1">Eixo Temático</label>
+                                    <select id="filtro-eixo-validacao" onchange="renderValidationCards()" class="w-full text-xs p-2.5 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                        <option value="todos" selected>Todos os Eixos</option>
+                                        <option value="Eixo 1">Eixo 1 - Gestão da Segurança</option>
+                                        <option value="Eixo 2">Eixo 2 - Gestão da Informação</option>
+                                        <option value="Eixo 3">Eixo 3 - Vias Seguras</option>
+                                        <option value="Eixo 4">Eixo 4 - Educação</option>
+                                        <option value="Eixo 5">Eixo 5 - Comunicação</option>
+                                        <option value="Eixo 6">Eixo 6 - Fiscalização</option>
+                                        <option value="Eixo 7">Eixo 7 - Veículos Seguros</option>
+                                        <option value="Eixo 8">Eixo 8 - Atendimento</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-sistran-body mb-1">Ano de Referência</label>
+                                    <select id="filtro-ano-validacao" onchange="renderValidationCards()" class="w-full text-xs p-2.5 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                        <option value="todos">Todos</option>
+                                        <option value="2025">2025</option>
+                                        <option value="2026">2026</option>
+                                        <option value="2027">2027</option>
+                                        <option value="2028">2028</option>
+                                        <option value="2029">2029</option>
+                                        <option value="2030">2030</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
 
@@ -3814,17 +3849,63 @@
         function renderValidationCards() {
             const container = document.getElementById('validation-cards-container');
             if (!container) return;
-            const filtro = document.getElementById('filtro-eixo-validacao').value;
+            const filtroEixo = document.getElementById('filtro-eixo-validacao').value;
+            const filtroAno = document.getElementById('filtro-ano-validacao') ? document.getElementById('filtro-ano-validacao').value : 'todos';
+            const filtroOrgao = document.getElementById('filtro-orgao-validacao') ? document.getElementById('filtro-orgao-validacao').value : 'todos';
+            const filtroMunicipio = document.getElementById('filtro-municipio-validacao') ? document.getElementById('filtro-municipio-validacao').value : 'todos';
             container.innerHTML = "";
 
             const pendentes = mockDatabase.acoes.filter(a => a.status === 'Recebido' || a.status === 'Em Análise');
-            const filtradas = filtro === 'todos' ? pendentes : pendentes.filter(a => a.eixo.toLowerCase().includes(filtro.toLowerCase()));
+
+            // Popula filtros dinâmicos (Órgão e Município)
+            const filtroOrgaoSelect = document.getElementById('filtro-orgao-validacao');
+            if (filtroOrgaoSelect) {
+                const orgaosUnicos = [...new Set(pendentes.map(a => a.orgao).filter(Boolean))];
+                const valorAtualOrgao = filtroOrgaoSelect.value;
+                filtroOrgaoSelect.innerHTML = '<option value="todos">Todos os Órgãos</option>';
+                orgaosUnicos.forEach(orgao => {
+                    const opt = document.createElement('option');
+                    opt.value = orgao;
+                    opt.textContent = orgao;
+                    filtroOrgaoSelect.appendChild(opt);
+                });
+                filtroOrgaoSelect.value = valorAtualOrgao || 'todos';
+            }
+
+            const filtroMunicipioSelect = document.getElementById('filtro-municipio-validacao');
+            if (filtroMunicipioSelect) {
+                const municipiosUnicos = [...new Set(pendentes.map(a => a.municipio).filter(Boolean))];
+                const valorAtualMun = filtroMunicipioSelect.value;
+                filtroMunicipioSelect.innerHTML = '<option value="todos">Todos os Municípios</option>';
+                municipiosUnicos.forEach(mun => {
+                    const opt = document.createElement('option');
+                    opt.value = mun;
+                    opt.textContent = mun;
+                    filtroMunicipioSelect.appendChild(opt);
+                });
+                filtroMunicipioSelect.value = valorAtualMun || 'todos';
+            }
+
+            // Aplica todos os filtros
+            let filtradas = [...pendentes];
+            if (filtroEixo !== 'todos') {
+                filtradas = filtradas.filter(a => a.eixo && a.eixo.toLowerCase().includes(filtroEixo.toLowerCase()));
+            }
+            if (filtroAno !== 'todos') {
+                filtradas = filtradas.filter(a => a.horizonte === filtroAno);
+            }
+            if (filtroOrgao !== 'todos') {
+                filtradas = filtradas.filter(a => a.orgao === filtroOrgao);
+            }
+            if (filtroMunicipio !== 'todos') {
+                filtradas = filtradas.filter(a => a.municipio === filtroMunicipio);
+            }
 
             if (filtradas.length === 0) {
                 container.innerHTML = `
                     <div class="text-center py-12 text-sistran-muted">
                         <i class="fa-solid fa-folder-open text-4xl mb-3 block"></i>
-                        <p class="text-sm">Nenhuma entrega pendente de validação neste momento.</p>
+                        <p class="text-sm">Nenhuma entrega pendente de validação com os filtros selecionados.</p>
                     </div>
                 `;
                 return;
