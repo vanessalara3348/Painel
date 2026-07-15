@@ -3571,17 +3571,25 @@
                 } else if (acao.status === "Aprovado") {
                     statusBadge = `<span class="bg-emerald-50 text-emerald-600 border border-emerald-200 px-2 py-0.5 rounded font-bold text-[10px]">Aprovado</span>`;
                 } else if (acao.status === "Reprovado") {
-                    statusBadge = `<span class="bg-rose-50 text-sistran-error border border-rose-200 px-2 py-0.5 rounded font-bold text-[10px]">Reprovado</span>`;
+                    const motivo = acao.motivoReprovacao || 'Motivo não informado';
+                    statusBadge = `<span class="relative group">
+                        <button class="bg-rose-50 text-sistran-error border border-rose-200 px-2 py-0.5 rounded font-bold text-[10px] cursor-pointer hover:bg-rose-100 transition">
+                            <i class="fa-solid fa-xmark mr-0.5"></i>Reprovado
+                        </button>
+                        <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-60 bg-sistran-ink text-white text-[10px] leading-relaxed rounded-md p-3 shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <strong class="block text-sistran-yellow mb-1">Motivo da Reprovação:</strong>
+                            ${motivo}
+                        </span>
+                    </span>`;
                 } else if (acao.status === "Revisado pelo usuário") {
                     statusBadge = `<span class="bg-purple-50 text-purple-600 border border-purple-200 px-2 py-0.5 rounded font-bold text-[10px]">Revisado pelo usuário</span>`;
                 }
 
-                // Botão Editar Submissão - inativo se revisado, aprovado ou reprovado
+                // Botão Editar Submissão - inativo se revisado ou aprovado
                 let editarBtn = "";
-                if (acao.revisado || acao.status === "Aprovado" || acao.status === "Reprovado") {
+                if (acao.revisado || acao.status === "Aprovado") {
                     let titleMsg = "Este produto já foi revisado";
                     if (acao.status === "Aprovado") titleMsg = "Produto aprovado — não é possível editar";
-                    if (acao.status === "Reprovado") titleMsg = "Produto reprovado — não é possível editar";
                     editarBtn = `<button disabled class="bg-gray-200 text-gray-400 font-bold text-[10px] px-3 py-1.5 rounded-pill cursor-not-allowed opacity-60" title="${titleMsg}">
                         <i class="fa-solid fa-pen-to-square mr-1"></i>Editar Submissão
                     </button>`;
@@ -3667,7 +3675,8 @@
                 'Anexos': acao.anexos || '',
                 'Link': acao.evidencia || '',
                 'Data de Envio': acao.data || '',
-                'Status': acao.status || ''
+                'Status': acao.status || '',
+                'Motivo da Reprovação': acao.motivoReprovacao || ''
             }));
 
             // Usa SheetJS (XLSX) para gerar o arquivo
@@ -3688,7 +3697,8 @@
                 { wch: 25 },  // Anexos
                 { wch: 40 },  // Link
                 { wch: 14 },  // Data Envio
-                { wch: 20 }   // Status
+                { wch: 20 },  // Status
+                { wch: 40 }   // Motivo da Reprovação
             ];
 
             // Gera o download
@@ -3707,7 +3717,7 @@
             });
 
             const acao = sorted[sortedIndex];
-            if (!acao || acao.revisado || acao.status === "Aprovado" || acao.status === "Reprovado") return;
+            if (!acao || acao.revisado || acao.status === "Aprovado") return;
 
             // Armazena o ID da submissão sendo editada
             editandoSubmissaoId = acao.id;
@@ -3841,7 +3851,7 @@
                         </button>
                     `;
                     reprovarBtn = `
-                        <button onclick="changeProductStatus(${acao.id}, 'Reprovado')" class="flex-1 md:flex-none bg-rose-500 text-white hover:bg-rose-600 font-bold text-xs px-5 py-2.5 rounded-pill transition duration-150 flex items-center justify-center gap-1.5">
+                        <button onclick="reprovarComMotivo(${acao.id})" class="flex-1 md:flex-none bg-rose-500 text-white hover:bg-rose-600 font-bold text-xs px-5 py-2.5 rounded-pill transition duration-150 flex items-center justify-center gap-1.5">
                             <i class="fa-solid fa-xmark"></i> Reprovar
                         </button>
                     `;
@@ -3882,10 +3892,14 @@
             });
         }
 
-        function changeProductStatus(id, novoStatus) {
+        function changeProductStatus(id, novoStatus, motivoReprovacao) {
             const acao = mockDatabase.acoes.find(a => a.id === id);
             if (acao) {
                 acao.status = novoStatus;
+
+                if (novoStatus === "Reprovado" && motivoReprovacao) {
+                    acao.motivoReprovacao = motivoReprovacao;
+                }
 
                 let cor = "blue";
                 if (novoStatus === "Aprovado") {
@@ -3899,12 +3913,22 @@
                 }
                 if (novoStatus === "Reprovado") cor = "rose";
 
-                showNotification("Ação Registrada", `O status do produto #${id} foi updated para: ${novoStatus}.`, cor);
+                showNotification("Ação Registrada", `O status do produto #${id} foi atualizado para: ${novoStatus}.`, cor);
 
                 updateUIStats();
                 renderValidationCards();
                 if (currentPontoFocal) renderColetaHistorico();
             }
+        }
+
+        function reprovarComMotivo(id) {
+            const motivo = prompt("Informe o motivo da reprovação:");
+            if (motivo === null) return; // Cancelou
+            if (!motivo.trim()) {
+                showNotification("Erro!", "O motivo da reprovação é obrigatório.", "rose");
+                return;
+            }
+            changeProductStatus(id, 'Reprovado', motivo.trim());
         }
 
         function openModalDetails(index) {
