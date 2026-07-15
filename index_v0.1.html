@@ -3706,8 +3706,8 @@
                 // Encontra a entrada original (a versão ativa com esse ID que não foi revisada)
                 const originalIdx = mockDatabase.acoes.findIndex(a => a.id === idSeteDigitos && !a.revisado);
                 if (originalIdx !== -1) {
-                    // Marca a versão original como "Revisado pelo usuário" e desativa o botão
-                    mockDatabase.acoes[originalIdx].status = "Revisado pelo usuário";
+                    // Marca a versão original como "Revisado" e desativa o botão
+                    mockDatabase.acoes[originalIdx].status = "Revisado";
                     mockDatabase.acoes[originalIdx].revisado = true;
                 }
                 
@@ -3795,7 +3795,7 @@
             if (linkFeedback) { linkFeedback.classList.add('hidden'); linkFeedback.textContent = ''; }
 
             if (isEdicao) {
-                showNotification("Produto Atualizado!", `O produto #${idSeteDigitos} foi revisado e reenviado com sucesso. A versão anterior foi marcada como 'Revisado pelo usuário'.`, "emerald");
+                showNotification("Produto Atualizado!", `O produto #${idSeteDigitos} foi revisado e reenviado com sucesso. A versão anterior foi marcada como 'Revisado'.`, "emerald");
             } else if (!triagemAutomaticaReprovada) {
                 showNotification("Produto Enviado!", `O produto #${idSeteDigitos} foi recebido com sucesso e aguarda validação.`, "emerald");
             }
@@ -3874,15 +3874,15 @@
                     const motivo = acao.motivoReprovacao || 'Motivo não informado';
                     statusBadge = `<span class="relative group">
                         <button class="bg-rose-50 text-sistran-error border border-rose-200 px-2 py-0.5 rounded font-bold text-[10px] cursor-pointer hover:bg-rose-100 transition">
-                            <i class="fa-solid fa-xmark mr-0.5"></i>Reprovado
+                            Reprovado
                         </button>
                         <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-60 bg-sistran-ink text-white text-[10px] leading-relaxed rounded-md p-3 shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                             <strong class="block text-sistran-yellow mb-1">Motivo da Reprovação:</strong>
                             ${motivo}
                         </span>
                     </span>`;
-                } else if (acao.status === "Revisado pelo usuário") {
-                    statusBadge = `<span class="bg-purple-50 text-purple-600 border border-purple-200 px-2 py-0.5 rounded font-bold text-[10px]">Revisado pelo usuário</span>`;
+                } else if (acao.status === "Revisado") {
+                    statusBadge = `<span class="bg-purple-50 text-purple-600 border border-purple-200 px-2 py-0.5 rounded font-bold text-[10px]">Revisado</span>`;
                 }
 
                 // Botão Editar Submissão - inativo se revisado ou aprovado
