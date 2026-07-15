@@ -1279,7 +1279,7 @@
                             <div>
                                 <label class="block font-bold text-sistran-heading mb-1 uppercase text-[10px]">Selecione o Perfil Simulado *</label>
                                 <select id="auth-perfil-validacao" class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm p-3 font-medium text-sistran-heading focus:ring-1 focus:ring-sistran-gold focus:outline-none">
-                                    <option value="fulano">Fulano de Tal (Órgão) - Gestor Público</option>
+                                    <option value="equipe_monitoramento">Ciclano de Tal (CETRAN-SP) - Equipe de Monitoramento</option>
                                 </select>
                             </div>
                             <div>
@@ -1570,7 +1570,11 @@
                             <div>
                                 <label class="block font-bold text-sistran-heading mb-1 uppercase text-[10px]">Selecione o Perfil Simulado *</label>
                                 <select id="auth-perfil-dashboard" class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm p-3 font-medium text-sistran-heading focus:ring-1 focus:ring-sistran-gold focus:outline-none">
-                                    <option value="fulano">Fulano de Tal (Órgão) - Gestor Público</option>
+                                    <option value="membro_comite">Beltrano de Tal (Órgão) - Membro do Comitê Gestor</option>
+                                    <option value="coordenador">Coordenador (Órgão) - Coordenador de Câmara Temática</option>
+                                    <option value="vice_coordenador">Vice-coordenador (Órgão) - Vice-coordenador</option>
+                                    <option value="secretario_camara">Secretário (Órgão) - Secretário de Câmara Temática</option>
+                                    <option value="ponto_focal_dashboard">Fulano de Tal (Órgão) - Ponto Focal</option>
                                 </select>
                             </div>
                             <div>
@@ -1789,6 +1793,29 @@
                 iniciais: "FT"
             }
         };
+
+        // Perfis do ambiente Monitoramento e Validação
+        const perfisMonitoramento = {
+            equipe_monitoramento: {
+                nome: "Ciclano de Tal",
+                cargo: "Equipe de Monitoramento",
+                orgao: "CETRAN-SP",
+                iniciais: "CT"
+            }
+        };
+
+        // Perfis do ambiente Acompanhamento e Consulta
+        const perfisAcompanhamento = {
+            membro_comite: { nome: "Beltrano de Tal", cargo: "Membro do Comitê Gestor", orgao: "Órgão", iniciais: "BT" },
+            coordenador: { nome: "Coordenador", cargo: "Coordenador de Câmara Temática", orgao: "Órgão", iniciais: "CO" },
+            vice_coordenador: { nome: "Vice-coordenador", cargo: "Vice-coordenador", orgao: "Órgão", iniciais: "VC" },
+            secretario_camara: { nome: "Secretário", cargo: "Secretário de Câmara Temática", orgao: "Órgão", iniciais: "SC" },
+            ponto_focal_dashboard: { nome: "Fulano de Tal", cargo: "Ponto Focal", orgao: "Órgão", iniciais: "FT" }
+        };
+
+        // Sessões independentes por ambiente
+        let sessaoValidacao = null;
+        let sessaoDashboard = null;
 
         const dbDesempenho = [
             {
@@ -2106,8 +2133,24 @@
 
         function handleProfileLogout() {
             toggleProfileMenu();
+            
+            // Reseta todas as sessões independentes
             if (currentPontoFocal) {
                 handleColetaLogout();
+            }
+            
+            // Reseta sessão de Monitoramento e Validação
+            if (sessaoValidacao) {
+                sessaoValidacao = null;
+                document.getElementById('validacao-auth-container').classList.remove('hidden');
+                document.getElementById('validacao-content').classList.add('hidden');
+            }
+            
+            // Reseta sessão de Acompanhamento e Consulta
+            if (sessaoDashboard) {
+                sessaoDashboard = null;
+                document.getElementById('dashboard-auth-container').classList.remove('hidden');
+                document.getElementById('dashboard-content').classList.add('hidden');
             }
         }
 
@@ -3219,17 +3262,22 @@
         }
 
         function handleRestrictedLogin(area) {
-            // Usa o mesmo perfil simulado para login em qualquer área restrita
-            if (!currentPontoFocal) {
-                handleColetaLogin();
-            }
-            // Mostra o conteúdo protegido da área
             if (area === 'validacao') {
-                document.getElementById('validacao-auth-container').classList.add('hidden');
-                document.getElementById('validacao-content').classList.remove('hidden');
+                const perfilSel = document.getElementById('auth-perfil-validacao').value;
+                sessaoValidacao = perfisMonitoramento[perfilSel];
+                if (sessaoValidacao) {
+                    document.getElementById('validacao-auth-container').classList.add('hidden');
+                    document.getElementById('validacao-content').classList.remove('hidden');
+                    showNotification("Acesso Autorizado", `Logado como ${sessaoValidacao.nome} (${sessaoValidacao.cargo}).`, "emerald");
+                }
             } else if (area === 'dashboard') {
-                document.getElementById('dashboard-auth-container').classList.add('hidden');
-                document.getElementById('dashboard-content').classList.remove('hidden');
+                const perfilSel = document.getElementById('auth-perfil-dashboard').value;
+                sessaoDashboard = perfisAcompanhamento[perfilSel];
+                if (sessaoDashboard) {
+                    document.getElementById('dashboard-auth-container').classList.add('hidden');
+                    document.getElementById('dashboard-content').classList.remove('hidden');
+                    showNotification("Acesso Autorizado", `Logado como ${sessaoDashboard.nome} (${sessaoDashboard.cargo}).`, "emerald");
+                }
             }
         }
 
@@ -3243,7 +3291,7 @@
                 document.getElementById('profile-initials').textContent = currentPontoFocal.iniciais;
                 document.getElementById('profile-name').textContent = currentPontoFocal.nome;
                 document.getElementById('profile-orgao').textContent = currentPontoFocal.orgao;
-                document.getElementById('profile-access-type').textContent = 'Acesso Restrito';
+                document.getElementById('profile-access-type').textContent = 'Coleta de Dados';
                 document.getElementById('profile-role').textContent = 'Ponto Focal';
 
                 document.getElementById('coleta-auth-container').classList.add('hidden');
@@ -3260,7 +3308,7 @@
 
                 selectColetaSubitem('formulario');
 
-                showNotification("Acesso Autorizado", `Ponto Focal logado ficticiamente como ${currentPontoFocal.nome}.`, "emerald");
+                showNotification("Acesso Autorizado", `Ponto Focal logado como ${currentPontoFocal.nome}.`, "emerald");
                 renderColetaHistorico();
             }
         }
@@ -3279,16 +3327,11 @@
             document.getElementById('profile-access-type').textContent = "Acesso Público";
             document.getElementById('profile-role').textContent = "Público Geral";
 
-            // Resetar áreas restritas - mostrar login novamente
-            document.getElementById('validacao-auth-container').classList.remove('hidden');
-            document.getElementById('validacao-content').classList.add('hidden');
-            document.getElementById('dashboard-auth-container').classList.remove('hidden');
-            document.getElementById('dashboard-content').classList.add('hidden');
-
             const indicator = document.getElementById('login-indicator');
             indicator.classList.remove('bg-emerald-500');
             indicator.classList.add('bg-red-500');
 
+            // Apenas reseta o ambiente Coleta de Dados
             document.getElementById('coleta-form-container').classList.add('hidden');
             document.getElementById('coleta-auth-container').classList.remove('hidden');
 
@@ -3301,7 +3344,7 @@
                 btn.classList.remove('bg-sistran-gold-surface', 'text-sistran-gold', 'font-semibold');
             });
 
-            showNotification("Sessão Encerrada", "Você saiu da área restrita de Pontos Focais.", "rose");
+            showNotification("Sessão Encerrada", "Você saiu do ambiente Coleta de Dados.", "rose");
             switchTab('publico');
         }
 
