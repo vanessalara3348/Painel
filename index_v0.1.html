@@ -1504,7 +1504,8 @@
 
                                     <div>
                                         <label class="block text-[10px] text-sistran-body mb-1">Caso seja necessário enviar arquivos maiores que 15MB, forneça um link para uma pasta compartilhada:</label>
-                                        <input type="text" id="form-coleta-link" placeholder="Ex: https://drive.google.com/drive/folders/..." class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-body focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                        <input type="text" id="form-coleta-link" placeholder="Ex: https://drive.google.com/drive/folders/..." class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-body focus:outline-none focus:ring-1 focus:ring-sistran-gold" onblur="validarLinkCompartilhado()">
+                                        <p id="link-validation-feedback" class="text-xs mt-1 hidden"></p>
                                     </div>
 
                                     <!-- Observações -->
@@ -3546,6 +3547,106 @@
             });
         }
 
+        // === VALIDAÇÃO DE LINK COMPARTILHADO ===
+        // Domínios confiáveis para armazenamento de arquivos
+        const dominiosConfiáveis = [
+            'drive.google.com',
+            'docs.google.com',
+            'onedrive.live.com',
+            '1drv.ms',
+            'sharepoint.com',
+            'dropbox.com',
+            'dl.dropboxusercontent.com',
+            'box.com',
+            'app.box.com',
+            'sei.sp.gov.br',
+            'sei.fazenda.sp.gov.br',
+            'gov.br',
+            'sp.gov.br',
+            'github.com',
+            'wetransfer.com'
+        ];
+
+        // Estado da validação do link
+        let linkValidacaoStatus = null; // 'valido', 'alerta', 'invalido', null
+
+        function validarLinkCompartilhado() {
+            const linkInput = document.getElementById('form-coleta-link');
+            const feedback = document.getElementById('link-validation-feedback');
+            const link = linkInput ? linkInput.value.trim() : '';
+
+            // Reseta feedback
+            feedback.classList.add('hidden');
+            feedback.textContent = '';
+            linkValidacaoStatus = null;
+
+            if (!link) return; // Campo vazio é OK (não obrigatório se há arquivo)
+
+            // 1. Validação de formato de URL
+            let url;
+            try {
+                url = new URL(link);
+            } catch (e) {
+                feedback.textContent = '✗ URL inválida. O link deve começar com https:// e ter um formato válido.';
+                feedback.className = 'text-xs mt-1 font-semibold text-sistran-error';
+                feedback.classList.remove('hidden');
+                linkValidacaoStatus = 'invalido';
+                return;
+            }
+
+            // 2. Deve usar HTTPS
+            if (url.protocol !== 'https:') {
+                feedback.textContent = '⚠ O link deve utilizar protocolo seguro (https://). Links com http:// não são aceitos.';
+                feedback.className = 'text-xs mt-1 font-semibold text-sistran-error';
+                feedback.classList.remove('hidden');
+                linkValidacaoStatus = 'invalido';
+                return;
+            }
+
+            // 3. Verificação de domínio confiável
+            const hostname = url.hostname.toLowerCase();
+            const dominioConfiavel = dominiosConfiáveis.some(d => hostname === d || hostname.endsWith('.' + d));
+
+            if (dominioConfiavel) {
+                feedback.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i>Link válido — domínio reconhecido (' + hostname + ').';
+                feedback.className = 'text-xs mt-1 font-semibold text-emerald-600';
+                feedback.classList.remove('hidden');
+                linkValidacaoStatus = 'valido';
+            } else {
+                feedback.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-1"></i>Atenção: domínio não reconhecido (' + hostname + '). Certifique-se de que o link é de uma plataforma oficial de armazenamento.';
+                feedback.className = 'text-xs mt-1 font-semibold text-amber-600';
+                feedback.classList.remove('hidden');
+                linkValidacaoStatus = 'alerta';
+            }
+
+            // 4. Tentativa de verificação de acessibilidade (fetch no-cors)
+            // Nota: devido a CORS, esta verificação é limitada no frontend
+            try {
+                fetch(link, { method: 'HEAD', mode: 'no-cors', signal: AbortSignal.timeout(5000) })
+                    .then(function(response) {
+                        // no-cors retorna resposta opaca (status 0) — não podemos verificar conteúdo
+                        // Mas se houve resposta sem erro, é provável que o servidor existe
+                        if (dominioConfiavel && linkValidacaoStatus === 'valido') {
+                            feedback.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i>Link válido — domínio reconhecido e servidor acessível (' + hostname + ').';
+                        }
+                    })
+                    .catch(function(err) {
+                        // Se o fetch falha completamente, pode indicar link quebrado
+                        if (linkValidacaoStatus === 'valido') {
+                            feedback.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-1"></i>Domínio reconhecido (' + hostname + '), porém não foi possível verificar acessibilidade. Confirme se o link está correto.';
+                            feedback.className = 'text-xs mt-1 font-semibold text-amber-600';
+                            linkValidacaoStatus = 'alerta';
+                        } else if (linkValidacaoStatus === 'alerta') {
+                            feedback.innerHTML = '<i class="fa-solid fa-circle-xmark mr-1"></i>Domínio não reconhecido e link possivelmente inacessível (' + hostname + '). Verifique o endereço.';
+                            feedback.className = 'text-xs mt-1 font-semibold text-sistran-error';
+                            linkValidacaoStatus = 'invalido';
+                        }
+                    });
+            } catch(e) {
+                // AbortSignal.timeout não suportado em navegadores antigos — ignora
+            }
+        }
+
         function handleFormSubmitColeta(event) {
             event.preventDefault();
 
@@ -3581,6 +3682,12 @@
 
             if (!pontoFocalFile && !link) {
                 showNotification("Erro!", "Por favor, anexe um arquivo ou forneça um link para a pasta compartilhada.", "rose");
+                return;
+            }
+
+            // Validação do link: bloqueia envio se link é inválido
+            if (link && linkValidacaoStatus === 'invalido') {
+                showNotification("Erro!", "O link fornecido é inválido. Corrija o endereço antes de submeter.", "rose");
                 return;
             }
 
@@ -3681,8 +3788,11 @@
             buildCascadingDropdowns();
             pontoFocalFile = null;
             pontoFocalFileIntegridade = null;
+            linkValidacaoStatus = null;
             document.getElementById('file-upload-name').textContent = "";
             document.getElementById('file-upload-name').className = "text-xs font-bold text-emerald-600 mt-2";
+            const linkFeedback = document.getElementById('link-validation-feedback');
+            if (linkFeedback) { linkFeedback.classList.add('hidden'); linkFeedback.textContent = ''; }
 
             if (isEdicao) {
                 showNotification("Produto Atualizado!", `O produto #${idSeteDigitos} foi revisado e reenviado com sucesso. A versão anterior foi marcada como 'Revisado pelo usuário'.`, "emerald");
