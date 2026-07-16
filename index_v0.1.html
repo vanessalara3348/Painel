@@ -3187,9 +3187,9 @@
                 }
             });
 
-            // Busca meta correspondente
+            // Busca meta correspondente (par cod + indicador é a chave única)
             let metaValue = 0;
-            const item = monitoramentoData.find(m => m.cod === cod);
+            const item = monitoramentoData.find(m => m.cod === cod && m.indicador === indicador);
             if (item) {
                 if (tipoMeta === 'curto') metaValue = item.metaCurto;
                 else if (tipoMeta === 'medio') metaValue = item.metaMedio;
