@@ -1191,16 +1191,20 @@
                             <div class="bg-white border border-sistran-border rounded-md p-6 shadow-subtle space-y-6">
                                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                                     <div>
-                                        <span class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Matriz de Entrega</span>
-                                        <h2 class="text-2xl font-bold text-sistran-heading">Matriz de Implementação de Ações e Produtos</h2>
-                                        <p class="text-xs text-sistran-body">Controle operacional e qualitativo do andamento das secretarias municipais e estaduais.</p>
+                                        <h2 class="text-2xl font-bold text-sistran-heading flex items-center gap-2.5">
+                                            <span class="w-8 h-8 bg-sistran-ink rounded-full flex items-center justify-center flex-shrink-0">
+                                                <i data-lucide="check-square" class="w-5 h-5 text-sistran-yellow"></i>
+                                            </span>
+                                            Matriz de Implementação de Ações e Produtos
+                                        </h2>
+                                        <p class="text-xs text-sistran-body mt-2">Monitoramento da implementação dos produtos e ações do PSV-SP (2025-2035).</p>
                                     </div>
-                                    <button onclick="exportImplementacaoCSV()" class="bg-white border-2 border-sistran-gold hover:bg-sistran-gold-surface text-sistran-ink font-bold py-2 px-4 rounded-pill text-xs flex items-center gap-1.5 transition">
-                                        <i data-lucide="download" class="w-4 h-4"></i> Exportar Base (.csv)
+                                    <button onclick="exportImplementacaoXLSX()" class="bg-white border-2 border-sistran-gold hover:bg-sistran-gold-surface text-sistran-ink font-bold py-2 px-4 rounded-pill text-xs flex items-center gap-1.5 transition">
+                                        <i data-lucide="download" class="w-4 h-4"></i> Exportar (.xlsx)
                                     </button>
                                 </div>
 
-                                <p class="text-[10px] text-sistran-muted font-semibold text-center mb-3" id="imp-period-label">Meta Parcial (2025 - 2027)</p>
+                                <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider" id="imp-period-label">Metas Parciais de Curto Prazo (2025 - 2027) - Resumo dos Quantitativos</p>
                                 <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-center font-semibold text-xs">
                                     <div class="p-3 bg-gray-50 border border-sistran-border rounded-md">
                                         <span class="text-sistran-muted block">Produtos Previstos</span>
@@ -3238,7 +3242,7 @@
 
             // Atualiza período
             const periodEl = document.getElementById('imp-period-label');
-            if (periodEl) periodEl.textContent = 'Meta Parcial (2025 - 2027)';
+            if (periodEl) periodEl.textContent = 'Metas Parciais de Curto Prazo (2025 - 2027) - Resumo dos Quantitativos';
 
             // Atualiza card "À Iniciar"
             const cardIniciar = document.getElementById('card-imp-iniciar');
@@ -4833,32 +4837,38 @@
             showToast("Tabela de Desempenho exportada com sucesso!");
         }
 
-        function exportImplementacaoCSV() {
-            let csvContent = "data:text/csv;charset=utf-8,Codigo,Eixo,Objetivo,Acao,Produto,Orgao Responsavel,Meta Parcial,Status,Ciclo,Alinhamento,Observacoes\n";
-            dbImplementacao.forEach(item => {
-                const row = [
-                    `"${item.cod}"`,
-                    `"${item.eixo}"`,
-                    `"${item.objetivo}"`,
-                    `"${item.acao}"`,
-                    `"${item.produto}"`,
-                    `"${item.responsavel}"`,
-                    `"${item.metaCiclo}"`,
-                    `"${item.status}"`,
-                    `"${item.ciclo}"`,
-                    `"${item.transversal}"`,
-                    `"${item.obs}"`
-                ].join(",");
-                csvContent += row + "\n";
-            });
+        function exportImplementacaoXLSX() {
+            if (monitoramentoData.length === 0) {
+                showNotification("Aviso", "Nenhum dado de implementação para exportar.", "warning");
+                return;
+            }
 
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "PSV-SP_Matriz_Implementacao.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            const dados = monitoramentoData.map(item => ({
+                'Código': item.cod || '',
+                'Eixo Temático': item.eixo || '',
+                'Objetivo Estratégico': item.objetivo || '',
+                'Ação': item.acao || '',
+                'Produto': item.produto || '',
+                'Indicador': item.indicador || '',
+                'Meta Final (2025-2035)': item.metaFinal || '',
+                'Meta Curto (2025-2027)': item.metaCurto || '',
+                'Meta Médio (2028-2030)': item.metaMedio || '',
+                'Meta Longo (2031-2035)': item.metaLongo || '',
+                'Status Curto Prazo': calcularSituacaoMeta(item.cod, item.indicador, 'curto')
+            }));
+
+            const ws = XLSX.utils.json_to_sheet(dados);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Implementação');
+
+            ws['!cols'] = [
+                { wch: 12 }, { wch: 35 }, { wch: 40 }, { wch: 40 },
+                { wch: 45 }, { wch: 35 }, { wch: 18 }, { wch: 18 },
+                { wch: 18 }, { wch: 18 }, { wch: 20 }
+            ];
+
+            const dataAtual = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
+            XLSX.writeFile(wb, `Matriz_Implementacao_PSV-SP_${dataAtual}.xlsx`);
             showToast("Matriz de Implementação exportada com sucesso!");
         }
     </script>
