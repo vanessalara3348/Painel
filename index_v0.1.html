@@ -1246,10 +1246,9 @@
                                     </div>
                                 </div>
 
-                                <p class="text-[10px] text-sistran-body leading-relaxed mt-1"><strong>Nota:</strong> * O status "Concluído*" indica que o produto foi cumprido fora do prazo previsto para a meta parcial, porém a Meta Final (2025-2035) já foi atingida.</p>
-
 
                                 <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Resumo dos indicadores de implementação por Fases de Implementação do Plano:<br>Curto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)</p>
+                                <p class="text-[10px] text-sistran-body leading-relaxed">Nota: O status <strong>Concluído*</strong> indica que a meta do produto foi cumprido fora do prazo de implementação previsto, porém a Meta Final (2025-2035) foi atingida.</p>
 
                                 <div class="bg-gray-50 p-4 border border-sistran-border rounded-md space-y-4">
                                     <p class="text-xs font-bold text-sistran-heading flex items-center gap-2">
@@ -3304,7 +3303,8 @@
                 const orgaoDisplay = produtoAprovado ? produtoAprovado.orgao : '—';
 
                 const tr = document.createElement('tr');
-                tr.className = 'hover:bg-gray-50 border-b border-gray-100 transition-colors';
+                tr.className = 'hover:bg-gray-50 border-b border-gray-100 transition-colors cursor-pointer';
+                tr.onclick = function() { mostrarHistoricoProdutoAprovado(item.cod, item.indicador, item.produto); };
 
                 tr.innerHTML = `
                     <td class="p-3 text-sistran-body text-[10px] max-w-[180px]">${item.eixo || '—'}</td>
@@ -3397,6 +3397,61 @@
 
         function filterImplementacao() {
             buildImplementacaoTable();
+        }
+
+        // === HISTÓRICO CONSULTIVO DE PRODUTOS APROVADOS ===
+        function mostrarHistoricoProdutoAprovado(cod, indicador, produtoNome) {
+            // Busca produtos aprovados que contribuíram para este código+indicador
+            const aprovados = mockDatabase.acoes.filter(a => 
+                a.status === 'Aprovado' && a.codProd === cod && a.indicador === indicador
+            );
+
+            let conteudoHtml = '';
+
+            if (aprovados.length === 0) {
+                conteudoHtml = `
+                    <p class="text-xs text-sistran-muted text-center py-4">Nenhum produto aprovado encontrado para este indicador.</p>
+                `;
+            } else {
+                conteudoHtml = `
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="bg-sistran-surface-muted text-sistran-heading font-bold border-b border-sistran-border">
+                                    <th class="p-2">ID</th>
+                                    <th class="p-2">Órgão</th>
+                                    <th class="p-2">Valor</th>
+                                    <th class="p-2">Ano Ref.</th>
+                                    <th class="p-2">Data de Aprovação</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                ${aprovados.map(a => `
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="p-2 font-bold text-sistran-gold">#${a.id}</td>
+                                        <td class="p-2 text-sistran-body">${a.orgao || '—'}</td>
+                                        <td class="p-2 font-semibold text-sistran-heading">${a.valor || '—'}</td>
+                                        <td class="p-2 text-sistran-heading">${a.horizonte || '—'}</td>
+                                        <td class="p-2 text-sistran-body">${a.data || '—'}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="text-[10px] text-sistran-muted mt-3 italic">Este histórico é apenas para fins consultivos e não interfere nos cálculos de metas.</p>
+                `;
+            }
+
+            // Usa o modal existente para exibir
+            document.getElementById('modal-produto-nome').innerHTML = `<span class="text-xs text-sistran-muted block mb-1">Histórico de Produtos Aprovados</span>${produtoNome || cod}`;
+            document.getElementById('modal-responsavel').innerHTML = `<span class="text-[10px] text-sistran-muted">Indicador:</span> ${indicador || '—'}`;
+            document.getElementById('modal-observacao').innerHTML = conteudoHtml;
+
+            const badge = document.getElementById('modal-status-badge');
+            badge.innerText = aprovados.length + ' aprovação(ões)';
+            badge.className = 'inline-block mt-1 px-2.5 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-600';
+
+            document.getElementById('modal-qualitativo').classList.remove('hidden');
         }
 
         // ===== Searchable Select Component =====
