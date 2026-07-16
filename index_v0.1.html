@@ -2545,8 +2545,8 @@
 
             const totalMatriz = monitoramentoData.length;
 
-            const impPrev = document.getElementById('imp-total-previsto');
-            if (impPrev) impPrev.innerText = totalMatriz;
+            // Card 'Produtos Previstos' é gerenciado por updateImplementacaoSummary()
+            // (mostra apenas produtos com meta de curto prazo definida)
 
             // Calcula contadores por status para os gráficos
             let concluídosMatriz = 0, andamentoMatriz = 0, pendentesMatriz = 0;
