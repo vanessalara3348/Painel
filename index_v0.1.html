@@ -1983,48 +1983,10 @@
             }
         ];
 
-        // Matriz mestre de implementação representando os Eixos
-        const dbImplementacao = [
-            {
-                cod: "1.1.1.1",
-                eixo: "Eixo 1",
-                objetivo: "OE 1.1 Fortalecer a Governança do SISTRAN-SP",
-                acao: "Consolidar o SISTRAN-SP como instância coordenadora da política estadual de segurança viária.",
-                produto: "Publicação oficial do regimento interno reformulado do SISTRAN-SP no Diário Oficial.",
-                responsavel: "Órgão",
-                metaCiclo: "1 regimento",
-                status: "Concluído",
-                ciclo: "2025-2027",
-                transversal: "PNATRANS",
-                obs: "Regimento publicado integralmente no Diário Oficial do Estado de São Paulo em 14/11/2025."
-            },
-            {
-                cod: "2.1.1.1",
-                eixo: "Eixo 2",
-                objetivo: "OE 2.1 Banco de Dados Integrado",
-                acao: "Unificar e tratar a base de acidentalidade estadual.",
-                produto: "Plataforma de conciliação estatística Infosiga integrada ao SISTRAN.",
-                responsavel: "Órgão",
-                metaCiclo: "1 portal",
-                status: "Pendente",
-                ciclo: "2025-2027",
-                transversal: "PNATRANS",
-                obs: "Aguardando homologação de convênio de proteção de dados."
-            },
-            {
-                cod: "3.1.1.1",
-                eixo: "Eixo 3",
-                objetivo: "OE 3.1 Infraestrutura Viária Tolerante",
-                acao: "Tratar locais críticos de acidentes em rodovias paulistas.",
-                produto: "Implantação de faixas elevadas e sinalização passiva na SP-055.",
-                responsavel: "Órgão",
-                metaCiclo: "14 faixas",
-                status: "Em andamento",
-                ciclo: "2025-2027",
-                transversal: "RISCO",
-                obs: "Fase de execução física de pavimentação nos trechos urbanos."
-            }
-        ];
+        // Matriz mestre de implementação — carregada de Monitoramento_Indicadores.xlsx
+        var monitoramentoData = [];
+        // Mantém referência legada para compatibilidade
+        var dbImplementacao = monitoramentoData;
 
         // Mock database de submissões pendentes para o fluxo de moderação (Ambiente 1 & 2)
         const mockDatabase = {
@@ -2181,9 +2143,9 @@
         window.onload = function() {
             lucide.createIcons();
             loadSpreadsheetData();
+            loadMonitoramentoData();
             
             buildDesempenhoTable();
-            buildImplementacaoTable();
             initCharts();
 
             renderValidationCards();
@@ -3107,19 +3069,158 @@
             });
         }
 
+        // === CARREGAMENTO DE MONITORAMENTO_INDICADORES.XLSX ===
+        function loadMonitoramentoData() {
+            try {
+                const arrayBuffer = new Promise(function(resolve, reject) {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('GET', 'Monitoramento_Indicadores.xlsx', true);
+                    xhr.responseType = 'arraybuffer';
+                    xhr.onload = function() {
+                        if (xhr.status === 200 || xhr.status === 0) {
+                            resolve(xhr.response);
+                        } else {
+                            reject(new Error('Erro ao carregar: ' + xhr.status));
+                        }
+                    };
+                    xhr.onerror = function() { reject(new Error('Erro de rede/CORS')); };
+                    xhr.send();
+                });
+
+                arrayBuffer.then(function(buffer) {
+                    const data = new Uint8Array(buffer);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+                    monitoramentoData = [];
+                    for (let i = 1; i < rows.length; i++) {
+                        const row = rows[i];
+                        if (!row || row.length === 0) continue;
+
+                        const colA = (row[0] != null) ? String(row[0]).trim() : '';
+                        const colB = (row[1] != null) ? String(row[1]).trim() : '';
+                        const colC = (row[2] != null) ? String(row[2]).trim() : '';
+                        const colD = (row[3] != null) ? String(row[3]).trim() : '';
+                        const colE = (row[4] != null) ? String(row[4]).trim() : '';
+                        const colF = (row[5] != null) ? String(row[5]).trim() : '';
+                        const colG = (row[6] != null) ? String(row[6]).trim() : '';
+                        const colH = (row[7] != null) ? String(row[7]).trim() : '';
+                        const colL = (row[11] != null) ? String(row[11]).trim() : '';
+                        const colP = (row[15] != null) ? row[15] : '';
+                        const colQ = (row[16] != null) ? row[16] : '';
+                        const colR = (row[17] != null) ? row[17] : '';
+                        const colS = (row[18] != null) ? row[18] : '';
+
+                        if (!colA && !colB) continue;
+
+                        monitoramentoData.push({
+                            cod: colG,
+                            eixo: colA && colB ? `Eixo ${colA} - ${colB}` : '',
+                            objetivo: colC && colD ? `${colC} - ${colD}` : '',
+                            acao: colE && colF ? `${colE} - ${colF}` : '',
+                            produto: colG && colH ? `${colG} - ${colH}` : '',
+                            indicador: colL,
+                            metaFinal: parseFloat(colP) || 0,
+                            metaCurto: parseFloat(colQ) || 0,
+                            metaMedio: parseFloat(colR) || 0,
+                            metaLongo: parseFloat(colS) || 0
+                        });
+                    }
+                    console.log('Monitoramento data loaded:', monitoramentoData.length, 'rows');
+                    dbImplementacao = monitoramentoData;
+                    buildImplementacaoTable();
+                    updateUIStats();
+                }).catch(function(err) {
+                    console.warn('Fallback para dados locais de implementação:', err);
+                    monitoramentoData = [
+                        { cod: "1.1.1.1", eixo: "Eixo 1 - Gestão da Segurança Viária", objetivo: "1.1 - Fortalecer a Governança", acao: "1.1.1 - Consolidar o SISTRAN-SP", produto: "1.1.1.1 - Publicação do regimento interno", indicador: "Regimento publicado (un.)", metaFinal: 1, metaCurto: 1, metaMedio: 0, metaLongo: 0 },
+                        { cod: "2.1.1.1", eixo: "Eixo 2 - Gestão da Informação", objetivo: "2.1 - Banco de Dados Integrado", acao: "2.1.1 - Consolidar Infosiga", produto: "2.1.1.1 - Plataforma de conciliação estatística", indicador: "Tempo de conciliação (dias)", metaFinal: 12, metaCurto: 12, metaMedio: 8, metaLongo: 5 },
+                        { cod: "3.1.1.1", eixo: "Eixo 3 - Vias Seguras", objetivo: "3.1 - Infraestrutura Tolerante", acao: "3.1.1 - Eliminar pontos críticos", produto: "3.1.1.1 - Faixas elevadas SP-055", indicador: "Intervenções executadas (un.)", metaFinal: 42, metaCurto: 14, metaMedio: 14, metaLongo: 14 }
+                    ];
+                    dbImplementacao = monitoramentoData;
+                    buildImplementacaoTable();
+                    updateUIStats();
+                });
+            } catch(e) {
+                console.warn('Erro geral em loadMonitoramentoData:', e);
+            }
+        }
+
+        // === CÁLCULO DE SITUAÇÃO DAS METAS ===
+        function calcularSituacaoMeta(cod, indicador, tipoMeta) {
+            const yearRanges = {
+                'curto': [2025, 2026, 2027],
+                'medio': [2028, 2029, 2030],
+                'longo': [2031, 2032, 2033, 2034, 2035],
+                'final': [2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035]
+            };
+            const validYears = yearRanges[tipoMeta] || yearRanges['final'];
+
+            let soma = 0;
+            let hasApproved = false;
+
+            mockDatabase.acoes.forEach(acao => {
+                if (acao.status === 'Aprovado' && acao.codProd === cod && acao.indicador === indicador) {
+                    const horizonte = parseInt(acao.horizonte, 10);
+                    if (validYears.includes(horizonte)) {
+                        hasApproved = true;
+                        const valor = parseFloat(acao.valor);
+                        if (!isNaN(valor)) soma += valor;
+                    }
+                }
+            });
+
+            // Busca meta correspondente
+            let metaValue = 0;
+            const item = monitoramentoData.find(m => m.cod === cod);
+            if (item) {
+                if (tipoMeta === 'curto') metaValue = item.metaCurto;
+                else if (tipoMeta === 'medio') metaValue = item.metaMedio;
+                else if (tipoMeta === 'longo') metaValue = item.metaLongo;
+                else metaValue = item.metaFinal;
+            }
+
+            if (!hasApproved || metaValue === 0) return 'À Iniciar';
+
+            const percentual = (soma / metaValue) * 100;
+
+            if (percentual < 1) return 'À Iniciar';
+            if (percentual >= 1 && percentual < 49) return 'Iniciado';
+            if (percentual >= 50 && percentual < 99) return 'Em Desenvolvimento';
+            return 'Concluído';
+        }
+
         function buildImplementacaoTable() {
             const tbody = document.getElementById('table-implementacao-body');
             if (!tbody) return;
             tbody.innerHTML = '';
 
-            dbImplementacao.forEach((item, index) => {
+            const searchText = document.getElementById('search-imp-text');
+            const filterStatus = document.getElementById('filter-imp-status');
+            const textValue = searchText ? searchText.value.toLowerCase().trim() : '';
+            const statusValue = filterStatus ? filterStatus.value : 'all';
+
+            monitoramentoData.forEach((item, index) => {
+                const status = calcularSituacaoMeta(item.cod, item.indicador, 'curto');
+
+                // Filtro por status
+                if (statusValue && statusValue !== 'all' && status !== statusValue) return;
+
+                // Filtro por busca textual
+                if (textValue) {
+                    const searchable = `${item.cod} ${item.eixo} ${item.acao} ${item.produto} ${item.indicador}`.toLowerCase();
+                    if (!searchable.includes(textValue)) return;
+                }
+
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-gray-50 border-b border-gray-100 transition-colors';
                 
                 let statusBadge = 'bg-gray-100 text-sistran-body';
-                if (item.status === 'Concluído') statusBadge = 'bg-emerald-50 text-emerald-600';
-                else if (item.status === 'Em andamento') statusBadge = 'bg-amber-50 text-amber-500';
-                else if (item.status === 'Pendente') statusBadge = 'bg-rose-50 text-rose-500';
+                if (status === 'Concluído') statusBadge = 'bg-emerald-50 text-emerald-600';
+                else if (status === 'Em Desenvolvimento') statusBadge = 'bg-amber-50 text-amber-600';
+                else if (status === 'Iniciado') statusBadge = 'bg-blue-50 text-blue-600';
+                else statusBadge = 'bg-gray-100 text-sistran-body';
 
                 tr.innerHTML = `
                     <td class="p-3 font-bold text-sistran-gold">${item.cod}</td>
@@ -3128,78 +3229,48 @@
                         <span class="font-medium text-sistran-heading leading-tight">${item.acao}</span>
                     </td>
                     <td class="p-3 text-sistran-body font-semibold max-w-xs">${item.produto}</td>
-                    <td class="p-3 font-semibold text-sistran-heading">${item.responsavel}</td>
-                    <td class="p-3 text-sistran-body">${item.metaCiclo}</td>
+                    <td class="p-3 text-sistran-body text-[10px] max-w-[150px]">${item.indicador}</td>
+                    <td class="p-3 text-sistran-body text-center font-semibold">${item.metaCurto || '—'}</td>
                     <td class="p-3">
                         <span class="px-2.5 py-1 rounded text-[10px] font-bold ${statusBadge}">
-                            ${item.status}
+                            ${status}
                         </span>
-                    </td>
-                    <td class="p-3 text-center">
-                        <button onclick="openModalDetails(${index})" class="text-sistran-gold hover:text-sistran-heading hover:bg-sistran-gold-surface p-1.5 rounded-full transition-colors">
-                            <i data-lucide="info" class="w-4 h-4"></i>
-                        </button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
             lucide.createIcons();
+            updateImplementacaoSummary();
+        }
+
+        function updateImplementacaoSummary() {
+            const counts = { 'À Iniciar': 0, 'Iniciado': 0, 'Em Desenvolvimento': 0, 'Concluído': 0 };
+            const total = monitoramentoData.length;
+
+            monitoramentoData.forEach(item => {
+                const status = calcularSituacaoMeta(item.cod, item.indicador, 'curto');
+                if (counts.hasOwnProperty(status)) counts[status]++;
+            });
+
+            const calcPercent = (c) => total === 0 ? '0%' : Math.round((c / total) * 100) + '%';
+
+            // Atualiza cards
+            const impPrev = document.getElementById('imp-total-previsto');
+            if (impPrev) impPrev.innerText = total;
+            const impConcl = document.getElementById('imp-total-concluidos');
+            if (impConcl) impConcl.innerText = counts['Concluído'] + ' (' + calcPercent(counts['Concluído']) + ')';
+            const impAnd = document.getElementById('imp-total-andamento');
+            if (impAnd) impAnd.innerText = counts['Em Desenvolvimento'] + ' (' + calcPercent(counts['Em Desenvolvimento']) + ')';
+            const impAtr = document.getElementById('imp-total-atrasados');
+            if (impAtr) impAtr.innerText = counts['À Iniciar'] + ' (' + calcPercent(counts['À Iniciar']) + ')';
+
+            // Card Iniciado (reusa um elemento existente ou cria)
+            const impIniciado = document.getElementById('imp-total-iniciado');
+            if (impIniciado) impIniciado.innerText = counts['Iniciado'] + ' (' + calcPercent(counts['Iniciado']) + ')';
         }
 
         function filterImplementacao() {
-            const ciclo = document.getElementById('filter-imp-ciclo').value;
-            const status = document.getElementById('filter-imp-status').value;
-            const transversal = document.getElementById('filter-imp-transversal').value;
-            const query = document.getElementById('search-imp-text').value.toLowerCase();
-
-            const filtered = dbImplementacao.filter(item => {
-                const matchesCiclo = (ciclo === 'all' || item.ciclo === ciclo);
-                const matchesStatus = (status === 'all' || item.status === status);
-                const matchesTransversal = (transversal === 'all' || item.transversal === transversal);
-                
-                const textContent = `${item.cod} ${item.acao} ${item.produto} ${item.responsavel} ${item.eixo}`.toLowerCase();
-                const matchesQuery = textContent.includes(query);
-
-                return matchesCiclo && matchesStatus && matchesTransversal && matchesQuery;
-            });
-
-            const tbody = document.getElementById('table-implementacao-body');
-            tbody.innerHTML = '';
-
-            filtered.forEach((item, index) => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-gray-50 border-b border-gray-100 transition-colors';
-                
-                let statusBadge = 'bg-gray-100 text-sistran-body';
-                if (item.status === 'Concluído') statusBadge = 'bg-emerald-50 text-emerald-600';
-                else if (item.status === 'Em andamento') statusBadge = 'bg-amber-50 text-amber-500';
-                else if (item.status === 'Pendente') statusBadge = 'bg-rose-50 text-rose-500';
-
-                const originalIndex = dbImplementacao.findIndex(original => original.cod === item.cod);
-
-                tr.innerHTML = `
-                    <td class="p-3 font-bold text-sistran-gold">${item.cod}</td>
-                    <td class="p-3">
-                        <span class="block text-[10px] font-bold text-sistran-muted uppercase">${item.eixo}</span>
-                        <span class="font-medium text-sistran-heading leading-tight">${item.acao}</span>
-                    </td>
-                    <td class="p-3 text-sistran-body font-semibold max-w-xs">${item.produto}</td>
-                    <td class="p-3 font-semibold text-sistran-heading">${item.responsavel}</td>
-                    <td class="p-3 text-sistran-body">${item.metaCiclo}</td>
-                    <td class="p-3 font-medium">
-                        <span class="px-2.5 py-1 rounded text-[10px] font-bold ${statusBadge}">
-                            ${item.status}
-                        </span>
-                    </td>
-                    <td class="p-3 text-center">
-                        <button onclick="openModalDetails(${originalIndex})" class="text-sistran-gold hover:text-sistran-heading hover:bg-sistran-gold-surface p-1.5 rounded-full transition-colors">
-                            <i data-lucide="info" class="w-4 h-4"></i>
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-            lucide.createIcons();
+            buildImplementacaoTable();
         }
 
         // ===== Searchable Select Component =====
@@ -3891,24 +3962,9 @@
                 showNotification("Produto Reprovado Automaticamente!", motivoTriagem, "rose");
             }
 
-            const originalItem = dbImplementacao.find(item => item.cod === novoProduto.codProd);
-            if (originalItem) {
-                originalItem.status = "Em andamento";
-            } else {
-                dbImplementacao.push({
-                    cod: novoProduto.codProd,
-                    eixo: txtEixo.split(' - ')[1] || txtEixo,
-                    objetivo: rowObjetivoVal,
-                    acao: rowAcaoVal,
-                    produto: novoProduto.produto,
-                    responsavel: currentPontoFocal.orgao,
-                    metaCiclo: "Acompanhamento",
-                    status: "Em andamento",
-                    ciclo: "2025-2027",
-                    transversal: "PNATRANS",
-                    obs: "Submetido em análise regulamentar."
-                });
-            }
+            // Nota: A submissão do Ponto Focal NÃO atualiza a Tabela de Implementação.
+            // A Tabela de Implementação só é atualizada quando a Equipe de Monitoramento
+            // aprova um produto no ambiente "Monitoramento e Validação".
 
             document.getElementById('form-coleta-dados').reset();
             buildCascadingDropdowns();
@@ -3929,7 +3985,6 @@
             updateUIStats();
             renderColetaHistorico();
             renderValidationCards();
-            buildImplementacaoTable();
 
             selectColetaSubitem('historico');
         }
@@ -4401,12 +4456,8 @@
                 let cor = "blue";
                 if (novoStatus === "Aprovado") {
                     cor = "emerald";
-                    const originalItem = dbImplementacao.find(item => item.cod === acao.codProd);
-                    if (originalItem) {
-                        originalItem.status = "Concluído";
-                        originalItem.obs = `Aprovado pelo Comitê Gestor via SIMO #${acao.id} em ${new Date().toLocaleDateString('pt-BR')}.`;
-                        buildImplementacaoTable();
-                    }
+                    // A Tabela de Implementação é recalculada com base nos produtos aprovados
+                    buildImplementacaoTable();
                 }
                 if (novoStatus === "Reprovado") cor = "rose";
 
