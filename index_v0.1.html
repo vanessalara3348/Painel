@@ -2546,7 +2546,16 @@
             const impPrev = document.getElementById('imp-total-previsto');
             if (impPrev) impPrev.innerText = totalMatriz;
 
-            const concluidoPorcentagem = totalMatriz > 0 ? ((monitoramentoData.filter(item => calcularSituacaoMeta(item.cod, item.indicador, 'curto') === 'Concluído').length / totalMatriz) * 100).toFixed(1) : '0.0';
+            // Calcula contadores por status para os gráficos
+            let concluídosMatriz = 0, andamentoMatriz = 0, pendentesMatriz = 0;
+            monitoramentoData.forEach(item => {
+                const s = calcularSituacaoMeta(item.cod, item.indicador, 'curto');
+                if (s === 'Concluído') concluídosMatriz++;
+                else if (s === 'Em Desenvolvimento' || s === 'Iniciado') andamentoMatriz++;
+                else pendentesMatriz++;
+            });
+
+            const concluidoPorcentagem = totalMatriz > 0 ? ((concluídosMatriz / totalMatriz) * 100).toFixed(1) : '0.0';
             const pconcluido = document.getElementById('percent-concluido');
             if (pconcluido) pconcluido.textContent = `${concluidoPorcentagem}%`;
 
