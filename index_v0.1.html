@@ -3086,16 +3086,22 @@
                     const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
                     monitoramentoData = [];
+
+                    // Variáveis para propagar valores de células mescladas (fill-down)
+                    let lastColA = '', lastColB = '', lastColC = '', lastColD = '';
+                    let lastColE = '', lastColF = '';
+
                     for (let i = 1; i < rows.length; i++) {
                         const row = rows[i];
                         if (!row || row.length === 0) continue;
 
-                        const colA = (row[0] != null) ? String(row[0]).trim() : '';
-                        const colB = (row[1] != null) ? String(row[1]).trim() : '';
-                        const colC = (row[2] != null) ? String(row[2]).trim() : '';
-                        const colD = (row[3] != null) ? String(row[3]).trim() : '';
-                        const colE = (row[4] != null) ? String(row[4]).trim() : '';
-                        const colF = (row[5] != null) ? String(row[5]).trim() : '';
+                        // Lê colunas — propaga valores anteriores se célula está vazia (merged cells)
+                        let colA = (row[0] != null && String(row[0]).trim() !== '') ? String(row[0]).trim() : lastColA;
+                        let colB = (row[1] != null && String(row[1]).trim() !== '') ? String(row[1]).trim() : lastColB;
+                        let colC = (row[2] != null && String(row[2]).trim() !== '') ? String(row[2]).trim() : lastColC;
+                        let colD = (row[3] != null && String(row[3]).trim() !== '') ? String(row[3]).trim() : lastColD;
+                        let colE = (row[4] != null && String(row[4]).trim() !== '') ? String(row[4]).trim() : lastColE;
+                        let colF = (row[5] != null && String(row[5]).trim() !== '') ? String(row[5]).trim() : lastColF;
                         const colG = (row[6] != null) ? String(row[6]).trim() : '';
                         const colH = (row[7] != null) ? String(row[7]).trim() : '';
                         const colL = (row[11] != null) ? String(row[11]).trim() : '';
@@ -3104,7 +3110,13 @@
                         const colR = (row[17] != null) ? row[17] : '';
                         const colS = (row[18] != null) ? row[18] : '';
 
-                        if (!colA && !colB) continue;
+                        // Atualiza valores para propagação
+                        lastColA = colA; lastColB = colB;
+                        lastColC = colC; lastColD = colD;
+                        lastColE = colE; lastColF = colF;
+
+                        // Pula apenas se não tem código de produto (colG)
+                        if (!colG && !colH) continue;
 
                         monitoramentoData.push({
                             cod: colG,
@@ -3119,7 +3131,10 @@
                             metaLongo: parseFloat(colS) || 0
                         });
                     }
-                    console.log('Monitoramento data loaded:', monitoramentoData.length, 'rows');
+                    console.log('Monitoramento data loaded:', monitoramentoData.length, 'rows (esperado: 365)');
+                    if (monitoramentoData.length < 365) {
+                        console.warn('ATENÇÃO: Menos de 365 linhas carregadas. Verifique se a planilha possui células mescladas não tratadas.');
+                    }
                     dbImplementacao = monitoramentoData;
                     buildImplementacaoTable();
                     updateUIStats();
