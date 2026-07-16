@@ -1271,6 +1271,7 @@
                                             <tr class="bg-sistran-surface-muted text-sistran-heading font-bold border-b border-sistran-border">
                                                 <th class="p-3">Eixo Temático</th>
                                                 <th class="p-3">Produto</th>
+                                                <th class="p-3">Indicador</th>
                                                 <th class="p-3">Órgão</th>
                                                 <th class="p-3 text-center">Curto Prazo<br>(2025–2027)</th>
                                                 <th class="p-3 text-center">Médio Prazo<br>(2028–2030)</th>
@@ -2551,6 +2552,7 @@
             let concluídosMatriz = 0, andamentoMatriz = 0, pendentesMatriz = 0;
             monitoramentoData.forEach(item => {
                 const s = calcularSituacaoMeta(item.cod, item.indicador, 'curto');
+                if (s === 'Sem meta prevista') return; // Não contabiliza
                 if (s === 'Concluído') concluídosMatriz++;
                 else if (s === 'Em Desenvolvimento' || s === 'Iniciado') andamentoMatriz++;
                 else pendentesMatriz++;
@@ -3195,7 +3197,9 @@
                 else metaValue = item.metaFinal;
             }
 
-            if (!hasApproved || metaValue === 0) return 'À Iniciar';
+            if (metaValue === 0) return 'Sem meta prevista';
+
+            if (!hasApproved) return 'À Iniciar';
 
             const percentual = (soma / metaValue) * 100;
 
@@ -3240,6 +3244,7 @@
                 if (s === 'Concluído') return 'bg-emerald-50 text-emerald-600';
                 if (s === 'Em Desenvolvimento') return 'bg-amber-50 text-amber-600';
                 if (s === 'Iniciado') return 'bg-blue-50 text-blue-600';
+                if (s === 'Sem meta prevista') return 'bg-zinc-50 text-zinc-400 italic';
                 return 'bg-gray-100 text-sistran-body';
             }
 
@@ -3275,6 +3280,7 @@
                 tr.innerHTML = `
                     <td class="p-3 text-sistran-body text-[10px] max-w-[180px]">${item.eixo || '—'}</td>
                     <td class="p-3 text-sistran-body font-semibold text-[10px] max-w-[200px]">${item.produto || '—'}</td>
+                    <td class="p-3 text-sistran-body text-[10px] max-w-[150px]">${item.indicador || '—'}</td>
                     <td class="p-3 text-sistran-body text-[10px]">${orgaoDisplay}</td>
                     <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${statusBadgeClass(statusCurto)}">${statusCurto}</span></td>
                     <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${statusBadgeClass(statusMedio)}">${statusMedio}</span></td>
@@ -3289,18 +3295,21 @@
 
         function updateImplementacaoSummary() {
             const counts = { 'À Iniciar': 0, 'Iniciado': 0, 'Em Desenvolvimento': 0, 'Concluído': 0 };
-            const total = monitoramentoData.length;
+            let totalComMeta = 0;
 
             monitoramentoData.forEach(item => {
                 const status = calcularSituacaoMeta(item.cod, item.indicador, 'curto');
-                if (counts.hasOwnProperty(status)) counts[status]++;
+                if (status !== 'Sem meta prevista') {
+                    totalComMeta++;
+                    if (counts.hasOwnProperty(status)) counts[status]++;
+                }
             });
 
-            const calcPercent = (c) => total === 0 ? '0%' : Math.round((c / total) * 100) + '%';
+            const calcPercent = (c) => totalComMeta === 0 ? '0%' : Math.round((c / totalComMeta) * 100) + '%';
 
-            // Atualiza total
+            // Atualiza total (apenas produtos com meta de curto prazo)
             const impPrev = document.getElementById('imp-total-previsto');
-            if (impPrev) impPrev.innerText = total;
+            if (impPrev) impPrev.innerText = totalComMeta;
 
             // Atualiza período
             const periodEl = document.getElementById('imp-period-label');
