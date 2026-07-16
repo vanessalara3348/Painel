@@ -1200,22 +1200,31 @@
                                     </button>
                                 </div>
 
-                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center font-semibold text-xs">
+                                <p class="text-[10px] text-sistran-muted font-semibold text-center mb-3" id="imp-period-label">Meta Parcial (2025 - 2027)</p>
+                                <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-center font-semibold text-xs">
                                     <div class="p-3 bg-gray-50 border border-sistran-border rounded-md">
                                         <span class="text-sistran-muted block">Produtos Previstos</span>
-                                        <strong class="text-xl font-bold text-sistran-heading" id="imp-total-previsto">15</strong>
+                                        <strong class="text-xl font-bold text-sistran-heading" id="imp-total-previsto">—</strong>
                                     </div>
-                                    <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-md">
-                                        <span class="text-emerald-600 block">Produtos Concluídos</span>
-                                        <strong class="text-xl font-bold text-emerald-600" id="imp-total-concluidos">1</strong>
+                                    <div class="p-3 bg-gray-50 border border-gray-200 rounded-md" id="card-imp-iniciar">
+                                        <span class="text-gray-600 block">À Iniciar</span>
+                                        <strong class="text-xl font-bold text-gray-700 card-count">—</strong>
+                                        <span class="text-[10px] text-gray-400 block card-percent"></span>
                                     </div>
-                                    <div class="p-3 bg-amber-50 border border-amber-200 rounded-md">
-                                        <span class="text-amber-600 block">Em Andamento</span>
-                                        <strong class="text-xl font-bold text-amber-600" id="imp-total-andamento">2</strong>
+                                    <div class="p-3 bg-blue-50 border border-blue-200 rounded-md" id="card-imp-iniciado">
+                                        <span class="text-blue-600 block">Iniciado</span>
+                                        <strong class="text-xl font-bold text-blue-600 card-count">—</strong>
+                                        <span class="text-[10px] text-blue-400 block card-percent"></span>
                                     </div>
-                                    <div class="p-3 bg-rose-50 border border-rose-200 rounded-md">
-                                        <span class="text-rose-600 block">Produtos Pendentes</span>
-                                        <strong class="text-xl font-bold text-rose-600" id="imp-total-atrasados">12</strong>
+                                    <div class="p-3 bg-amber-50 border border-amber-200 rounded-md" id="card-imp-desenvolvimento">
+                                        <span class="text-amber-600 block">Em Desenvolvimento</span>
+                                        <strong class="text-xl font-bold text-amber-600 card-count">—</strong>
+                                        <span class="text-[10px] text-amber-400 block card-percent"></span>
+                                    </div>
+                                    <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-md" id="card-imp-concluido">
+                                        <span class="text-emerald-600 block">Concluído</span>
+                                        <strong class="text-xl font-bold text-emerald-600 card-count">—</strong>
+                                        <span class="text-[10px] text-emerald-400 block card-percent"></span>
                                     </div>
                                 </div>
 
@@ -1224,35 +1233,20 @@
                                         <i data-lucide="sliders" class="w-4 h-4 text-sistran-gold"></i>
                                         Filtros Combinados para Gestão de Portfólio
                                     </p>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
-                                        <div>
-                                            <label class="block text-sistran-body font-semibold mb-1">Filtrar Ciclo Temporal</label>
-                                            <select id="filter-imp-ciclo" onchange="filterImplementacao()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
-                                                <option value="all" selected>Todos os Ciclos</option>
-                                                <option value="2025-2027">Ciclo Curto (2025-2027)</option>
-                                                <option value="2028-2030">Ciclo Médio (2028-2030)</option>
-                                            </select>
-                                        </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
                                         <div>
                                             <label class="block text-sistran-body font-semibold mb-1">Status Operacional</label>
                                             <select id="filter-imp-status" onchange="filterImplementacao()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
                                                 <option value="all" selected>Todos os Status</option>
-                                                <option value="Concluído">Apenas Concluídos</option>
-                                                <option value="Em andamento">Em Andamento</option>
-                                                <option value="Pendente">Pendente</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label class="block text-sistran-body font-semibold mb-1">Alinhamento Transversal</label>
-                                            <select id="filter-imp-transversal" onchange="filterImplementacao()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
-                                                <option value="all" selected>Qualquer Alinhamento</option>
-                                                <option value="PNATRANS">Alinhado ao PNATRANS</option>
-                                                <option value="RISCO">Fatores de Risco</option>
+                                                <option value="À Iniciar">À Iniciar</option>
+                                                <option value="Iniciado">Iniciado</option>
+                                                <option value="Em Desenvolvimento">Em Desenvolvimento</option>
+                                                <option value="Concluído">Concluído</option>
                                             </select>
                                         </div>
                                         <div>
                                             <label class="block text-sistran-body font-semibold mb-1">Busca Textual</label>
-                                            <input type="text" id="search-imp-text" onkeyup="filterImplementacao()" placeholder="Ação, produto..." class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                            <input type="text" id="search-imp-text" onkeyup="filterImplementacao()" placeholder="Código, ação, produto, indicador..." class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
                                         </div>
                                     </div>
                                 </div>
@@ -1261,13 +1255,12 @@
                                     <table class="w-full text-left border-collapse text-xs">
                                         <thead>
                                             <tr class="bg-sistran-surface-muted text-sistran-heading font-bold border-b border-sistran-border">
-                                                <th class="p-3 w-12">Cód.</th>
-                                                <th class="p-3 w-40">Objetivo Estratégico</th>
-                                                <th class="p-3">Produto a ser Entregue</th>
-                                                <th class="p-3">Órgão Responsável</th>
-                                                <th class="p-3">Meta Parcial</th>
-                                                <th class="p-3">Status</th>
-                                                <th class="p-3 text-center">Info</th>
+                                                <th class="p-3 w-16">Cód.</th>
+                                                <th class="p-3">Eixo / Ação</th>
+                                                <th class="p-3">Produto</th>
+                                                <th class="p-3">Indicador</th>
+                                                <th class="p-3 w-20 text-center">Meta Curto</th>
+                                                <th class="p-3 w-32">Status</th>
                                             </tr>
                                         </thead>
                                         <tbody id="table-implementacao-body" class="divide-y divide-gray-100"></tbody>
@@ -2534,27 +2527,12 @@
             const dfazer = document.getElementById('prod-fazer');
             if (dfazer) dfazer.textContent = total;
 
-            const totalMatriz = dbImplementacao.length;
-            const concluídosMatriz = dbImplementacao.filter(item => item.status === 'Concluído').length;
-            const andamentoMatriz = dbImplementacao.filter(item => item.status === 'Em andamento').length;
-            const pendentesMatriz = dbImplementacao.filter(item => item.status === 'Pendente').length;
+            const totalMatriz = monitoramentoData.length;
 
             const impPrev = document.getElementById('imp-total-previsto');
             if (impPrev) impPrev.innerText = totalMatriz;
 
-            const impConcl = document.getElementById('imp-total-concluidos');
-            if (impConcl) impConcl.innerText = concluídosMatriz;
-
-            const impAnd = document.getElementById('imp-total-andamento');
-            if (impAnd) impAnd.innerText = andamentoMatriz;
-
-            const impAtr = document.getElementById('imp-total-atrasados');
-            if (impAtr) impAtr.innerText = pendentesMatriz;
-
-            const impRatio = document.getElementById('card-imp-ratio');
-            if (impRatio) impRatio.innerText = `${concluídosMatriz} / ${totalMatriz}`;
-
-            const concluidoPorcentagem = ((concluídosMatriz / totalMatriz) * 100).toFixed(1);
+            const concluidoPorcentagem = totalMatriz > 0 ? ((monitoramentoData.filter(item => calcularSituacaoMeta(item.cod, item.indicador, 'curto') === 'Concluído').length / totalMatriz) * 100).toFixed(1) : '0.0';
             const pconcluido = document.getElementById('percent-concluido');
             if (pconcluido) pconcluido.textContent = `${concluidoPorcentagem}%`;
 
@@ -3254,19 +3232,49 @@
 
             const calcPercent = (c) => total === 0 ? '0%' : Math.round((c / total) * 100) + '%';
 
-            // Atualiza cards
+            // Atualiza total
             const impPrev = document.getElementById('imp-total-previsto');
             if (impPrev) impPrev.innerText = total;
-            const impConcl = document.getElementById('imp-total-concluidos');
-            if (impConcl) impConcl.innerText = counts['Concluído'] + ' (' + calcPercent(counts['Concluído']) + ')';
-            const impAnd = document.getElementById('imp-total-andamento');
-            if (impAnd) impAnd.innerText = counts['Em Desenvolvimento'] + ' (' + calcPercent(counts['Em Desenvolvimento']) + ')';
-            const impAtr = document.getElementById('imp-total-atrasados');
-            if (impAtr) impAtr.innerText = counts['À Iniciar'] + ' (' + calcPercent(counts['À Iniciar']) + ')';
 
-            // Card Iniciado (reusa um elemento existente ou cria)
-            const impIniciado = document.getElementById('imp-total-iniciado');
-            if (impIniciado) impIniciado.innerText = counts['Iniciado'] + ' (' + calcPercent(counts['Iniciado']) + ')';
+            // Atualiza período
+            const periodEl = document.getElementById('imp-period-label');
+            if (periodEl) periodEl.textContent = 'Meta Parcial (2025 - 2027)';
+
+            // Atualiza card "À Iniciar"
+            const cardIniciar = document.getElementById('card-imp-iniciar');
+            if (cardIniciar) {
+                const countEl = cardIniciar.querySelector('.card-count');
+                const percentEl = cardIniciar.querySelector('.card-percent');
+                if (countEl) countEl.textContent = counts['À Iniciar'];
+                if (percentEl) percentEl.textContent = calcPercent(counts['À Iniciar']);
+            }
+
+            // Atualiza card "Iniciado"
+            const cardIniciado = document.getElementById('card-imp-iniciado');
+            if (cardIniciado) {
+                const countEl = cardIniciado.querySelector('.card-count');
+                const percentEl = cardIniciado.querySelector('.card-percent');
+                if (countEl) countEl.textContent = counts['Iniciado'];
+                if (percentEl) percentEl.textContent = calcPercent(counts['Iniciado']);
+            }
+
+            // Atualiza card "Em Desenvolvimento"
+            const cardDev = document.getElementById('card-imp-desenvolvimento');
+            if (cardDev) {
+                const countEl = cardDev.querySelector('.card-count');
+                const percentEl = cardDev.querySelector('.card-percent');
+                if (countEl) countEl.textContent = counts['Em Desenvolvimento'];
+                if (percentEl) percentEl.textContent = calcPercent(counts['Em Desenvolvimento']);
+            }
+
+            // Atualiza card "Concluído"
+            const cardConcluido = document.getElementById('card-imp-concluido');
+            if (cardConcluido) {
+                const countEl = cardConcluido.querySelector('.card-count');
+                const percentEl = cardConcluido.querySelector('.card-percent');
+                if (countEl) countEl.textContent = counts['Concluído'];
+                if (percentEl) percentEl.textContent = calcPercent(counts['Concluído']);
+            }
         }
 
         function filterImplementacao() {
