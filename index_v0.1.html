@@ -1197,40 +1197,47 @@
                                             </span>
                                             Matriz de Implementação de Ações e Produtos
                                         </h2>
-                                        <p class="text-xs text-sistran-body mt-2">Monitoramento da implementação dos produtos e ações do PSV-SP (2025-2035).</p>
+                                        <p class="text-sm text-sistran-body leading-relaxed mt-2">Monitoramento da implementação dos produtos e ações do PSV-SP (2025-2035).</p>
                                     </div>
-                                    <button onclick="exportImplementacaoXLSX()" class="bg-white border-2 border-sistran-gold hover:bg-sistran-gold-surface text-sistran-ink font-bold py-2 px-4 rounded-pill text-xs flex items-center gap-1.5 transition">
-                                        <i data-lucide="download" class="w-4 h-4"></i> Exportar (.xlsx)
-                                    </button>
+                                    <div class="flex gap-2 flex-shrink-0">
+                                        <button onclick="exportImplementacaoXLSX()" class="bg-white border-2 border-sistran-gold hover:bg-sistran-gold-surface text-sistran-ink font-bold py-2 px-4 rounded-pill text-xs flex items-center gap-1.5 transition">
+                                            <i data-lucide="download" class="w-4 h-4"></i> Exportar (.xlsx)
+                                        </button>
+                                        <button onclick="exportImplementacaoCSV()" class="bg-white border-2 border-sistran-border hover:bg-sistran-surface-muted text-sistran-ink font-bold py-2 px-4 rounded-pill text-xs flex items-center gap-1.5 transition">
+                                            <i data-lucide="download" class="w-4 h-4"></i> Exportar (.csv)
+                                        </button>
+                                    </div>
                                 </div>
 
-                                <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider" id="imp-period-label">Metas Parciais de Curto Prazo (2025 - 2027) - Resumo dos Quantitativos</p>
+                                <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider" id="imp-period-label">Resumo dos Quantitativos das Metas de Curto Prazo (2025 - 2027)</p>
                                 <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-center font-semibold text-xs">
                                     <div class="p-3 bg-gray-50 border border-sistran-border rounded-md">
                                         <span class="text-sistran-muted block">Produtos Previstos</span>
                                         <strong class="text-xl font-bold text-sistran-heading" id="imp-total-previsto">—</strong>
-                                    </div>
-                                    <div class="p-3 bg-gray-50 border border-gray-200 rounded-md" id="card-imp-iniciar">
-                                        <span class="text-gray-600 block">À Iniciar</span>
-                                        <strong class="text-xl font-bold text-gray-700 card-count">—</strong>
-                                        <span class="text-[10px] text-gray-400 block card-percent"></span>
-                                    </div>
-                                    <div class="p-3 bg-blue-50 border border-blue-200 rounded-md" id="card-imp-iniciado">
-                                        <span class="text-blue-600 block">Iniciado</span>
-                                        <strong class="text-xl font-bold text-blue-600 card-count">—</strong>
-                                        <span class="text-[10px] text-blue-400 block card-percent"></span>
-                                    </div>
-                                    <div class="p-3 bg-amber-50 border border-amber-200 rounded-md" id="card-imp-desenvolvimento">
-                                        <span class="text-amber-600 block">Em Desenvolvimento</span>
-                                        <strong class="text-xl font-bold text-amber-600 card-count">—</strong>
-                                        <span class="text-[10px] text-amber-400 block card-percent"></span>
                                     </div>
                                     <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-md" id="card-imp-concluido">
                                         <span class="text-emerald-600 block">Concluído</span>
                                         <strong class="text-xl font-bold text-emerald-600 card-count">—</strong>
                                         <span class="text-[10px] text-emerald-400 block card-percent"></span>
                                     </div>
+                                    <div class="p-3 bg-amber-50 border border-amber-200 rounded-md" id="card-imp-desenvolvimento">
+                                        <span class="text-amber-600 block">Em Desenvolvimento</span>
+                                        <strong class="text-xl font-bold text-amber-600 card-count">—</strong>
+                                        <span class="text-[10px] text-amber-400 block card-percent"></span>
+                                    </div>
+                                    <div class="p-3 bg-blue-50 border border-blue-200 rounded-md" id="card-imp-iniciado">
+                                        <span class="text-blue-600 block">Iniciado</span>
+                                        <strong class="text-xl font-bold text-blue-600 card-count">—</strong>
+                                        <span class="text-[10px] text-blue-400 block card-percent"></span>
+                                    </div>
+                                    <div class="p-3 bg-gray-50 border border-gray-200 rounded-md" id="card-imp-iniciar">
+                                        <span class="text-gray-600 block">À Iniciar</span>
+                                        <strong class="text-xl font-bold text-gray-700 card-count">—</strong>
+                                        <span class="text-[10px] text-gray-400 block card-percent"></span>
+                                    </div>
                                 </div>
+
+                                <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Monitoramento da situação dos indicadores de implementação por Fases de Implementação do Plano: Curto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)</p>
 
                                 <div class="bg-gray-50 p-4 border border-sistran-border rounded-md space-y-4">
                                     <p class="text-xs font-bold text-sistran-heading flex items-center gap-2">
@@ -3242,7 +3249,7 @@
 
             // Atualiza período
             const periodEl = document.getElementById('imp-period-label');
-            if (periodEl) periodEl.textContent = 'Metas Parciais de Curto Prazo (2025 - 2027) - Resumo dos Quantitativos';
+            if (periodEl) periodEl.textContent = 'Resumo dos Quantitativos das Metas de Curto Prazo (2025 - 2027)';
 
             // Atualiza card "À Iniciar"
             const cardIniciar = document.getElementById('card-imp-iniciar');
@@ -4870,6 +4877,42 @@
             const dataAtual = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
             XLSX.writeFile(wb, `Matriz_Implementacao_PSV-SP_${dataAtual}.xlsx`);
             showToast("Matriz de Implementação exportada com sucesso!");
+        }
+
+        function exportImplementacaoCSV() {
+            if (monitoramentoData.length === 0) {
+                showNotification("Aviso", "Nenhum dado de implementação para exportar.", "warning");
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,Codigo,Eixo Tematico,Objetivo Estrategico,Acao,Produto,Indicador,Meta Final,Meta Curto,Meta Medio,Meta Longo,Status Curto Prazo\n";
+            monitoramentoData.forEach(item => {
+                const status = calcularSituacaoMeta(item.cod, item.indicador, 'curto');
+                const row = [
+                    `"${item.cod || ''}"`,
+                    `"${item.eixo || ''}"`,
+                    `"${item.objetivo || ''}"`,
+                    `"${item.acao || ''}"`,
+                    `"${item.produto || ''}"`,
+                    `"${item.indicador || ''}"`,
+                    `"${item.metaFinal || ''}"`,
+                    `"${item.metaCurto || ''}"`,
+                    `"${item.metaMedio || ''}"`,
+                    `"${item.metaLongo || ''}"`,
+                    `"${status}"`
+                ].join(",");
+                csvContent += row + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            const dataAtual = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
+            link.setAttribute("download", `Matriz_Implementacao_PSV-SP_${dataAtual}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast("Matriz de Implementação exportada em CSV!");
         }
     </script>
 </body>
