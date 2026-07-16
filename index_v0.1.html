@@ -1238,7 +1238,7 @@
                                 </div>
 
 
-                                <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Monitoramento da situação dos indicadores de implementação por Fases de Implementação do Plano:<br>Curto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)</p>
+                                <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Resumo dos indicadores de implementação por Fases de Implementação do Plano:<br>Curto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)</p>
 
                                 <div class="bg-gray-50 p-4 border border-sistran-border rounded-md space-y-4">
                                     <p class="text-xs font-bold text-sistran-heading flex items-center gap-2">
@@ -3063,67 +3063,62 @@
 
         // === CARREGAMENTO DE MONITORAMENTO_INDICADORES.XLSX ===
         function loadMonitoramentoData() {
-            try {
-                const arrayBuffer = new Promise(function(resolve, reject) {
-                    const xhr = new XMLHttpRequest();
-                    xhr.open('GET', 'Monitoramento_Indicadores.xlsx', true);
-                    xhr.responseType = 'arraybuffer';
-                    xhr.onload = function() {
-                        if (xhr.status === 200 || xhr.status === 0) {
-                            resolve(xhr.response);
-                        } else {
-                            reject(new Error('Erro ao carregar: ' + xhr.status));
-                        }
-                    };
-                    xhr.onerror = function() { reject(new Error('Erro de rede/CORS')); };
-                    xhr.send();
-                });
-
-                arrayBuffer.then(function(buffer) {
+            console.log('[SIMO] Iniciando carregamento de Monitoramento_Indicadores.xlsx...');
+            
+            fetch('Monitoramento_Indicadores.xlsx')
+                .then(function(response) {
+                    console.log('[SIMO] Fetch response status:', response.status);
+                    if (!response.ok) {
+                        throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+                    }
+                    return response.arrayBuffer();
+                })
+                .then(function(buffer) {
+                    console.log('[SIMO] ArrayBuffer recebido, tamanho:', buffer.byteLength, 'bytes');
                     const data = new Uint8Array(buffer);
                     const workbook = XLSX.read(data, { type: 'array' });
-                    const sheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+                    const sheetName = workbook.SheetNames[0];
+                    console.log('[SIMO] Sheet:', sheetName);
+                    const sheet = workbook.Sheets[sheetName];
+                    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+                    console.log('[SIMO] Total de linhas no Excel:', rows.length);
 
                     monitoramentoData = [];
 
-                    // Variáveis para propagar valores de células mescladas (fill-down)
-                    let lastColA = '', lastColB = '', lastColC = '', lastColD = '';
-                    let lastColE = '', lastColF = '';
+                    // Variáveis para propagar valores (caso haja células vazias)
+                    let lastA = '', lastB = '', lastC = '', lastD = '', lastE = '', lastF = '';
 
                     for (let i = 1; i < rows.length; i++) {
                         const row = rows[i];
                         if (!row || row.length === 0) continue;
 
-                        // Lê colunas — propaga valores anteriores se célula está vazia (merged cells)
-                        let colA = (row[0] != null && String(row[0]).trim() !== '') ? String(row[0]).trim() : lastColA;
-                        let colB = (row[1] != null && String(row[1]).trim() !== '') ? String(row[1]).trim() : lastColB;
-                        let colC = (row[2] != null && String(row[2]).trim() !== '') ? String(row[2]).trim() : lastColC;
-                        let colD = (row[3] != null && String(row[3]).trim() !== '') ? String(row[3]).trim() : lastColD;
-                        let colE = (row[4] != null && String(row[4]).trim() !== '') ? String(row[4]).trim() : lastColE;
-                        let colF = (row[5] != null && String(row[5]).trim() !== '') ? String(row[5]).trim() : lastColF;
+                        // Colunas A-H, L, P-S
+                        let colA = (row[0] != null && String(row[0]).trim() !== '') ? String(row[0]).trim() : lastA;
+                        let colB = (row[1] != null && String(row[1]).trim() !== '') ? String(row[1]).trim() : lastB;
+                        let colC = (row[2] != null && String(row[2]).trim() !== '') ? String(row[2]).trim() : lastC;
+                        let colD = (row[3] != null && String(row[3]).trim() !== '') ? String(row[3]).trim() : lastD;
+                        let colE = (row[4] != null && String(row[4]).trim() !== '') ? String(row[4]).trim() : lastE;
+                        let colF = (row[5] != null && String(row[5]).trim() !== '') ? String(row[5]).trim() : lastF;
                         const colG = (row[6] != null) ? String(row[6]).trim() : '';
                         const colH = (row[7] != null) ? String(row[7]).trim() : '';
                         const colL = (row[11] != null) ? String(row[11]).trim() : '';
-                        const colP = (row[15] != null) ? row[15] : '';
-                        const colQ = (row[16] != null) ? row[16] : '';
-                        const colR = (row[17] != null) ? row[17] : '';
-                        const colS = (row[18] != null) ? row[18] : '';
+                        const colP = (row[15] != null) ? row[15] : 0;
+                        const colQ = (row[16] != null) ? row[16] : 0;
+                        const colR = (row[17] != null) ? row[17] : 0;
+                        const colS = (row[18] != null) ? row[18] : 0;
 
-                        // Atualiza valores para propagação
-                        lastColA = colA; lastColB = colB;
-                        lastColC = colC; lastColD = colD;
-                        lastColE = colE; lastColF = colF;
+                        // Atualiza últimos valores válidos
+                        lastA = colA; lastB = colB; lastC = colC; lastD = colD; lastE = colE; lastF = colF;
 
-                        // Pula apenas se não tem código de produto (colG)
-                        if (!colG && !colH) continue;
+                        // Inclui a linha se tem pelo menos código ou nome de produto
+                        if (!colG && !colH && !colL) continue;
 
                         monitoramentoData.push({
                             cod: colG,
-                            eixo: colA && colB ? `Eixo ${colA} - ${colB}` : '',
-                            objetivo: colC && colD ? `${colC} - ${colD}` : '',
-                            acao: colE && colF ? `${colE} - ${colF}` : '',
-                            produto: colG && colH ? `${colG} - ${colH}` : '',
+                            eixo: (colA && colB) ? ('Eixo ' + colA + ' - ' + colB) : '',
+                            objetivo: (colC && colD) ? (colC + ' - ' + colD) : '',
+                            acao: (colE && colF) ? (colE + ' - ' + colF) : '',
+                            produto: (colG && colH) ? (colG + ' - ' + colH) : (colG || colH || ''),
                             indicador: colL,
                             metaFinal: parseFloat(colP) || 0,
                             metaCurto: parseFloat(colQ) || 0,
@@ -3131,15 +3126,20 @@
                             metaLongo: parseFloat(colS) || 0
                         });
                     }
-                    console.log('Monitoramento data loaded:', monitoramentoData.length, 'rows (esperado: 365)');
-                    if (monitoramentoData.length < 365) {
-                        console.warn('ATENÇÃO: Menos de 365 linhas carregadas. Verifique se a planilha possui células mescladas não tratadas.');
+
+                    console.log('[SIMO] Monitoramento data loaded:', monitoramentoData.length, 'produtos (esperado: 365)');
+                    if (monitoramentoData.length > 0) {
+                        console.log('[SIMO] Primeiro produto:', JSON.stringify(monitoramentoData[0]));
+                        console.log('[SIMO] Último produto:', JSON.stringify(monitoramentoData[monitoramentoData.length - 1]));
                     }
+
                     dbImplementacao = monitoramentoData;
                     buildImplementacaoTable();
                     updateUIStats();
-                }).catch(function(err) {
-                    console.warn('Fallback para dados locais de implementação:', err);
+                })
+                .catch(function(err) {
+                    console.error('[SIMO] Erro ao carregar Monitoramento_Indicadores.xlsx:', err);
+                    console.warn('[SIMO] Utilizando dados de contingência (3 registros)');
                     monitoramentoData = [
                         { cod: "1.1.1.1", eixo: "Eixo 1 - Gestão da Segurança Viária", objetivo: "1.1 - Fortalecer a Governança", acao: "1.1.1 - Consolidar o SISTRAN-SP", produto: "1.1.1.1 - Publicação do regimento interno", indicador: "Regimento publicado (un.)", metaFinal: 1, metaCurto: 1, metaMedio: 0, metaLongo: 0 },
                         { cod: "2.1.1.1", eixo: "Eixo 2 - Gestão da Informação", objetivo: "2.1 - Banco de Dados Integrado", acao: "2.1.1 - Consolidar Infosiga", produto: "2.1.1.1 - Plataforma de conciliação estatística", indicador: "Tempo de conciliação (dias)", metaFinal: 12, metaCurto: 12, metaMedio: 8, metaLongo: 5 },
@@ -3149,9 +3149,6 @@
                     buildImplementacaoTable();
                     updateUIStats();
                 });
-            } catch(e) {
-                console.warn('Erro geral em loadMonitoramentoData:', e);
-            }
         }
 
         // === CÁLCULO DE SITUAÇÃO DAS METAS ===
