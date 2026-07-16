@@ -1203,7 +1203,7 @@
                                         <button onclick="exportImplementacaoXLSX()" class="bg-white border-2 border-sistran-gold hover:bg-sistran-gold-surface text-sistran-ink font-bold py-2 px-4 rounded-pill text-xs flex items-center gap-1.5 transition">
                                             <i data-lucide="download" class="w-4 h-4"></i> Exportar (.xlsx)
                                         </button>
-                                        <button onclick="exportImplementacaoCSV()" class="bg-white border-2 border-sistran-border hover:bg-sistran-surface-muted text-sistran-ink font-bold py-2 px-4 rounded-pill text-xs flex items-center gap-1.5 transition">
+                                        <button onclick="exportImplementacaoCSV()" class="bg-white border-2 border-sistran-gold hover:bg-sistran-gold-surface text-sistran-ink font-bold py-2 px-4 rounded-pill text-xs flex items-center gap-1.5 transition">
                                             <i data-lucide="download" class="w-4 h-4"></i> Exportar (.csv)
                                         </button>
                                     </div>
@@ -1211,8 +1211,8 @@
 
                                 <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider" id="imp-period-label">Resumo dos Quantitativos das Metas de Curto Prazo (2025 - 2027)</p>
                                 <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-center font-semibold text-xs">
-                                    <div class="p-3 bg-gray-50 border border-sistran-border rounded-md">
-                                        <span class="text-sistran-muted block">Produtos Previstos</span>
+                                    <div class="p-3 bg-sistran-gold-surface border border-sistran-yellow rounded-md">
+                                        <span class="text-sistran-gold font-bold block">Produtos Previstos</span>
                                         <strong class="text-xl font-bold text-sistran-heading" id="imp-total-previsto">—</strong>
                                     </div>
                                     <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-md" id="card-imp-concluido">
@@ -1237,22 +1237,25 @@
                                     </div>
                                 </div>
 
-                                <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Monitoramento da situação dos indicadores de implementação por Fases de Implementação do Plano: Curto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)</p>
+
+                                <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Monitoramento da situação dos indicadores de implementação por Fases de Implementação do Plano:<br>Curto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)</p>
 
                                 <div class="bg-gray-50 p-4 border border-sistran-border rounded-md space-y-4">
                                     <p class="text-xs font-bold text-sistran-heading flex items-center gap-2">
                                         <i data-lucide="sliders" class="w-4 h-4 text-sistran-gold"></i>
-                                        Filtros Combinados para Gestão de Portfólio
+                                        Filtros
                                     </p>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
                                         <div>
-                                            <label class="block text-sistran-body font-semibold mb-1">Status Operacional</label>
-                                            <select id="filter-imp-status" onchange="filterImplementacao()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
-                                                <option value="all" selected>Todos os Status</option>
-                                                <option value="À Iniciar">À Iniciar</option>
-                                                <option value="Iniciado">Iniciado</option>
-                                                <option value="Em Desenvolvimento">Em Desenvolvimento</option>
-                                                <option value="Concluído">Concluído</option>
+                                            <label class="block text-sistran-body font-semibold mb-1">Eixo Temático</label>
+                                            <select id="filter-imp-eixo" onchange="filterImplementacao()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                <option value="all" selected>Todos os Eixos</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sistran-body font-semibold mb-1">Órgão</label>
+                                            <select id="filter-imp-orgao" onchange="filterImplementacao()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                <option value="all" selected>Todos os Órgãos</option>
                                             </select>
                                         </div>
                                         <div>
@@ -1266,15 +1269,15 @@
                                     <table class="w-full text-left border-collapse text-xs">
                                         <thead>
                                             <tr class="bg-sistran-surface-muted text-sistran-heading font-bold border-b border-sistran-border">
-                                                <th class="p-3 w-16">Cód.</th>
-                                                <th class="p-3">Eixo / Ação</th>
+                                                <th class="p-3">Eixo Temático</th>
                                                 <th class="p-3">Produto</th>
-                                                <th class="p-3">Indicador</th>
-                                                <th class="p-3 w-20 text-center">Meta Curto</th>
-                                                <th class="p-3 w-32">Status</th>
+                                                <th class="p-3">Órgão</th>
+                                                <th class="p-3 text-center">Curto Prazo<br>(2025–2027)</th>
+                                                <th class="p-3 text-center">Médio Prazo<br>(2028–2030)</th>
+                                                <th class="p-3 text-center">Longo Prazo<br>(2031–2035)</th>
+                                                <th class="p-3 text-center">Meta Final<br>(2025-2035)</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="table-implementacao-body" class="divide-y divide-gray-100"></tbody>
                                     </table>
                                 </div>
                             </div>
@@ -3186,15 +3189,47 @@
             tbody.innerHTML = '';
 
             const searchText = document.getElementById('search-imp-text');
-            const filterStatus = document.getElementById('filter-imp-status');
+            const filterEixo = document.getElementById('filter-imp-eixo');
+            const filterOrgao = document.getElementById('filter-imp-orgao');
             const textValue = searchText ? searchText.value.toLowerCase().trim() : '';
-            const statusValue = filterStatus ? filterStatus.value : 'all';
+            const eixoValue = filterEixo ? filterEixo.value : 'all';
+            const orgaoValue = filterOrgao ? filterOrgao.value : 'all';
 
-            monitoramentoData.forEach((item, index) => {
-                const status = calcularSituacaoMeta(item.cod, item.indicador, 'curto');
+            // Popula filtro de Eixo dinamicamente
+            if (filterEixo) {
+                const eixosUnicos = [...new Set(monitoramentoData.map(i => i.eixo).filter(Boolean))];
+                const eixoAtual = filterEixo.value;
+                filterEixo.innerHTML = '<option value="all">Todos os Eixos</option>';
+                eixosUnicos.forEach(e => { const o = document.createElement('option'); o.value = e; o.textContent = e; filterEixo.appendChild(o); });
+                filterEixo.value = eixoAtual || 'all';
+            }
 
-                // Filtro por status
-                if (statusValue && statusValue !== 'all' && status !== statusValue) return;
+            // Popula filtro de Órgão dinamicamente (dos produtos aprovados)
+            if (filterOrgao) {
+                const orgaosUnicos = [...new Set(mockDatabase.acoes.filter(a => a.status === 'Aprovado').map(a => a.orgao).filter(Boolean))];
+                const orgaoAtual = filterOrgao.value;
+                filterOrgao.innerHTML = '<option value="all">Todos os Órgãos</option>';
+                orgaosUnicos.forEach(o => { const opt = document.createElement('option'); opt.value = o; opt.textContent = o; filterOrgao.appendChild(opt); });
+                filterOrgao.value = orgaoAtual || 'all';
+            }
+
+            // Helper para badge de status
+            function statusBadgeClass(s) {
+                if (s === 'Concluído') return 'bg-emerald-50 text-emerald-600';
+                if (s === 'Em Desenvolvimento') return 'bg-amber-50 text-amber-600';
+                if (s === 'Iniciado') return 'bg-blue-50 text-blue-600';
+                return 'bg-gray-100 text-sistran-body';
+            }
+
+            monitoramentoData.forEach((item) => {
+                // Filtro por Eixo
+                if (eixoValue !== 'all' && item.eixo !== eixoValue) return;
+
+                // Filtro por Órgão (verifica se há produtos aprovados desse órgão para este cod)
+                if (orgaoValue !== 'all') {
+                    const temProdutoDoOrgao = mockDatabase.acoes.some(a => a.status === 'Aprovado' && a.codProd === item.cod && a.orgao === orgaoValue);
+                    if (!temProdutoDoOrgao) return;
+                }
 
                 // Filtro por busca textual
                 if (textValue) {
@@ -3202,29 +3237,27 @@
                     if (!searchable.includes(textValue)) return;
                 }
 
+                // Calcula status para cada meta
+                const statusCurto = calcularSituacaoMeta(item.cod, item.indicador, 'curto');
+                const statusMedio = calcularSituacaoMeta(item.cod, item.indicador, 'medio');
+                const statusLongo = calcularSituacaoMeta(item.cod, item.indicador, 'longo');
+                const statusFinal = calcularSituacaoMeta(item.cod, item.indicador, 'final');
+
+                // Busca órgão dos produtos aprovados
+                const produtoAprovado = mockDatabase.acoes.find(a => a.status === 'Aprovado' && a.codProd === item.cod);
+                const orgaoDisplay = produtoAprovado ? produtoAprovado.orgao : '—';
+
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-gray-50 border-b border-gray-100 transition-colors';
-                
-                let statusBadge = 'bg-gray-100 text-sistran-body';
-                if (status === 'Concluído') statusBadge = 'bg-emerald-50 text-emerald-600';
-                else if (status === 'Em Desenvolvimento') statusBadge = 'bg-amber-50 text-amber-600';
-                else if (status === 'Iniciado') statusBadge = 'bg-blue-50 text-blue-600';
-                else statusBadge = 'bg-gray-100 text-sistran-body';
 
                 tr.innerHTML = `
-                    <td class="p-3 font-bold text-sistran-gold">${item.cod}</td>
-                    <td class="p-3">
-                        <span class="block text-[10px] font-bold text-sistran-muted uppercase">${item.eixo}</span>
-                        <span class="font-medium text-sistran-heading leading-tight">${item.acao}</span>
-                    </td>
-                    <td class="p-3 text-sistran-body font-semibold max-w-xs">${item.produto}</td>
-                    <td class="p-3 text-sistran-body text-[10px] max-w-[150px]">${item.indicador}</td>
-                    <td class="p-3 text-sistran-body text-center font-semibold">${item.metaCurto || '—'}</td>
-                    <td class="p-3">
-                        <span class="px-2.5 py-1 rounded text-[10px] font-bold ${statusBadge}">
-                            ${status}
-                        </span>
-                    </td>
+                    <td class="p-3 text-sistran-body text-[10px] max-w-[180px]">${item.eixo || '—'}</td>
+                    <td class="p-3 text-sistran-body font-semibold text-[10px] max-w-[200px]">${item.produto || '—'}</td>
+                    <td class="p-3 text-sistran-body text-[10px]">${orgaoDisplay}</td>
+                    <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${statusBadgeClass(statusCurto)}">${statusCurto}</span></td>
+                    <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${statusBadgeClass(statusMedio)}">${statusMedio}</span></td>
+                    <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${statusBadgeClass(statusLongo)}">${statusLongo}</span></td>
+                    <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${statusBadgeClass(statusFinal)}">${statusFinal}</span></td>
                 `;
                 tbody.appendChild(tr);
             });
