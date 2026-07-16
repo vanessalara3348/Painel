@@ -1210,6 +1210,15 @@
                                 </div>
 
                                 <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider" id="imp-period-label">Resumo dos Quantitativos das Metas de Curto Prazo (2025 - 2027)</p>
+                                <div class="flex items-center gap-3 mb-2">
+                                    <label class="text-xs font-semibold text-sistran-body">Visualizar período:</label>
+                                    <select id="seletor-periodo-cards" onchange="updateImplementacaoSummary()" class="text-xs p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                        <option value="curto" selected>Curto Prazo (2025–2027)</option>
+                                        <option value="medio">Médio Prazo (2028–2030)</option>
+                                        <option value="longo">Longo Prazo (2031–2035)</option>
+                                        <option value="final">Meta Final (2025–2035)</option>
+                                    </select>
+                                </div>
                                 <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-center font-semibold text-xs">
                                     <div class="p-3 bg-sistran-gold-surface border border-sistran-yellow rounded-md">
                                         <span class="text-sistran-gold font-bold block">Produtos Previstos</span>
@@ -1236,6 +1245,8 @@
                                         <span class="text-[10px] text-gray-400 block card-percent"></span>
                                     </div>
                                 </div>
+
+                                <p class="text-[10px] text-sistran-body leading-relaxed mt-1"><strong>Nota:</strong> * O status "Concluído*" indica que o produto foi cumprido fora do prazo previsto para a meta parcial, porém a Meta Final (2025-2035) já foi atingida.</p>
 
 
                                 <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Resumo dos indicadores de implementação por Fases de Implementação do Plano:<br>Curto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)</p>
@@ -2553,7 +2564,7 @@
             monitoramentoData.forEach(item => {
                 const s = calcularSituacaoMeta(item.cod, item.indicador, 'curto');
                 if (s === 'Sem meta prevista') return; // Não contabiliza
-                if (s === 'Concluído') concluídosMatriz++;
+                if (s === 'Concluído' || s === 'Concluído*') concluídosMatriz++;
                 else if (s === 'Em Desenvolvimento' || s === 'Iniciado') andamentoMatriz++;
                 else pendentesMatriz++;
             });
@@ -3164,7 +3175,8 @@
         }
 
         // === CÁLCULO DE SITUAÇÃO DAS METAS ===
-        function calcularSituacaoMeta(cod, indicador, tipoMeta) {
+        // Função interna que calcula sem compensação progressiva
+        function calcularSituacaoMetaInterno(cod, indicador, tipoMeta) {
             const yearRanges = {
                 'curto': [2025, 2026, 2027],
                 'medio': [2028, 2029, 2030],
@@ -3209,6 +3221,22 @@
             return 'Concluído';
         }
 
+        // Função principal com Compensação Progressiva
+        function calcularSituacaoMeta(cod, indicador, tipoMeta) {
+            const resultado = calcularSituacaoMetaInterno(cod, indicador, tipoMeta);
+
+            // Compensação Progressiva: se a meta parcial não foi cumprida no prazo,
+            // mas a Meta Final já está Concluída, retorna "Concluído*"
+            if (tipoMeta !== 'final' && resultado !== 'Concluído' && resultado !== 'Sem meta prevista') {
+                const statusFinal = calcularSituacaoMetaInterno(cod, indicador, 'final');
+                if (statusFinal === 'Concluído') {
+                    return 'Concluído*';
+                }
+            }
+
+            return resultado;
+        }
+
         function buildImplementacaoTable() {
             const tbody = document.getElementById('table-implementacao-body');
             if (!tbody) return;
@@ -3242,6 +3270,7 @@
             // Helper para badge de status
             function statusBadgeClass(s) {
                 if (s === 'Concluído') return 'bg-emerald-50 text-emerald-600';
+                if (s === 'Concluído*') return 'bg-emerald-50 text-emerald-500 border border-emerald-300';
                 if (s === 'Em Desenvolvimento') return 'bg-amber-50 text-amber-600';
                 if (s === 'Iniciado') return 'bg-blue-50 text-blue-600';
                 if (s === 'Sem meta prevista') return 'bg-zinc-50 text-zinc-400 italic';
@@ -3297,11 +3326,25 @@
             const counts = { 'À Iniciar': 0, 'Iniciado': 0, 'Em Desenvolvimento': 0, 'Concluído': 0 };
             let totalComMeta = 0;
 
+            // Obtém o período selecionado no seletor
+            const seletorPeriodo = document.getElementById('seletor-periodo-cards');
+            const periodo = seletorPeriodo ? seletorPeriodo.value : 'curto';
+
+            // Labels por período
+            const periodLabels = {
+                'curto': 'Resumo dos Quantitativos das Metas de Curto Prazo (2025 - 2027)',
+                'medio': 'Resumo dos Quantitativos das Metas de Médio Prazo (2028 - 2030)',
+                'longo': 'Resumo dos Quantitativos das Metas de Longo Prazo (2031 - 2035)',
+                'final': 'Resumo dos Quantitativos da Meta Final (2025 - 2035)'
+            };
+
             monitoramentoData.forEach(item => {
-                const status = calcularSituacaoMeta(item.cod, item.indicador, 'curto');
+                const status = calcularSituacaoMeta(item.cod, item.indicador, periodo);
                 if (status !== 'Sem meta prevista') {
                     totalComMeta++;
-                    if (counts.hasOwnProperty(status)) counts[status]++;
+                    // "Concluído*" é contabilizado junto com "Concluído"
+                    if (status === 'Concluído' || status === 'Concluído*') counts['Concluído']++;
+                    else if (counts.hasOwnProperty(status)) counts[status]++;
                 }
             });
 
@@ -3313,7 +3356,7 @@
 
             // Atualiza período
             const periodEl = document.getElementById('imp-period-label');
-            if (periodEl) periodEl.textContent = 'Resumo dos Quantitativos das Metas de Curto Prazo (2025 - 2027)';
+            if (periodEl) periodEl.textContent = periodLabels[periodo] || periodLabels['curto'];
 
             // Atualiza card "À Iniciar"
             const cardIniciar = document.getElementById('card-imp-iniciar');
