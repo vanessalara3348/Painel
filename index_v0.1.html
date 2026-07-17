@@ -1663,9 +1663,14 @@
                                         <textarea id="form-coleta-descricao" rows="3" placeholder="Insira observações adicionais, se necessário..." class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-body focus:outline-none focus:ring-1 focus:ring-sistran-gold"></textarea>
                                     </div>
 
-                                    <button type="submit" class="w-full bg-sistran-yellow hover:bg-sistran-yellow-hover text-sistran-ink font-bold py-3 rounded-pill text-xs transition duration-150 flex items-center justify-center gap-2 shadow-sm">
-                                        <i class="fa-solid fa-paper-plane"></i> Submeter para Avaliação
-                                    </button>
+                                    <div class="flex gap-3">
+                                        <button type="button" onclick="limparFormularioColeta()" class="w-full bg-white border-2 border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-bold py-3 rounded-pill text-xs transition duration-150 flex items-center justify-center gap-2">
+                                            <i class="fa-solid fa-eraser"></i> Limpar Dados
+                                        </button>
+                                        <button type="submit" class="w-full bg-sistran-yellow hover:bg-sistran-yellow-hover text-sistran-ink font-bold py-3 rounded-pill text-xs transition duration-150 flex items-center justify-center gap-2 shadow-sm">
+                                            <i class="fa-solid fa-paper-plane"></i> Submeter para Avaliação
+                                        </button>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -3641,6 +3646,20 @@
             if (filtroEixo) filtroEixo.value = 'todos';
             if (filtroAno) filtroAno.value = 'todos';
             renderColetaHistorico();
+        }
+
+        function limparFormularioColeta() {
+            document.getElementById('form-coleta-dados').reset();
+            buildCascadingDropdowns();
+            pontoFocalFile = null;
+            pontoFocalFileIntegridade = null;
+            linkValidacaoStatus = null;
+            editandoSubmissaoId = null;
+            const fileUploadName = document.getElementById('file-upload-name');
+            if (fileUploadName) { fileUploadName.textContent = ''; fileUploadName.className = 'text-xs font-bold text-emerald-600 mt-2'; }
+            const linkFeedback = document.getElementById('link-validation-feedback');
+            if (linkFeedback) { linkFeedback.classList.add('hidden'); linkFeedback.textContent = ''; }
+            showNotification("Formulário limpo", "Todos os campos foram limpos.", "blue");
         }
 
         function limparFiltrosValidacao() {
