@@ -1209,7 +1209,7 @@
                                     </div>
                                 </div>
 
-                                <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider" id="imp-period-label">Resumo dos Quantitativos das Metas de Curto Prazo (2025 - 2027)</p>
+                                <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider" id="imp-period-label">Resumo dos Quantitativos das Metas por Fases de Implementação do Plano:<br>Curto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)</p>
                                 <div class="flex items-center gap-3 mb-2">
                                     <label class="text-xs font-semibold text-sistran-body">Visualizar período:</label>
                                     <select id="seletor-periodo-cards" onchange="updateImplementacaoSummary()" class="text-xs p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
@@ -1251,12 +1251,12 @@
                                     <div class="flex items-center justify-between mb-3">
                                         <p class="text-xs font-bold text-sistran-heading">% do status do andamento dos produtos — Metas de Curto Prazo (2025–2027)</p>
                                     </div>
-                                    <div class="h-[400px] w-full">
+                                    <div class="h-[450px] w-full">
                                         <canvas id="chartImplementacaoEixos"></canvas>
                                     </div>
                                 </div>
 
-                                <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Resumo dos indicadores de implementação por Fases de Implementação do Plano:<br>Curto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)</p>
+                                <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Resumo dos indicadores de implementação por Fases de Implementação do Plano</p>
                                 <p class="text-[10px] text-sistran-body leading-relaxed">Nota: O status <strong>Concluído*</strong> indica que a meta do produto foi cumprido fora do prazo de implementação previsto, porém a Meta Final (2025-2035) foi atingida.</p>
 
                                 <div class="bg-gray-50 p-4 border border-sistran-border rounded-md space-y-4">
@@ -3372,10 +3372,10 @@
 
             // Labels por período
             const periodLabels = {
-                'curto': 'Resumo dos Quantitativos das Metas de Curto Prazo (2025 - 2027)',
-                'medio': 'Resumo dos Quantitativos das Metas de Médio Prazo (2028 - 2030)',
-                'longo': 'Resumo dos Quantitativos das Metas de Longo Prazo (2031 - 2035)',
-                'final': 'Resumo dos Quantitativos da Meta Final (2025 - 2035)'
+                'curto': 'Resumo dos Quantitativos das Metas por Fases de Implementação do Plano:\nCurto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)',
+                'medio': 'Resumo dos Quantitativos das Metas por Fases de Implementação do Plano:\nCurto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)',
+                'longo': 'Resumo dos Quantitativos das Metas por Fases de Implementação do Plano:\nCurto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)',
+                'final': 'Resumo dos Quantitativos das Metas por Fases de Implementação do Plano:\nCurto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)'
             };
 
             monitoramentoData.forEach(item => {
@@ -3472,8 +3472,15 @@
                 totalGeral.total += eixosMap[eixo].total;
             });
 
-            // Labels completos para o gráfico (eixos temáticos)
-            const labels = eixosOrdenados.map(e => e.replace('Eixo ', ''));
+            // Labels completos para o gráfico (eixos temáticos com nome completo)
+            const labels = eixosOrdenados.map(e => {
+                // Formata como array de 2 linhas para Chart.js (quebra automática)
+                const parts = e.split(' - ');
+                if (parts.length > 1 && e.length > 25) {
+                    return [parts[0] + ' -', parts.slice(1).join(' - ')];
+                }
+                return e;
+            });
             labels.push('Total');
 
             // Calcula percentuais
@@ -3504,25 +3511,25 @@
                         {
                             label: 'Concluído',
                             data: dataConcluido,
-                            backgroundColor: '#1F8A4C',
+                            backgroundColor: '#10B981',
                             borderRadius: 2
                         },
                         {
                             label: 'Em Desenvolvimento',
                             data: dataEmDesenv,
-                            backgroundColor: '#FECF03',
+                            backgroundColor: '#D97706',
                             borderRadius: 2
                         },
                         {
                             label: 'Iniciado',
                             data: dataIniciado,
-                            backgroundColor: '#C68B00',
+                            backgroundColor: '#2563EB',
                             borderRadius: 2
                         },
                         {
                             label: 'À Iniciar',
                             data: dataAIniciar,
-                            backgroundColor: '#D3D8DB',
+                            backgroundColor: '#9CA3AF',
                             borderRadius: 2
                         }
                     ]
