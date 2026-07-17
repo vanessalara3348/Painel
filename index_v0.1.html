@@ -1255,7 +1255,7 @@
                                         <i data-lucide="filter" class="w-4 h-4 text-sistran-gold"></i>
                                         Filtros
                                     </p>
-                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
                                         <div>
                                             <label class="block text-sistran-body font-semibold mb-1">Eixo Temático</label>
                                             <select id="filter-imp-eixo" onchange="filterImplementacao()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
@@ -1266,6 +1266,18 @@
                                             <label class="block text-sistran-body font-semibold mb-1">Órgão</label>
                                             <select id="filter-imp-orgao" onchange="filterImplementacao()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
                                                 <option value="all" selected>Todos os Órgãos</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sistran-body font-semibold mb-1">Status (Meta Final 2025-2035)</label>
+                                            <select id="filter-imp-status-final" onchange="filterImplementacao()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                <option value="all" selected>Todos os Status</option>
+                                                <option value="Concluído">Concluído</option>
+                                                <option value="Concluído*">Concluído*</option>
+                                                <option value="Em Desenvolvimento">Em Desenvolvimento</option>
+                                                <option value="Iniciado">Iniciado</option>
+                                                <option value="À Iniciar">À Iniciar</option>
+                                                <option value="Sem meta prevista">Sem meta prevista</option>
                                             </select>
                                         </div>
                                         <div>
@@ -3254,9 +3266,11 @@
             const searchText = document.getElementById('search-imp-text');
             const filterEixo = document.getElementById('filter-imp-eixo');
             const filterOrgao = document.getElementById('filter-imp-orgao');
+            const filterStatusFinal = document.getElementById('filter-imp-status-final');
             const textValue = searchText ? searchText.value.toLowerCase().trim() : '';
             const eixoValue = filterEixo ? filterEixo.value : 'all';
             const orgaoValue = filterOrgao ? filterOrgao.value : 'all';
+            const statusFinalValue = filterStatusFinal ? filterStatusFinal.value : 'all';
 
             // Popula filtro de Eixo dinamicamente
             if (filterEixo) {
@@ -3294,6 +3308,12 @@
                 if (orgaoValue !== 'all') {
                     const temProdutoDoOrgao = mockDatabase.acoes.some(a => a.status === 'Aprovado' && a.codProd === item.cod && a.orgao === orgaoValue);
                     if (!temProdutoDoOrgao) return;
+                }
+
+                // Filtro por Status da Meta Final (2025-2035)
+                if (statusFinalValue !== 'all') {
+                    const statusMetaFinal = calcularSituacaoMeta(item.cod, item.indicador, 'final');
+                    if (statusMetaFinal !== statusFinalValue) return;
                 }
 
                 // Filtro por busca textual
