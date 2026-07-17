@@ -1567,6 +1567,13 @@
                                 </div>
 
                                 <form id="form-coleta-dados" class="space-y-4" onsubmit="handleFormSubmitColeta(event)">
+                                    <!-- Botão Limpar Dados -->
+                                    <div class="flex justify-end">
+                                        <button type="button" onclick="limparFormularioColeta()" class="bg-white border border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-semibold text-[10px] px-4 py-1.5 rounded-pill transition flex items-center gap-1.5">
+                                            <i class="fa-solid fa-eraser"></i> Limpar Dados
+                                        </button>
+                                    </div>
+
                                     <!-- Busca rápida por Produto -->
                                     <div>
                                         <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Buscar Produto (preenchimento automático)</label>
@@ -1663,14 +1670,9 @@
                                         <textarea id="form-coleta-descricao" rows="3" placeholder="Insira observações adicionais, se necessário..." class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-body focus:outline-none focus:ring-1 focus:ring-sistran-gold"></textarea>
                                     </div>
 
-                                    <div class="flex gap-3">
-                                        <button type="button" onclick="limparFormularioColeta()" class="w-full bg-white border-2 border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-bold py-3 rounded-pill text-xs transition duration-150 flex items-center justify-center gap-2">
-                                            <i class="fa-solid fa-eraser"></i> Limpar Dados
-                                        </button>
-                                        <button type="submit" class="w-full bg-sistran-yellow hover:bg-sistran-yellow-hover text-sistran-ink font-bold py-3 rounded-pill text-xs transition duration-150 flex items-center justify-center gap-2 shadow-sm">
-                                            <i class="fa-solid fa-paper-plane"></i> Submeter para Avaliação
-                                        </button>
-                                    </div>
+                                    <button type="submit" class="w-full bg-sistran-yellow hover:bg-sistran-yellow-hover text-sistran-ink font-bold py-3 rounded-pill text-xs transition duration-150 flex items-center justify-center gap-2 shadow-sm">
+                                        <i class="fa-solid fa-paper-plane"></i> Submeter para Avaliação
+                                    </button>
                                 </form>
                             </div>
                         </div>
