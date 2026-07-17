@@ -1565,6 +1565,12 @@
                                 </div>
 
                                 <form id="form-coleta-dados" class="space-y-4" onsubmit="handleFormSubmitColeta(event)">
+                                    <!-- Busca rápida por Produto -->
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Buscar Produto (preenchimento automático)</label>
+                                        <div class="search-select-wrapper" id="ss-busca-produto"></div>
+                                    </div>
+
                                     <!-- Eixo Temático -->
                                     <div>
                                         <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Eixo Temático *</label>
@@ -3756,6 +3762,74 @@
             const selectEixo = document.getElementById('form-coleta-eixo');
             selectEixo.innerHTML = '<option value=""></option>';
             uniqueEixes.forEach(e => { const o = document.createElement('option'); o.value = e; o.textContent = e; selectEixo.appendChild(o); });
+
+            // Inicializa campo de busca por produto (preenchimento automático)
+            const allProducts = [...new Set(psvSpreadsheetData.map(item => item.prodKey))].filter(Boolean);
+            createSearchableSelect('ss-busca-produto', 'Digite o código ou nome do produto para buscar...', handleBuscaProdutoChange, false);
+            const wBusca = document.getElementById('ss-busca-produto');
+            if (wBusca) wBusca._options = allProducts;
+        }
+
+        // Auto-preenche todos os campos ao selecionar um produto na busca
+        function handleBuscaProdutoChange() {
+            const wBusca = document.getElementById('ss-busca-produto');
+            const selectedProd = wBusca ? wBusca._value : '';
+            if (!selectedProd) return;
+
+            // Encontra o registro completo na planilha
+            const registro = psvSpreadsheetData.find(item => item.prodKey === selectedProd);
+            if (!registro) return;
+
+            // Preenche Eixo
+            const wEixo = document.getElementById('ss-eixo');
+            if (wEixo && registro.eixoKey) {
+                wEixo._value = registro.eixoKey;
+                wEixo._input.value = registro.eixoKey;
+                const selectEixo = document.getElementById('form-coleta-eixo');
+                if (selectEixo) selectEixo.value = registro.eixoKey;
+                handleEixoChange();
+            }
+
+            setTimeout(() => {
+                // Preenche Objetivo
+                const wObj = document.getElementById('ss-objetivo');
+                if (wObj && registro.objKey) {
+                    wObj._value = registro.objKey;
+                    wObj._input.value = registro.objKey;
+                    handleObjetivoChange();
+                }
+
+                setTimeout(() => {
+                    // Preenche Ação
+                    const wAcao = document.getElementById('ss-acao');
+                    if (wAcao && registro.acaoKey) {
+                        wAcao._value = registro.acaoKey;
+                        wAcao._input.value = registro.acaoKey;
+                        handleAcaoChange();
+                    }
+
+                    setTimeout(() => {
+                        // Preenche Produto
+                        const wProd = document.getElementById('ss-produto');
+                        if (wProd && registro.prodKey) {
+                            wProd._value = registro.prodKey;
+                            wProd._input.value = registro.prodKey;
+                            handleProdutoChange();
+                        }
+
+                        setTimeout(() => {
+                            // Preenche Indicador
+                            const wInd = document.getElementById('ss-indicador');
+                            if (wInd && registro.indicador) {
+                                wInd._value = registro.indicador;
+                                wInd._input.value = registro.indicador;
+                            }
+
+                            showNotification("Produto encontrado!", "Campos preenchidos automaticamente. Verifique e complete o formulário.", "emerald");
+                        }, 50);
+                    }, 50);
+                }, 50);
+            }, 50);
         }
 
         function resetSelect(selectEl, placeholder) {
