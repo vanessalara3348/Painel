@@ -1254,12 +1254,13 @@
                                 </div>
 
                                 <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Resumo dos indicadores de implementação por Fases de Implementação do Plano</p>
-                                <p class="text-[10px] text-sistran-body leading-relaxed">Nota: O status <strong>Concluído*</strong> indica que a meta do produto foi cumprido fora do prazo de implementação previsto, porém a Meta Final (2025-2035) foi atingida.</p>
+                                <p class="text-[10px] text-sistran-body leading-relaxed"><strong>Nota:</strong> O status <strong class="text-emerald-600">Concluído*</strong> indica que a meta do produto foi cumprido fora do prazo de implementação previsto, porém a Meta Final (2025-2035) foi atingida.</p>
 
                                 <div class="bg-gray-50 p-4 border border-sistran-border rounded-md space-y-4">
                                     <p class="text-xs font-bold text-sistran-heading flex items-center gap-2">
                                         <i data-lucide="filter" class="w-4 h-4 text-sistran-gold"></i>
                                         Filtros
+                                        <button onclick="limparFiltrosImplementacao()" class="ml-auto bg-white border border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-semibold text-[10px] px-3 py-1 rounded-pill transition">Limpar Filtros</button>
                                     </p>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
                                         <div>
@@ -3372,7 +3373,6 @@
                                 ${aprovados.map(a => '<tr class="hover:bg-gray-50"><td class="p-2 font-bold text-sistran-gold">#' + a.id + '</td><td class="p-2 text-sistran-body">' + (a.orgao || '—') + '</td><td class="p-2 font-semibold text-sistran-heading">' + (a.valor || '—') + '</td><td class="p-2 text-sistran-heading">' + (a.horizonte || '—') + '</td><td class="p-2 text-sistran-body">' + (a.data || '—') + '</td></tr>').join('')}
                             </tbody>
                         </table>
-                        <p class="text-[10px] text-sistran-muted mt-2 italic">Este histórico é apenas para fins consultivos e não interfere nos cálculos de metas.</p>
                     `;
                 }
 
@@ -3609,6 +3609,20 @@
         }
 
         function filterImplementacao() {
+            buildImplementacaoTable();
+        }
+
+        function limparFiltrosImplementacao() {
+            const filterEixo = document.getElementById('filter-imp-eixo');
+            const filterOrgao = document.getElementById('filter-imp-orgao');
+            const filterStatus = document.getElementById('filter-imp-status-final');
+            const searchText = document.getElementById('search-imp-text');
+
+            if (filterEixo) filterEixo.value = 'all';
+            if (filterOrgao) filterOrgao.value = 'all';
+            if (filterStatus) filterStatus.value = 'all';
+            if (searchText) searchText.value = '';
+
             buildImplementacaoTable();
         }
 
