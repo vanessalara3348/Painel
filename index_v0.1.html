@@ -1368,6 +1368,7 @@
                             <p class="text-xs font-bold text-sistran-heading mb-3 flex items-center gap-2">
                                 <i data-lucide="filter" class="w-4 h-4 text-sistran-gold"></i>
                                 Filtros de Validação
+                                <button onclick="limparFiltrosValidacao()" class="ml-auto bg-white border border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-semibold text-[10px] px-3 py-1 rounded-pill transition">Limpar Filtros</button>
                             </p>
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                                 <div>
@@ -1440,6 +1441,7 @@
                                 <p class="text-xs font-bold text-sistran-heading mb-3 flex items-center gap-2">
                                     <i data-lucide="filter" class="w-4 h-4 text-sistran-gold"></i>
                                     Filtros
+                                    <button onclick="limparFiltrosProdutosValidados()" class="ml-auto bg-white border border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-semibold text-[10px] px-3 py-1 rounded-pill transition">Limpar Filtros</button>
                                 </p>
                                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                     <div>
@@ -1690,6 +1692,7 @@
                                 <p class="text-xs font-bold text-sistran-heading mb-3 flex items-center gap-2">
                                     <i data-lucide="filter" class="w-4 h-4 text-sistran-gold"></i>
                                     Filtros do Histórico
+                                    <button onclick="limparFiltrosHistorico()" class="ml-auto bg-white border border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-semibold text-[10px] px-3 py-1 rounded-pill transition">Limpar Filtros</button>
                                 </p>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
@@ -3630,6 +3633,36 @@
             if (searchText) searchText.value = '';
 
             buildImplementacaoTable();
+        }
+
+        function limparFiltrosHistorico() {
+            const filtroEixo = document.getElementById('filtro-historico-eixo');
+            const filtroAno = document.getElementById('filtro-historico-ano');
+            if (filtroEixo) filtroEixo.value = 'todos';
+            if (filtroAno) filtroAno.value = 'todos';
+            renderColetaHistorico();
+        }
+
+        function limparFiltrosValidacao() {
+            const filtroOrgao = document.getElementById('filtro-orgao-validacao');
+            const filtroMunicipio = document.getElementById('filtro-municipio-validacao');
+            const filtroEixo = document.getElementById('filtro-eixo-validacao');
+            const filtroAno = document.getElementById('filtro-ano-validacao');
+            if (filtroOrgao) filtroOrgao.value = 'todos';
+            if (filtroMunicipio) filtroMunicipio.value = 'todos';
+            if (filtroEixo) filtroEixo.value = 'todos';
+            if (filtroAno) filtroAno.value = 'todos';
+            renderValidationCards();
+        }
+
+        function limparFiltrosProdutosValidados() {
+            const filtroStatus = document.getElementById('filtro-validados-status');
+            const filtroEixo = document.getElementById('filtro-validados-eixo');
+            const filtroAno = document.getElementById('filtro-validados-ano');
+            if (filtroStatus) filtroStatus.value = 'todos';
+            if (filtroEixo) filtroEixo.value = 'todos';
+            if (filtroAno) filtroAno.value = 'todos';
+            renderProdutosValidados();
         }
 
         // === LINHA EXPANSÍVEL DA TABELA DE IMPLEMENTAÇÃO ===
