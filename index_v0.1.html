@@ -1249,7 +1249,7 @@
                                 <!-- Gráfico de Barras Horizontais - Status por Eixo (Meta Curto Prazo) -->
                                 <div class="bg-white border border-sistran-border rounded-md p-5">
                                     <div class="flex items-center justify-between mb-3">
-                                        <p class="text-xs font-bold text-sistran-heading">% do status do andamento dos produtos — Metas de Curto Prazo (2025–2027)</p>
+                                        <p class="text-xs font-bold text-sistran-heading" id="chart-imp-titulo">% do status do andamento dos produtos</p>
                                     </div>
                                     <div class="h-[450px] w-full">
                                         <canvas id="chartImplementacaoEixos"></canvas>
@@ -3371,13 +3371,7 @@
             const periodo = seletorPeriodo ? seletorPeriodo.value : 'curto';
 
             // Labels por período
-            const periodLabels = {
-                'curto': 'Resumo dos Quantitativos das Metas por Fases de Implementação do Plano:\nCurto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)',
-                'medio': 'Resumo dos Quantitativos das Metas por Fases de Implementação do Plano:\nCurto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)',
-                'longo': 'Resumo dos Quantitativos das Metas por Fases de Implementação do Plano:\nCurto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)',
-                'final': 'Resumo dos Quantitativos das Metas por Fases de Implementação do Plano:\nCurto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)'
-            };
-
+            const periodLabel = 'Resumo dos Quantitativos das Metas por Fases de Implementação do Plano:<br>Curto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)';
             monitoramentoData.forEach(item => {
                 const status = calcularSituacaoMeta(item.cod, item.indicador, periodo);
                 if (status !== 'Sem meta prevista') {
@@ -3396,7 +3390,7 @@
 
             // Atualiza período
             const periodEl = document.getElementById('imp-period-label');
-            if (periodEl) periodEl.textContent = periodLabels[periodo] || periodLabels['curto'];
+            if (periodEl) periodEl.innerHTML = periodLabel;
 
             // Atualiza card "À Iniciar"
             const cardIniciar = document.getElementById('card-imp-iniciar');
@@ -3439,13 +3433,27 @@
             const canvas = document.getElementById('chartImplementacaoEixos');
             if (!canvas) return;
 
+            // Obtém o período selecionado no seletor de cards
+            const seletorPeriodo = document.getElementById('seletor-periodo-cards');
+            const periodo = seletorPeriodo ? seletorPeriodo.value : 'curto';
+
+            // Atualiza título do gráfico
+            const tituloChart = document.getElementById('chart-imp-titulo');
+            const periodoTitulos = {
+                'curto': '% do status do andamento dos produtos — Metas de Curto Prazo (2025–2027)',
+                'medio': '% do status do andamento dos produtos — Metas de Médio Prazo (2028–2030)',
+                'longo': '% do status do andamento dos produtos — Metas de Longo Prazo (2031–2035)',
+                'final': '% do status do andamento dos produtos — Meta Final (2025–2035)'
+            };
+            if (tituloChart) tituloChart.textContent = periodoTitulos[periodo] || periodoTitulos['curto'];
+
             // Agrupa por eixo
             const eixosMap = {};
             monitoramentoData.forEach(item => {
                 if (!item.eixo) return;
                 if (!eixosMap[item.eixo]) eixosMap[item.eixo] = { concluido: 0, emDesenvolvimento: 0, iniciado: 0, aIniciar: 0, total: 0 };
 
-                const status = calcularSituacaoMeta(item.cod, item.indicador, 'curto');
+                const status = calcularSituacaoMeta(item.cod, item.indicador, periodo);
                 if (status === 'Sem meta prevista') return;
 
                 eixosMap[item.eixo].total++;
