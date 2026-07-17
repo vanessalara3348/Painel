@@ -3359,10 +3359,11 @@
                 const aprovados = mockDatabase.acoes.filter(a => a.status === 'Aprovado' && a.codProd === item.cod && a.indicador === item.indicador);
                 let detalhesHtml = '';
                 if (aprovados.length === 0) {
-                    detalhesHtml = '<p class="text-xs text-sistran-muted py-3">Nenhum produto aprovado encontrado para este indicador.</p>';
+                    detalhesHtml = '<p class="text-[11px] text-sistran-muted uppercase font-bold tracking-wider mb-2">Histórico de Produtos Aprovados</p><p class="text-xs text-sistran-body mb-3"><strong class="text-sistran-heading">Ação:</strong> ' + (item.acao || '—') + '</p><p class="text-xs text-sistran-muted py-3">Nenhum produto aprovado encontrado para este indicador.</p>';
                 } else {
                     detalhesHtml = `
                         <p class="text-[11px] text-sistran-muted uppercase font-bold tracking-wider mb-2">Histórico de Produtos Aprovados</p>
+                        <p class="text-xs text-sistran-body mb-3"><strong class="text-sistran-heading">Ação:</strong> ${item.acao || '—'}</p>
                         <table class="w-full text-left text-xs border-collapse">
                             <thead><tr class="bg-sistran-surface-muted text-sistran-heading font-bold border-b border-sistran-border">
                                 <th class="p-2">ID</th><th class="p-2">Órgão</th><th class="p-2">Valor</th><th class="p-2">Ano Ref.</th><th class="p-2">Data</th>
