@@ -1212,7 +1212,7 @@
                                 <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider" id="imp-period-label">Resumo dos Quantitativos das Metas por Fases de Implementação do Plano: Curto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)</p>
                                 <div class="flex items-center gap-3 mb-2">
                                     <label class="text-xs font-semibold text-sistran-body">Visualizar período:</label>
-                                    <select id="seletor-periodo-cards" onchange="updateImplementacaoSummary()" class="text-xs p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                    <select id="seletor-periodo-cards" onchange="updateImplementacaoSummary(); renderChartImplementacaoEixos();" class="text-xs p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
                                         <option value="curto" selected>Curto Prazo (2025–2027)</option>
                                         <option value="medio">Médio Prazo (2028–2030)</option>
                                         <option value="longo">Longo Prazo (2031–2035)</option>
