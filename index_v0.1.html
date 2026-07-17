@@ -3304,7 +3304,7 @@
                 return 'bg-gray-100 text-sistran-body';
             }
 
-            monitoramentoData.forEach((item) => {
+            monitoramentoData.forEach((item, i) => {
                 // Filtro por Eixo
                 if (eixoValue !== 'all' && item.eixo !== eixoValue) return;
 
@@ -3336,9 +3336,12 @@
                 const produtoAprovado = mockDatabase.acoes.find(a => a.status === 'Aprovado' && a.codProd === item.cod);
                 const orgaoDisplay = produtoAprovado ? produtoAprovado.orgao : '—';
 
+                // ID único para a linha expansível
+                const rowId = 'imp-detail-' + item.cod.replace(/\./g, '-') + '-' + i;
+
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-gray-50 border-b border-gray-100 transition-colors cursor-pointer';
-                tr.onclick = function() { mostrarHistoricoProdutoAprovado(item.cod, item.indicador, item.produto); };
+                tr.onclick = function() { toggleImplementacaoDetail(rowId); };
 
                 tr.innerHTML = `
                     <td class="p-3 text-sistran-body text-[10px] max-w-[180px]">${item.eixo || '—'}</td>
@@ -3351,6 +3354,32 @@
                     <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${statusBadgeClass(statusFinal)}">${statusFinal}</span></td>
                 `;
                 tbody.appendChild(tr);
+
+                // Linha expansível (oculta por padrão)
+                const aprovados = mockDatabase.acoes.filter(a => a.status === 'Aprovado' && a.codProd === item.cod && a.indicador === item.indicador);
+                let detalhesHtml = '';
+                if (aprovados.length === 0) {
+                    detalhesHtml = '<p class="text-xs text-sistran-muted py-3">Nenhum produto aprovado encontrado para este indicador.</p>';
+                } else {
+                    detalhesHtml = `
+                        <p class="text-[11px] text-sistran-muted uppercase font-bold tracking-wider mb-2">Histórico de Produtos Aprovados</p>
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead><tr class="bg-sistran-surface-muted text-sistran-heading font-bold border-b border-sistran-border">
+                                <th class="p-2">ID</th><th class="p-2">Órgão</th><th class="p-2">Valor</th><th class="p-2">Ano Ref.</th><th class="p-2">Data</th>
+                            </tr></thead>
+                            <tbody class="divide-y divide-gray-100">
+                                ${aprovados.map(a => '<tr class="hover:bg-gray-50"><td class="p-2 font-bold text-sistran-gold">#' + a.id + '</td><td class="p-2 text-sistran-body">' + (a.orgao || '—') + '</td><td class="p-2 font-semibold text-sistran-heading">' + (a.valor || '—') + '</td><td class="p-2 text-sistran-heading">' + (a.horizonte || '—') + '</td><td class="p-2 text-sistran-body">' + (a.data || '—') + '</td></tr>').join('')}
+                            </tbody>
+                        </table>
+                        <p class="text-[10px] text-sistran-muted mt-2 italic">Este histórico é apenas para fins consultivos e não interfere nos cálculos de metas.</p>
+                    `;
+                }
+
+                const trDetail = document.createElement('tr');
+                trDetail.id = rowId;
+                trDetail.className = 'hidden';
+                trDetail.innerHTML = '<td colspan="8" class="p-4 bg-white border-t border-sistran-border">' + detalhesHtml + '</td>';
+                tbody.appendChild(trDetail);
             });
             lucide.createIcons();
             updateImplementacaoSummary();
@@ -3582,59 +3611,12 @@
             buildImplementacaoTable();
         }
 
-        // === HISTÓRICO CONSULTIVO DE PRODUTOS APROVADOS ===
-        function mostrarHistoricoProdutoAprovado(cod, indicador, produtoNome) {
-            // Busca produtos aprovados que contribuíram para este código+indicador
-            const aprovados = mockDatabase.acoes.filter(a => 
-                a.status === 'Aprovado' && a.codProd === cod && a.indicador === indicador
-            );
-
-            let conteudoHtml = '';
-
-            if (aprovados.length === 0) {
-                conteudoHtml = `
-                    <p class="text-xs text-sistran-muted text-center py-4">Nenhum produto aprovado encontrado para este indicador.</p>
-                `;
-            } else {
-                conteudoHtml = `
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs border-collapse">
-                            <thead>
-                                <tr class="bg-sistran-surface-muted text-sistran-heading font-bold border-b border-sistran-border">
-                                    <th class="p-2">ID</th>
-                                    <th class="p-2">Órgão</th>
-                                    <th class="p-2">Valor</th>
-                                    <th class="p-2">Ano Ref.</th>
-                                    <th class="p-2">Data de Aprovação</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-100">
-                                ${aprovados.map(a => `
-                                    <tr class="hover:bg-gray-50">
-                                        <td class="p-2 font-bold text-sistran-gold">#${a.id}</td>
-                                        <td class="p-2 text-sistran-body">${a.orgao || '—'}</td>
-                                        <td class="p-2 font-semibold text-sistran-heading">${a.valor || '—'}</td>
-                                        <td class="p-2 text-sistran-heading">${a.horizonte || '—'}</td>
-                                        <td class="p-2 text-sistran-body">${a.data || '—'}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                    <p class="text-[10px] text-sistran-muted mt-3 italic">Este histórico é apenas para fins consultivos e não interfere nos cálculos de metas.</p>
-                `;
+        // === LINHA EXPANSÍVEL DA TABELA DE IMPLEMENTAÇÃO ===
+        function toggleImplementacaoDetail(rowId) {
+            const detailRow = document.getElementById(rowId);
+            if (detailRow) {
+                detailRow.classList.toggle('hidden');
             }
-
-            // Usa o modal existente para exibir
-            document.getElementById('modal-produto-nome').innerHTML = `<span class="text-xs text-sistran-muted block mb-1">Histórico de Produtos Aprovados</span>${produtoNome || cod}`;
-            document.getElementById('modal-responsavel').innerHTML = `<span class="text-[10px] text-sistran-muted">Indicador:</span> ${indicador || '—'}`;
-            document.getElementById('modal-observacao').innerHTML = conteudoHtml;
-
-            const badge = document.getElementById('modal-status-badge');
-            badge.innerText = aprovados.length + ' aprovação(ões)';
-            badge.className = 'inline-block mt-1 px-2.5 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-600';
-
-            document.getElementById('modal-qualitativo').classList.remove('hidden');
         }
 
         // ===== Searchable Select Component =====
