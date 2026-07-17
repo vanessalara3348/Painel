@@ -1246,19 +1246,18 @@
                                     </div>
                                 </div>
 
-
-                                <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Resumo dos indicadores de implementação por Fases de Implementação do Plano:<br>Curto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)</p>
-                                <p class="text-[10px] text-sistran-body leading-relaxed">Nota: O status <strong>Concluído*</strong> indica que a meta do produto foi cumprido fora do prazo de implementação previsto, porém a Meta Final (2025-2035) foi atingida.</p>
-
                                 <!-- Gráfico de Barras Horizontais - Status por Eixo (Meta Curto Prazo) -->
                                 <div class="bg-white border border-sistran-border rounded-md p-5">
                                     <div class="flex items-center justify-between mb-3">
                                         <p class="text-xs font-bold text-sistran-heading">% do status do andamento dos produtos — Metas de Curto Prazo (2025–2027)</p>
                                     </div>
-                                    <div class="h-[360px] w-full">
+                                    <div class="h-[400px] w-full">
                                         <canvas id="chartImplementacaoEixos"></canvas>
                                     </div>
                                 </div>
+
+                                <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Resumo dos indicadores de implementação por Fases de Implementação do Plano:<br>Curto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)</p>
+                                <p class="text-[10px] text-sistran-body leading-relaxed">Nota: O status <strong>Concluído*</strong> indica que a meta do produto foi cumprido fora do prazo de implementação previsto, porém a Meta Final (2025-2035) foi atingida.</p>
 
                                 <div class="bg-gray-50 p-4 border border-sistran-border rounded-md space-y-4">
                                     <p class="text-xs font-bold text-sistran-heading flex items-center gap-2">
@@ -3473,11 +3472,8 @@
                 totalGeral.total += eixosMap[eixo].total;
             });
 
-            // Labels curtos para o gráfico
-            const labels = eixosOrdenados.map(e => {
-                const parts = e.split(' - ');
-                return parts.length > 1 ? parts[0].replace('Eixo ', '') + '. ' + parts[1].substring(0, 20) : e;
-            });
+            // Labels completos para o gráfico (eixos temáticos)
+            const labels = eixosOrdenados.map(e => e.replace('Eixo ', ''));
             labels.push('Total');
 
             // Calcula percentuais
@@ -3508,25 +3504,25 @@
                         {
                             label: 'Concluído',
                             data: dataConcluido,
-                            backgroundColor: '#10B981',
+                            backgroundColor: '#1F8A4C',
                             borderRadius: 2
                         },
                         {
                             label: 'Em Desenvolvimento',
                             data: dataEmDesenv,
-                            backgroundColor: '#F59E0B',
+                            backgroundColor: '#FECF03',
                             borderRadius: 2
                         },
                         {
                             label: 'Iniciado',
                             data: dataIniciado,
-                            backgroundColor: '#EF4444',
+                            backgroundColor: '#C68B00',
                             borderRadius: 2
                         },
                         {
                             label: 'À Iniciar',
                             data: dataAIniciar,
-                            backgroundColor: '#4B7BBF',
+                            backgroundColor: '#D3D8DB',
                             borderRadius: 2
                         }
                     ]
