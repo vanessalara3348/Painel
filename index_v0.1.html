@@ -585,6 +585,14 @@
                             <!-- Caixa envolvente única (mesmo padrão da aba Impacto) -->
                             <div class="bg-white border border-sistran-border rounded-md p-6 shadow-subtle space-y-6">
 
+                                <!-- Título da Seção -->
+                                <h2 class="text-2xl font-bold text-sistran-heading flex items-center gap-2.5">
+                                    <span class="w-8 h-8 bg-sistran-ink rounded-full flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="home" class="w-5 h-5 text-sistran-yellow"></i>
+                                    </span>
+                                    Sistema Integrado de Monitoramento (SIMO)
+                                </h2>
+
                                 <!-- Cards Resumo Consolidado com alinhamento vertical uniforme -->
                                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                     <!-- Card IMPACTO -->
@@ -645,14 +653,8 @@
 
                                 </div>
 
-                                <!-- Título e Texto Introdutório -->
+                                <!-- Texto Introdutório -->
                                 <div class="space-y-2">
-                                    <h2 class="text-2xl font-bold text-sistran-heading flex items-center gap-2.5">
-                                        <span class="w-8 h-8 bg-sistran-ink rounded-full flex items-center justify-center flex-shrink-0">
-                                            <i data-lucide="home" class="w-5 h-5 text-sistran-yellow"></i>
-                                        </span>
-                                        Sistema Integrado de Monitoramento (SIMO)
-                                    </h2>
                                     <p class="text-sm text-sistran-body leading-relaxed">
                                         O Plano de Segurança Viária do Estado de São Paulo (PSV-SP), instituído pelo Decreto nº 70.551/2026, consiste em um instrumento que organiza a estratégia estadual, consolida prioridades, integra esforços e estabelece um roteiro claro para a atuação pública no território paulista com o intuito de reduzir mortes e lesões no trânsito. Mais do que um documento técnico, o PSV-SP representa um compromisso coletivo ao inserir a vida no centro das políticas públicas de mobilidade e estabelece caminhos concretos para que nenhuma morte no trânsito seja considerada aceitável.
                                     </p>
@@ -1209,7 +1211,7 @@
                                     </div>
                                 </div>
 
-                                <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider" id="imp-period-label">Resumo dos Quantitativos do Status das Metas por Fases de Implementação do Plano: Curto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)</p>
+                                <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider" id="imp-period-label">Resumo dos Quantitativos do Status das Metas por Fase de Implementação do Plano: Curto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)</p>
                                 <div class="flex items-center gap-3 mb-2">
                                     <label class="text-xs font-semibold text-sistran-body">Fase de Implementação:</label>
                                     <select id="seletor-periodo-cards" onchange="updateImplementacaoSummary(); renderChartImplementacaoEixos();" class="text-xs p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
@@ -1261,7 +1263,7 @@
                                     </div>
                                 </div>
 
-                                <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Resumo dos indicadores de implementação por Fases de Implementação do Plano</p>
+                                <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Resumo dos indicadores de implementação por Fase de Implementação do Plano</p>
                                 <p class="text-[10px] text-sistran-body leading-relaxed"><strong>Nota:</strong> O status <strong class="text-emerald-600">Concluído*</strong> indica que a meta do produto foi cumprido fora do prazo de implementação previsto, porém a Meta Final (2025-2035) foi atingida.</p>
 
                                 <div class="bg-gray-50 p-4 border border-sistran-border rounded-md space-y-4">
@@ -3427,7 +3429,7 @@
             const periodo = seletorPeriodo ? seletorPeriodo.value : 'curto';
 
             // Labels por período
-            const periodLabel = 'Resumo dos Quantitativos do Status das Metas por Fases de Implementação do Plano: Curto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)';
+            const periodLabel = 'Resumo dos Quantitativos do Status das Metas por Fase de Implementação do Plano: Curto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)';
             monitoramentoData.forEach(item => {
                 const status = calcularSituacaoMeta(item.cod, item.indicador, periodo);
                 if (status !== 'Sem meta prevista') {
