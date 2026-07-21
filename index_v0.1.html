@@ -693,7 +693,7 @@
                                     <!-- Bloco 2: Estrutura do PSV-SP (recolhível) -->
                                     <div class="border border-sistran-border rounded-md overflow-hidden">
                                         <button onclick="toggleAccordion('acc-intro-estrutura')" class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
-                                            <h3 class="text-section text-sistran-heading">Estrutura do Plano de Segurança Viária do Estado de São Paulo (PSV-SP)</h3>
+                                            <h3 class="text-section text-sistran-heading flex items-center gap-2"><span class="material-symbols-outlined text-sistran-gold" style="font-size:24px;">account_tree</span> Estrutura do Plano de Segurança Viária do Estado de São Paulo (PSV-SP)</h3>
                                             <i data-lucide="chevron-down" class="w-5 h-5 text-sistran-muted transition-transform flex-shrink-0" id="icon-acc-intro-estrutura"></i>
                                         </button>
                                         <div id="acc-intro-estrutura" class="hidden p-4 bg-white border-t border-sistran-border space-y-3">
@@ -712,7 +712,7 @@
                                     <!-- Bloco 3: Panorama da Situação (recolhível) -->
                                     <div class="border border-sistran-border rounded-md overflow-hidden">
                                         <button onclick="toggleAccordion('acc-intro-panorama')" class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
-                                            <h3 class="text-section text-sistran-heading">Panorama da situação da segurança viária no Estado</h3>
+                                            <h3 class="text-section text-sistran-heading flex items-center gap-2"><span class="material-symbols-outlined text-sistran-gold" style="font-size:24px;">trending_down</span> Panorama da situação da segurança viária no Estado</h3>
                                             <i data-lucide="chevron-down" class="w-5 h-5 text-sistran-muted transition-transform flex-shrink-0" id="icon-acc-intro-panorama"></i>
                                         </button>
                                         <div id="acc-intro-panorama" class="hidden p-4 bg-white border-t border-sistran-border space-y-3">
@@ -720,7 +720,7 @@
                                             De acordo com os dados do Infosiga, entre 2015 e 2024, São Paulo passou de 6.321 para 6.122 mortes no trânsito. Embora esse recorte aponte para uma melhora, a tendência não foi linear: houve uma redução contínua até 2019, intensificada nos anos da pandemia; mas, a partir de 2022, o número de óbitos voltou a crescer.
                                         </p>
                                         <p class="text-body text-sistran-body leading-relaxed">
-                                            Segundo o Detran-SP (2025), estima-se que o impacto financeiro em decorrência dos sinistros de trânsito no Estado de São Paulo totalizou mais de R$ 12 bilhões no ano de 2024.
+                                            Segundo o Detran-SP (2025), estima-se que o impacto financeiro em decorrência dos sinistros de trânsito no Estado de São Paulo totalizou mais de R$ 12 bilhões no ano de 2024 (para mais detalhes veja a <a href="https://detran-sp.github.io/custos_sinistros_sp/" target="_blank" class="text-sistran-gold hover:underline font-semibold">Nota Técnica 02 - Estimativa do custo dos sinistros de trânsito no estado de São Paulo</a>).
                                         </p>
                                         <p class="text-body text-sistran-body leading-relaxed">
                                             Caso nenhuma medida seja realizada para o controle desse panorama de sinistralidade, projeta-se uma taxa de 16,5 óbitos no trânsito a cada 100 mil habitantes até 2030 no Estado de São Paulo. O PSV-SP apresenta de forma simplificada uma estimativa das taxas de óbitos anuais para que esse cenário não se cumpra e que a meta nacional estabelecida pelo Pnatrans seja alcançada até 2030. Dessa forma, a partir da comparação entre os valores anuais projetados em relação ao cenário atual e da meta de redução, pondera-se que 19.193 vidas seriam salvas entre 2025 e 2030.
@@ -751,19 +751,36 @@
                                 <!-- Bloco 4: Estrutura das Metas (recolhível) -->
                                 <div class="border border-sistran-border rounded-md overflow-hidden">
                                     <button onclick="toggleAccordion('acc-intro-metas')" class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
-                                        <h3 class="text-section text-sistran-heading">Estrutura das metas</h3>
+                                        <h3 class="text-section text-sistran-heading flex items-center gap-2"><span class="material-symbols-outlined text-sistran-gold" style="font-size:24px;">flag</span> Estrutura das metas</h3>
                                         <i data-lucide="chevron-down" class="w-5 h-5 text-sistran-muted transition-transform flex-shrink-0" id="icon-acc-intro-metas"></i>
                                     </button>
                                     <div id="acc-intro-metas" class="hidden p-4 bg-white border-t border-sistran-border space-y-3">
                                     <p class="text-body text-sistran-body leading-relaxed">
-                                        Com o intuito de reverter o panorama da sinistralidade no Estado de São Paulo, o PSV-SP apresenta metas organizadas em três níveis complementares: metas de impacto, metas de desempenho e metas de implementação. A estrutura de metas permite acompanhar desde a execução das ações até o impacto final sobre a preservação de vidas no trânsito:
+                                        Com o intuito de reverter o panorama da sinistralidade no Estado de São Paulo, o PSV-SP apresenta metas organizadas em três níveis complementares: <strong class="text-sistran-heading">metas de impacto, metas de desempenho e metas de implementação</strong>. A estrutura de metas permite acompanhar desde a execução das ações até o impacto final sobre a preservação de vidas no trânsito:
                                     </p>
                                     <ul class="list-disc pl-6 space-y-2 text-body text-sistran-body leading-relaxed">
                                         <li>
-                                            <strong class="text-sistran-heading">Metas de impacto:</strong> Quantificam os efeitos finais da política em termos de vidas preservadas;
+                                            <strong class="text-sistran-heading">Metas de impacto:</strong> Quantificam os efeitos finais da política em termos de vidas preservadas.
+                                            <ul class="list-disc pl-6 mt-1 space-y-0.5 text-small text-sistran-body">
+                                                <li>Meta principal (2030): reduzir pela metade as mortes no trânsito, em alinhamento com a ONU e o PNATRANS;</li>
+                                                <li>Metas de consolidação (2035): manter reduções sustentadas como política de Estado;</li>
+                                                <li>Metas específicas:
+                                                    <ul class="list-disc pl-6 mt-1 space-y-0.5">
+                                                        <li>Redução da mortalidade total (óbitos por 100 mil habitantes);</li>
+                                                        <li>Redução da mortalidade em vias urbanas;</li>
+                                                        <li>Redução da mortalidade em rodovias;</li>
+                                                        <li>Redução da mortalidade de pedestres;</li>
+                                                        <li>Redução da mortalidade de ciclistas;</li>
+                                                        <li>Redução da mortalidade de motociclistas;</li>
+                                                        <li>Redução da mortalidade de ocupantes de automóveis;</li>
+                                                        <li>Redução da mortalidade de ocupantes de caminhão;</li>
+                                                        <li>Redução da mortalidade de ocupantes de ônibus.</li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
                                         </li>
                                         <li>
-                                            <strong class="text-sistran-heading">Metas de desempenho:</strong> Avaliam mudanças intermediárias, estando diretamente associadas aos objetivos estratégicos de cada eixo. Expressam o desempenho do plano em termos de gestão, financiamento, dados, educação, comunicação, fiscalização, infraestrutura e atendimento às vítimas;
+                                            <strong class="text-sistran-heading">Metas de desempenho:</strong> Avaliam mudanças intermediárias, estando diretamente associadas aos objetivos estratégicos de cada eixo. Expressam o desempenho do plano em termos de gestão, financiamento, dados, educação, comunicação, fiscalização, infraestrutura e atendimento às vítimas.
                                         </li>
                                         <li>
                                             <strong class="text-sistran-heading">Metas de implementação:</strong> Analisam se as ações previstas foram efetivamente executadas dentro dos prazos e com a cobertura esperada, estando vinculadas aos produtos estabelecidos em cada ação do plano, permitindo o acompanhamento do ritmo de execução e da entrega dos resultados esperados.
@@ -775,7 +792,7 @@
                                 <!-- Bloco 5: Indicadores para Monitoramento (recolhível) -->
                                 <div class="border border-sistran-border rounded-md overflow-hidden">
                                     <button onclick="toggleAccordion('acc-intro-indicadores')" class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
-                                        <h3 class="text-section text-sistran-heading">Indicadores para monitoramento</h3>
+                                        <h3 class="text-section text-sistran-heading flex items-center gap-2"><span class="material-symbols-outlined text-sistran-gold" style="font-size:24px;">monitoring</span> Indicadores para monitoramento</h3>
                                         <i data-lucide="chevron-down" class="w-5 h-5 text-sistran-muted transition-transform flex-shrink-0" id="icon-acc-intro-indicadores"></i>
                                     </button>
                                     <div id="acc-intro-indicadores" class="hidden p-4 bg-white border-t border-sistran-border space-y-3">
@@ -796,7 +813,7 @@
                                 <!-- Bloco 6: Fases de Implementação (recolhível) -->
                                 <div class="border border-sistran-border rounded-md overflow-hidden">
                                     <button onclick="toggleAccordion('acc-intro-fases')" class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
-                                        <h3 class="text-section text-sistran-heading">Fases de implementação</h3>
+                                        <h3 class="text-section text-sistran-heading flex items-center gap-2"><span class="material-symbols-outlined text-sistran-gold" style="font-size:24px;">schedule</span> Fases de implementação</h3>
                                         <i data-lucide="chevron-down" class="w-5 h-5 text-sistran-muted transition-transform flex-shrink-0" id="icon-acc-intro-fases"></i>
                                     </button>
                                     <div id="acc-intro-fases" class="hidden p-4 bg-white border-t border-sistran-border space-y-3">
