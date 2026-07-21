@@ -710,88 +710,122 @@
                                         <!-- FIGURA 1: Estrutura do PSV-SP -->
                                         <div class="mt-4">
                                             <p class="text-small text-sistran-muted mb-3 font-semibold">Quantitativo dos objetivos estratégicos, ações e produtos total e por eixo estratégico do PSV-SP.</p>
-                                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+                                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
 
                                                 <!-- Pirâmide (lado esquerdo) -->
                                                 <div class="flex justify-center">
-                                                    <svg viewBox="0 0 280 320" width="260" height="300" xmlns="http://www.w3.org/2000/svg" class="drop-shadow-sm">
-                                                        <!-- Nível 1: 8 eixos -->
-                                                        <polygon points="140,10 185,80 95,80" fill="#C68B00"/>
-                                                        <text x="140" y="42" text-anchor="middle" font-size="22" font-weight="bold" fill="#fff" font-family="Open Sans, sans-serif">8</text>
-                                                        <text x="140" y="58" text-anchor="middle" font-size="9" fill="#fff" font-family="Open Sans, sans-serif">eixos</text>
-                                                        <text x="140" y="68" text-anchor="middle" font-size="9" fill="#fff" font-family="Open Sans, sans-serif">estratégicos</text>
-                                                        <text x="140" y="78" text-anchor="middle" font-size="7" fill="#fff" font-family="Open Sans, sans-serif">(estruturais e temáticos)</text>
-                                                        <!-- Nível 2: 25 objetivos -->
-                                                        <polygon points="95,85 185,85 210,155 70,155" fill="#E87500"/>
-                                                        <text x="140" y="112" text-anchor="middle" font-size="24" font-weight="bold" fill="#fff" font-family="Open Sans, sans-serif">25</text>
-                                                        <text x="140" y="130" text-anchor="middle" font-size="10" fill="#fff" font-family="Open Sans, sans-serif">objetivos</text>
-                                                        <text x="140" y="142" text-anchor="middle" font-size="10" fill="#fff" font-family="Open Sans, sans-serif">estratégicos</text>
-                                                        <!-- Nível 3: 98 ações -->
-                                                        <polygon points="70,160 210,160 235,230 45,230" fill="#F5A623"/>
-                                                        <text x="140" y="190" text-anchor="middle" font-size="26" font-weight="bold" fill="#fff" font-family="Open Sans, sans-serif">98</text>
-                                                        <text x="140" y="210" text-anchor="middle" font-size="11" fill="#fff" font-family="Open Sans, sans-serif">ações</text>
-                                                        <!-- Nível 4: 307 produtos -->
-                                                        <polygon points="45,235 235,235 260,310 20,310" fill="#FECF03"/>
-                                                        <text x="140" y="267" text-anchor="middle" font-size="28" font-weight="bold" fill="#262828" font-family="Open Sans, sans-serif">307</text>
-                                                        <text x="140" y="290" text-anchor="middle" font-size="12" fill="#262828" font-family="Open Sans, sans-serif">produtos</text>
+                                                    <svg viewBox="0 0 320 380" width="300" height="360" xmlns="http://www.w3.org/2000/svg">
+                                                        <!-- Nível labels (lateral esquerda) -->
+                                                        <text x="12" y="62" font-size="8" font-weight="600" fill="#57595A" font-family="Open Sans, sans-serif" text-transform="uppercase">NÍVEL 1</text>
+                                                        <text x="12" y="145" font-size="8" font-weight="600" fill="#57595A" font-family="Open Sans, sans-serif">NÍVEL 2</text>
+                                                        <text x="12" y="235" font-size="8" font-weight="600" fill="#57595A" font-family="Open Sans, sans-serif">NÍVEL 3</text>
+                                                        <text x="12" y="330" font-size="8" font-weight="600" fill="#57595A" font-family="Open Sans, sans-serif">NÍVEL 4</text>
+
+                                                        <!-- Nível 1: 8 eixos de ação (preto) -->
+                                                        <polygon points="160,8 200,80 120,80" fill="#262828"/>
+                                                        <text x="160" y="36" text-anchor="middle" font-size="20" font-weight="bold" fill="#FECF03" font-family="Open Sans, sans-serif">8</text>
+                                                        <text x="160" y="52" text-anchor="middle" font-size="8" font-weight="700" fill="#fff" font-family="Open Sans, sans-serif">EIXOS</text>
+                                                        <text x="160" y="62" text-anchor="middle" font-size="8" font-weight="700" fill="#fff" font-family="Open Sans, sans-serif">DE AÇÃO</text>
+
+                                                        <!-- Nível 2: 25 objetivos estratégicos (gold escuro) -->
+                                                        <polygon points="120,85 200,85 230,165 90,165" fill="#C68B00"/>
+                                                        <text x="160" y="115" text-anchor="middle" font-size="22" font-weight="bold" fill="#fff" font-family="Open Sans, sans-serif">25</text>
+                                                        <text x="160" y="133" text-anchor="middle" font-size="8" font-weight="700" fill="#fff" font-family="Open Sans, sans-serif">OBJETIVOS</text>
+                                                        <text x="160" y="145" text-anchor="middle" font-size="8" font-weight="700" fill="#fff" font-family="Open Sans, sans-serif">ESTRATÉGICOS</text>
+
+                                                        <!-- Nível 3: 98 ações (amarelo escuro/laranja) -->
+                                                        <polygon points="90,170 230,170 262,255 58,255" fill="#EBBF00"/>
+                                                        <text x="160" y="205" text-anchor="middle" font-size="24" font-weight="bold" fill="#262828" font-family="Open Sans, sans-serif">98</text>
+                                                        <text x="160" y="225" text-anchor="middle" font-size="9" font-weight="700" fill="#262828" font-family="Open Sans, sans-serif">AÇÕES</text>
+
+                                                        <!-- Nível 4: 308 produtos (amarelo claro) -->
+                                                        <polygon points="58,260 262,260 295,350 25,350" fill="#FECF03"/>
+                                                        <text x="160" y="297" text-anchor="middle" font-size="26" font-weight="bold" fill="#262828" font-family="Open Sans, sans-serif">308</text>
+                                                        <text x="160" y="320" text-anchor="middle" font-size="9" font-weight="700" fill="#262828" font-family="Open Sans, sans-serif">PRODUTOS</text>
                                                     </svg>
                                                 </div>
 
                                                 <!-- Tabela de eixos (lado direito) -->
-                                                <div class="space-y-2">
-                                                    <div class="flex items-center justify-between gap-2 mb-1">
-                                                        <span class="text-[10px] font-bold text-sistran-muted uppercase tracking-wider">Eixos transversais</span>
-                                                        <span class="text-[10px] font-bold text-sistran-muted uppercase tracking-wider">Eixos estruturais</span>
+                                                <div class="space-y-1.5">
+                                                    <!-- Headers -->
+                                                    <div class="flex items-center justify-between gap-2 mb-2">
+                                                        <span class="text-[10px] font-bold text-sistran-gold uppercase tracking-wider">Eixos transversais</span>
+                                                        <span class="text-[10px] font-bold text-sistran-heading uppercase tracking-wider">Eixos estruturais</span>
                                                     </div>
-                                                    <div class="flex items-center gap-2">
-                                                        <span class="flex-1 bg-sistran-ink text-white text-[11px] font-bold px-3 py-1.5 rounded-pill truncate">1. Gestão da Segurança Viária</span>
-                                                        <span class="bg-sistran-yellow text-sistran-ink text-[10px] font-bold px-2 py-1 rounded whitespace-nowrap">13 ações</span>
-                                                        <span class="bg-sistran-ink text-white text-[10px] font-bold px-2 py-1 rounded whitespace-nowrap">47 produtos</span>
-                                                    </div>
-                                                    <div class="flex items-center gap-2">
-                                                        <span class="flex-1 bg-sistran-ink text-white text-[11px] font-bold px-3 py-1.5 rounded-pill truncate">2. Gestão da Informação</span>
-                                                        <span class="bg-sistran-yellow text-sistran-ink text-[10px] font-bold px-2 py-1 rounded whitespace-nowrap">12 ações</span>
-                                                        <span class="bg-sistran-ink text-white text-[10px] font-bold px-2 py-1 rounded whitespace-nowrap">44 produtos</span>
-                                                    </div>
-                                                    <div class="border-t border-sistran-border pt-1 mt-1">
-                                                        <span class="text-[10px] font-bold text-sistran-muted uppercase tracking-wider">Eixos temáticos</span>
-                                                    </div>
-                                                    <div class="flex items-center gap-2">
-                                                        <span class="flex-1 bg-sistran-ink text-white text-[11px] font-bold px-3 py-1.5 rounded-pill truncate">3. Vias Seguras</span>
-                                                        <span class="bg-sistran-yellow text-sistran-ink text-[10px] font-bold px-2 py-1 rounded whitespace-nowrap">11 ações</span>
-                                                        <span class="bg-sistran-ink text-white text-[10px] font-bold px-2 py-1 rounded whitespace-nowrap">47 produtos</span>
-                                                    </div>
-                                                    <div class="flex items-center gap-2">
-                                                        <span class="flex-1 bg-sistran-ink text-white text-[11px] font-bold px-3 py-1.5 rounded-pill truncate">4. Educação</span>
-                                                        <span class="bg-sistran-yellow text-sistran-ink text-[10px] font-bold px-2 py-1 rounded whitespace-nowrap">11 ações</span>
-                                                        <span class="bg-sistran-ink text-white text-[10px] font-bold px-2 py-1 rounded whitespace-nowrap">30 produtos</span>
-                                                    </div>
-                                                    <div class="flex items-center gap-2">
-                                                        <span class="flex-1 bg-sistran-ink text-white text-[11px] font-bold px-3 py-1.5 rounded-pill truncate">5. Comunicação</span>
-                                                        <span class="bg-sistran-yellow text-sistran-ink text-[10px] font-bold px-2 py-1 rounded whitespace-nowrap">10 ações</span>
-                                                        <span class="bg-sistran-ink text-white text-[10px] font-bold px-2 py-1 rounded whitespace-nowrap">26 produtos</span>
-                                                    </div>
-                                                    <div class="flex items-center gap-2">
-                                                        <span class="flex-1 bg-sistran-ink text-white text-[11px] font-bold px-3 py-1.5 rounded-pill truncate">6. Fiscalização</span>
-                                                        <span class="bg-sistran-yellow text-sistran-ink text-[10px] font-bold px-2 py-1 rounded whitespace-nowrap">16 ações</span>
-                                                        <span class="bg-sistran-ink text-white text-[10px] font-bold px-2 py-1 rounded whitespace-nowrap">43 produtos</span>
-                                                    </div>
-                                                    <div class="flex items-center gap-2">
-                                                        <span class="flex-1 bg-sistran-ink text-white text-[11px] font-bold px-3 py-1.5 rounded-pill truncate">7. Veículos Seguros</span>
-                                                        <span class="bg-sistran-yellow text-sistran-ink text-[10px] font-bold px-2 py-1 rounded whitespace-nowrap">13 ações</span>
-                                                        <span class="bg-sistran-ink text-white text-[10px] font-bold px-2 py-1 rounded whitespace-nowrap">34 produtos</span>
-                                                    </div>
-                                                    <div class="flex items-center gap-2">
-                                                        <span class="flex-1 bg-sistran-ink text-white text-[11px] font-bold px-3 py-1.5 rounded-pill truncate">8. Atendimento às Vítimas</span>
-                                                        <span class="bg-sistran-yellow text-sistran-ink text-[10px] font-bold px-2 py-1 rounded whitespace-nowrap">12 ações</span>
-                                                        <span class="bg-sistran-ink text-white text-[10px] font-bold px-2 py-1 rounded whitespace-nowrap">37 produtos</span>
+
+                                                    <!-- Container com borda tracejada (eixos transversais) -->
+                                                    <div class="border-2 border-dashed border-sistran-yellow rounded-lg p-3 space-y-2 relative">
+                                                        <!-- Labels verticais simulados -->
+                                                        <div class="absolute -left-6 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1">
+                                                            <span class="text-[7px] font-bold text-sistran-muted uppercase tracking-wider" style="writing-mode: vertical-rl; transform: rotate(180deg);">PNATRANS</span>
+                                                        </div>
+                                                        <div class="absolute -left-14 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1">
+                                                            <span class="text-[7px] font-bold text-sistran-muted uppercase tracking-wider" style="writing-mode: vertical-rl; transform: rotate(180deg);">REGULAÇÃO</span>
+                                                        </div>
+                                                        <div class="absolute -right-6 top-1/2 -translate-y-1/2">
+                                                            <span class="text-[7px] font-bold text-sistran-muted uppercase tracking-wider" style="writing-mode: vertical-rl; transform: rotate(180deg);">GESTÃO DOS FATORES DE RISCO NO TRÂNSITO</span>
+                                                        </div>
+
+                                                        <!-- Eixo 1 -->
+                                                        <div class="flex items-center gap-2">
+                                                            <span class="flex-1 bg-sistran-ink text-white text-[11px] font-bold px-3 py-2 rounded-pill truncate">1. GESTÃO DA SEGURANÇA VIÁRIA</span>
+                                                            <span class="bg-sistran-yellow text-sistran-ink text-[10px] font-bold px-2.5 py-1 rounded-pill whitespace-nowrap">13 AÇÕES</span>
+                                                            <span class="bg-sistran-gold-surface text-sistran-heading text-[10px] font-bold px-2.5 py-1 rounded-pill whitespace-nowrap">47 PRODUTOS</span>
+                                                        </div>
+                                                        <!-- Eixo 2 -->
+                                                        <div class="flex items-center gap-2">
+                                                            <span class="flex-1 bg-sistran-ink text-white text-[11px] font-bold px-3 py-2 rounded-pill truncate">2. GESTÃO DA INFORMAÇÃO</span>
+                                                            <span class="bg-sistran-yellow text-sistran-ink text-[10px] font-bold px-2.5 py-1 rounded-pill whitespace-nowrap">12 AÇÕES</span>
+                                                            <span class="bg-sistran-gold-surface text-sistran-heading text-[10px] font-bold px-2.5 py-1 rounded-pill whitespace-nowrap">44 PRODUTOS</span>
+                                                        </div>
+
+                                                        <!-- Separador: Eixos temáticos -->
+                                                        <div class="border-t border-sistran-border pt-2 mt-2">
+                                                            <span class="text-[10px] font-bold text-sistran-heading uppercase tracking-wider">Eixos temáticos</span>
+                                                        </div>
+
+                                                        <!-- Eixo 3 -->
+                                                        <div class="flex items-center gap-2">
+                                                            <span class="flex-1 bg-sistran-ink text-white text-[11px] font-bold px-3 py-2 rounded-pill truncate">3. VIAS SEGURAS</span>
+                                                            <span class="bg-sistran-yellow text-sistran-ink text-[10px] font-bold px-2.5 py-1 rounded-pill whitespace-nowrap">11 AÇÕES</span>
+                                                            <span class="bg-sistran-gold-surface text-sistran-heading text-[10px] font-bold px-2.5 py-1 rounded-pill whitespace-nowrap">47 PRODUTOS</span>
+                                                        </div>
+                                                        <!-- Eixo 4 -->
+                                                        <div class="flex items-center gap-2">
+                                                            <span class="flex-1 bg-sistran-ink text-white text-[11px] font-bold px-3 py-2 rounded-pill truncate">4. EDUCAÇÃO</span>
+                                                            <span class="bg-sistran-yellow text-sistran-ink text-[10px] font-bold px-2.5 py-1 rounded-pill whitespace-nowrap">11 AÇÕES</span>
+                                                            <span class="bg-sistran-gold-surface text-sistran-heading text-[10px] font-bold px-2.5 py-1 rounded-pill whitespace-nowrap">30 PRODUTOS</span>
+                                                        </div>
+                                                        <!-- Eixo 5 -->
+                                                        <div class="flex items-center gap-2">
+                                                            <span class="flex-1 bg-sistran-ink text-white text-[11px] font-bold px-3 py-2 rounded-pill truncate">5. COMUNICAÇÃO</span>
+                                                            <span class="bg-sistran-yellow text-sistran-ink text-[10px] font-bold px-2.5 py-1 rounded-pill whitespace-nowrap">10 AÇÕES</span>
+                                                            <span class="bg-sistran-gold-surface text-sistran-heading text-[10px] font-bold px-2.5 py-1 rounded-pill whitespace-nowrap">26 PRODUTOS</span>
+                                                        </div>
+                                                        <!-- Eixo 6 -->
+                                                        <div class="flex items-center gap-2">
+                                                            <span class="flex-1 bg-sistran-ink text-white text-[11px] font-bold px-3 py-2 rounded-pill truncate">6. FISCALIZAÇÃO</span>
+                                                            <span class="bg-sistran-yellow text-sistran-ink text-[10px] font-bold px-2.5 py-1 rounded-pill whitespace-nowrap">16 AÇÕES</span>
+                                                            <span class="bg-sistran-gold-surface text-sistran-heading text-[10px] font-bold px-2.5 py-1 rounded-pill whitespace-nowrap">43 PRODUTOS</span>
+                                                        </div>
+                                                        <!-- Eixo 7 -->
+                                                        <div class="flex items-center gap-2">
+                                                            <span class="flex-1 bg-sistran-ink text-white text-[11px] font-bold px-3 py-2 rounded-pill truncate">7. VEÍCULOS SEGUROS</span>
+                                                            <span class="bg-sistran-yellow text-sistran-ink text-[10px] font-bold px-2.5 py-1 rounded-pill whitespace-nowrap">13 AÇÕES</span>
+                                                            <span class="bg-sistran-gold-surface text-sistran-heading text-[10px] font-bold px-2.5 py-1 rounded-pill whitespace-nowrap">34 PRODUTOS</span>
+                                                        </div>
+                                                        <!-- Eixo 8 -->
+                                                        <div class="flex items-center gap-2">
+                                                            <span class="flex-1 bg-sistran-ink text-white text-[11px] font-bold px-3 py-2 rounded-pill truncate">8. ATENDIMENTO ÀS VÍTIMAS</span>
+                                                            <span class="bg-sistran-yellow text-sistran-ink text-[10px] font-bold px-2.5 py-1 rounded-pill whitespace-nowrap">12 AÇÕES</span>
+                                                            <span class="bg-sistran-gold-surface text-sistran-heading text-[10px] font-bold px-2.5 py-1 rounded-pill whitespace-nowrap">37 PRODUTOS</span>
+                                                        </div>
                                                     </div>
                                                 </div>
 
                                             </div>
                                         </div>
 
-                                            </p>
                                         </div>
                                     </div>
 
