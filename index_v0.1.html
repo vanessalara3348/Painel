@@ -642,7 +642,7 @@
                                                     <div><span class="inline-block w-1.5 h-1.5 rounded-full bg-gray-400 mr-0.5"></span> À Iniciar (<span id="card-donut-ainiciar-pct">0%</span>)</div>
                                                 </div>
                                             </div>
-                                            <p class="text-[9px] text-sistran-muted text-center mt-2">Curto Prazo (2025–2027)</p>
+                                            <p class="text-[9px] text-sistran-muted text-center mt-2">Meta Final (2025–2035)</p>
                                         </div>
                                         <div class="text-left mt-4 pt-0">
                                             <h4 class="font-bold text-sistran-heading text-xs mb-1">As ações foram executadas?</h4>
@@ -2830,20 +2830,20 @@
             // Card 'Produtos Previstos' é gerenciado por updateImplementacaoSummary()
             // (mostra apenas produtos com meta de curto prazo definida)
 
-            // Calcula contadores por status para os gráficos
+            // Calcula contadores por status para os gráficos (Meta Final 2025-2035)
             let concluídosMatriz = 0, emDesenvolvimentoMatriz = 0, iniciadoMatriz = 0, aIniciarMatriz = 0;
-            let totalComMetaCurto = 0;
+            let totalComMetaFinal = 0;
             monitoramentoData.forEach(item => {
-                const s = calcularSituacaoMeta(item.cod, item.indicador, 'curto');
+                const s = calcularSituacaoMeta(item.cod, item.indicador, 'final');
                 if (s === 'Sem meta prevista') return; // Não contabiliza
-                totalComMetaCurto++;
+                totalComMetaFinal++;
                 if (s === 'Concluído' || s === 'Concluído*') concluídosMatriz++;
                 else if (s === 'Em Desenvolvimento') emDesenvolvimentoMatriz++;
                 else if (s === 'Iniciado') iniciadoMatriz++;
                 else aIniciarMatriz++;
             });
 
-            const concluidoPorcentagem = totalComMetaCurto > 0 ? ((concluídosMatriz / totalComMetaCurto) * 100).toFixed(1) : '0.0';
+            const concluidoPorcentagem = totalComMetaFinal > 0 ? ((concluídosMatriz / totalComMetaFinal) * 100).toFixed(1) : '0.0';
             const pconcluido = document.getElementById('percent-concluido');
             if (pconcluido) pconcluido.textContent = `${concluidoPorcentagem}%`;
 
@@ -2851,7 +2851,7 @@
             if (uiprog) uiprog.style.width = `${concluidoPorcentagem}%`;
 
             // Atualiza percentuais na legenda do card donut
-            const calcPctDonut = (c) => totalComMetaCurto === 0 ? '0%' : Math.round((c / totalComMetaCurto) * 100) + '%';
+            const calcPctDonut = (c) => totalComMetaFinal === 0 ? '0%' : Math.round((c / totalComMetaFinal) * 100) + '%';
             const elConcluidoPct = document.getElementById('card-donut-concluido-pct');
             const elDesenvolvimentoPct = document.getElementById('card-donut-desenvolvimento-pct');
             const elIniciadoPct = document.getElementById('card-donut-iniciado-pct');
