@@ -631,17 +631,18 @@
                                     <div class="bg-amber-50 border border-amber-200 rounded-md p-5 shadow-subtle hover:shadow-hover hover:-translate-y-0.5 transition duration-card flex flex-col">
                                         <p class="text-sm font-extrabold text-sistran-gold uppercase tracking-wider mb-4 flex items-center gap-1.5"><i data-lucide="check-square" class="w-5 h-5"></i>Implementação</p>
                                         <div class="flex-1 flex flex-col items-center justify-center min-h-[120px]">
-                                            <h3 class="text-4xl font-extrabold text-sistran-heading" id="card-imp-ratio">1 / 15</h3>
-                                            <div class="flex items-center justify-center gap-3 mt-2">
-                                                <div class="w-14 h-14 flex-shrink-0">
+                                            <div class="flex items-center justify-center gap-3">
+                                                <div class="w-20 h-20 flex-shrink-0">
                                                     <canvas id="cardStatusDonutChart"></canvas>
                                                 </div>
                                                 <div class="text-[9px] text-sistran-heading leading-tight space-y-0.5 font-semibold">
-                                                    <div><span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 mr-0.5"></span> Concluintes (10%)</div>
-                                                    <div><span class="inline-block w-1.5 h-1.5 rounded-full bg-amber-400 mr-0.5"></span> Em Curso (50%)</div>
-                                                    <div><span class="inline-block w-1.5 h-1.5 rounded-full bg-rose-500 mr-0.5"></span> Pendentes (40%)</div>
+                                                    <div><span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 mr-0.5"></span> Concluído (<span id="card-donut-concluido-pct">0%</span>)</div>
+                                                    <div><span class="inline-block w-1.5 h-1.5 rounded-full bg-amber-500 mr-0.5"></span> Em Desenvolvimento (<span id="card-donut-desenvolvimento-pct">0%</span>)</div>
+                                                    <div><span class="inline-block w-1.5 h-1.5 rounded-full bg-blue-500 mr-0.5"></span> Iniciado (<span id="card-donut-iniciado-pct">0%</span>)</div>
+                                                    <div><span class="inline-block w-1.5 h-1.5 rounded-full bg-gray-400 mr-0.5"></span> À Iniciar (<span id="card-donut-ainiciar-pct">0%</span>)</div>
                                                 </div>
                                             </div>
+                                            <p class="text-[9px] text-sistran-muted text-center mt-2">Curto Prazo (2025–2027)</p>
                                         </div>
                                         <div class="text-left mt-4 pt-0">
                                             <h4 class="font-bold text-sistran-heading text-xs mb-1">As ações foram executadas?</h4>
@@ -2830,29 +2831,43 @@
             // (mostra apenas produtos com meta de curto prazo definida)
 
             // Calcula contadores por status para os gráficos
-            let concluídosMatriz = 0, andamentoMatriz = 0, pendentesMatriz = 0;
+            let concluídosMatriz = 0, emDesenvolvimentoMatriz = 0, iniciadoMatriz = 0, aIniciarMatriz = 0;
+            let totalComMetaCurto = 0;
             monitoramentoData.forEach(item => {
                 const s = calcularSituacaoMeta(item.cod, item.indicador, 'curto');
                 if (s === 'Sem meta prevista') return; // Não contabiliza
+                totalComMetaCurto++;
                 if (s === 'Concluído' || s === 'Concluído*') concluídosMatriz++;
-                else if (s === 'Em Desenvolvimento' || s === 'Iniciado') andamentoMatriz++;
-                else pendentesMatriz++;
+                else if (s === 'Em Desenvolvimento') emDesenvolvimentoMatriz++;
+                else if (s === 'Iniciado') iniciadoMatriz++;
+                else aIniciarMatriz++;
             });
 
-            const concluidoPorcentagem = totalMatriz > 0 ? ((concluídosMatriz / totalMatriz) * 100).toFixed(1) : '0.0';
+            const concluidoPorcentagem = totalComMetaCurto > 0 ? ((concluídosMatriz / totalComMetaCurto) * 100).toFixed(1) : '0.0';
             const pconcluido = document.getElementById('percent-concluido');
             if (pconcluido) pconcluido.textContent = `${concluidoPorcentagem}%`;
 
             const uiprog = document.getElementById('ui-progress-bar');
             if (uiprog) uiprog.style.width = `${concluidoPorcentagem}%`;
 
+            // Atualiza percentuais na legenda do card donut
+            const calcPctDonut = (c) => totalComMetaCurto === 0 ? '0%' : Math.round((c / totalComMetaCurto) * 100) + '%';
+            const elConcluidoPct = document.getElementById('card-donut-concluido-pct');
+            const elDesenvolvimentoPct = document.getElementById('card-donut-desenvolvimento-pct');
+            const elIniciadoPct = document.getElementById('card-donut-iniciado-pct');
+            const elAIniciarPct = document.getElementById('card-donut-ainiciar-pct');
+            if (elConcluidoPct) elConcluidoPct.textContent = calcPctDonut(concluídosMatriz);
+            if (elDesenvolvimentoPct) elDesenvolvimentoPct.textContent = calcPctDonut(emDesenvolvimentoMatriz);
+            if (elIniciadoPct) elIniciadoPct.textContent = calcPctDonut(iniciadoMatriz);
+            if (elAIniciarPct) elAIniciarPct.textContent = calcPctDonut(aIniciarMatriz);
+
             if (charts.cardStatusDonut) {
-                charts.cardStatusDonut.data.datasets[0].data = [concluídosMatriz, andamentoMatriz, pendentesMatriz, 0];
+                charts.cardStatusDonut.data.datasets[0].data = [concluídosMatriz, emDesenvolvimentoMatriz, iniciadoMatriz, aIniciarMatriz];
                 charts.cardStatusDonut.update();
             }
 
             if (charts.chartProgresso) {
-                charts.chartProgresso.data.datasets[0].data = [concluídosMatriz, andamentoMatriz, pendentesMatriz];
+                charts.chartProgresso.data.datasets[0].data = [concluídosMatriz, emDesenvolvimentoMatriz + iniciadoMatriz, aIniciarMatriz];
                 charts.chartProgresso.update();
             }
         }
@@ -2862,10 +2877,10 @@
             charts.cardStatusDonut = new Chart(ctxCardIntro, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Concluído', 'Em andamento', 'Pendente', 'Não iniciado'],
+                    labels: ['Concluído', 'Em Desenvolvimento', 'Iniciado', 'À Iniciar'],
                     datasets: [{
-                        data: [1, 2, 5, 0],
-                        backgroundColor: ['#10B981', '#FECF03', '#FF0000', '#D3D8DB'],
+                        data: [0, 0, 0, 0],
+                        backgroundColor: ['#10B981', '#D97706', '#2563EB', '#9CA3AF'],
                         borderWidth: 1.5,
                         borderColor: '#FFFFFF'
                     }]
