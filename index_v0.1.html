@@ -998,11 +998,47 @@
 
                                     <!-- Seção Perguntas Frequentes -->
                                     <div id="secao-faq" class="hidden">
-                                        <div class="bg-white border border-sistran-border rounded-lg p-5 mt-4 space-y-4">
-                                            <div><strong class="text-xs text-sistran-heading">O que é o PSV-SP?</strong><p class="text-[11px] text-sistran-body mt-1">O Plano de Segurança Viária do Estado de São Paulo é o instrumento que orienta a política estadual de trânsito para o período de 2025 a 2035, com meta de reduzir em 50% as mortes até 2030.</p></div>
-                                            <div><strong class="text-xs text-sistran-heading">Qual a meta principal?</strong><p class="text-[11px] text-sistran-body mt-1">Reduzir em 50% o número de óbitos no trânsito paulista até 2030, conforme alinhamento com a ONU e o PNATRANS.</p></div>
-                                            <div><strong class="text-xs text-sistran-heading">Como os dados são coletados?</strong><p class="text-[11px] text-sistran-body mt-1">Os dados de óbitos são consolidados pelo sistema Infosiga, a partir de registros de boletins de ocorrência e declarações de óbito.</p></div>
-                                            <div><strong class="text-xs text-sistran-heading">Como acompanhar o progresso?</strong><p class="text-[11px] text-sistran-body mt-1">O progresso pode ser acompanhado por meio deste painel (SIMO), que apresenta indicadores de impacto, desempenho e implementação.</p></div>
+                                        <div class="bg-white border border-sistran-border rounded-lg p-5 mt-4 space-y-2">
+                                            <!-- FAQ 1 -->
+                                            <div class="border border-sistran-border rounded-md overflow-hidden">
+                                                <button onclick="toggleAccordion('faq-1')" class="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
+                                                    <strong class="text-xs text-sistran-heading">O que é o PSV-SP?</strong>
+                                                    <i data-lucide="chevron-down" class="w-4 h-4 text-sistran-muted transition-transform flex-shrink-0" id="icon-faq-1"></i>
+                                                </button>
+                                                <div id="faq-1" class="hidden p-3 bg-white border-t border-sistran-border">
+                                                    <p class="text-[11px] text-sistran-body leading-relaxed">O Plano de Segurança Viária do Estado de São Paulo é o instrumento que orienta a política estadual de trânsito para o período de 2025 a 2035, com meta de reduzir em 50% as mortes até 2030.</p>
+                                                </div>
+                                            </div>
+                                            <!-- FAQ 2 -->
+                                            <div class="border border-sistran-border rounded-md overflow-hidden">
+                                                <button onclick="toggleAccordion('faq-2')" class="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
+                                                    <strong class="text-xs text-sistran-heading">Qual a meta principal?</strong>
+                                                    <i data-lucide="chevron-down" class="w-4 h-4 text-sistran-muted transition-transform flex-shrink-0" id="icon-faq-2"></i>
+                                                </button>
+                                                <div id="faq-2" class="hidden p-3 bg-white border-t border-sistran-border">
+                                                    <p class="text-[11px] text-sistran-body leading-relaxed">Reduzir em 50% o número de óbitos no trânsito paulista até 2030, conforme alinhamento com a ONU e o PNATRANS.</p>
+                                                </div>
+                                            </div>
+                                            <!-- FAQ 3 -->
+                                            <div class="border border-sistran-border rounded-md overflow-hidden">
+                                                <button onclick="toggleAccordion('faq-3')" class="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
+                                                    <strong class="text-xs text-sistran-heading">Como os dados são coletados?</strong>
+                                                    <i data-lucide="chevron-down" class="w-4 h-4 text-sistran-muted transition-transform flex-shrink-0" id="icon-faq-3"></i>
+                                                </button>
+                                                <div id="faq-3" class="hidden p-3 bg-white border-t border-sistran-border">
+                                                    <p class="text-[11px] text-sistran-body leading-relaxed">Os dados de óbitos são consolidados pelo sistema Infosiga, a partir de registros de boletins de ocorrência e declarações de óbito.</p>
+                                                </div>
+                                            </div>
+                                            <!-- FAQ 4 -->
+                                            <div class="border border-sistran-border rounded-md overflow-hidden">
+                                                <button onclick="toggleAccordion('faq-4')" class="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
+                                                    <strong class="text-xs text-sistran-heading">Como acompanhar o progresso?</strong>
+                                                    <i data-lucide="chevron-down" class="w-4 h-4 text-sistran-muted transition-transform flex-shrink-0" id="icon-faq-4"></i>
+                                                </button>
+                                                <div id="faq-4" class="hidden p-3 bg-white border-t border-sistran-border">
+                                                    <p class="text-[11px] text-sistran-body leading-relaxed">O progresso pode ser acompanhado por meio deste painel (SIMO), que apresenta indicadores de impacto, desempenho e implementação.</p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -2889,7 +2925,7 @@
                     ctx.save();
                     ctx.beginPath();
                     ctx.setLineDash([8, 4, 2, 4]);
-                    ctx.strokeStyle = '#1F8A4C';
+                    ctx.strokeStyle = '#FECF03';
                     ctx.lineWidth = 1.5;
                     ctx.moveTo(x, yAxis.top);
                     ctx.lineTo(x, yAxis.bottom);
@@ -3064,7 +3100,7 @@
                         ctx.save();
                         ctx.beginPath();
                         ctx.setLineDash([8, 4, 2, 4]);
-                        ctx.strokeStyle = '#1F8A4C';
+                        ctx.strokeStyle = '#FECF03';
                         ctx.lineWidth = 1.5;
                         ctx.moveTo(x, yAxis.top);
                         ctx.lineTo(x, yAxis.bottom);
