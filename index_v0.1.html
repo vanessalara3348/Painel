@@ -863,89 +863,44 @@
                                     </div>
                                 </div>
 
-                                <!-- Ciclo de Monitoramento & Políticas Públicas -->
-                                <div>
-                                    <h3 class="text-base font-bold text-sistran-heading mb-4 flex items-center gap-2">
-                                        <i data-lucide="refresh-cw" class="text-sistran-gold w-5 h-5 animate-spin-slow"></i>
-                                        Ciclo de Monitoramento & Políticas Públicas
-                                    </h3>
-                                    <div class="pl-6">
-                                        <p class="text-xs text-sistran-body leading-relaxed mb-6">
+                                <!-- Bloco 7: Ciclo de Monitoramento & Políticas Públicas (recolhível) -->
+                                <div class="border border-sistran-border rounded-md overflow-hidden">
+                                    <button onclick="toggleAccordion('acc-intro-ciclo')" class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
+                                        <h3 class="text-section text-sistran-heading flex items-center gap-2"><span class="material-symbols-outlined text-sistran-gold" style="font-size:24px;">sync</span> Ciclo de Monitoramento & Políticas Públicas</h3>
+                                        <i data-lucide="chevron-down" class="w-5 h-5 text-sistran-muted transition-transform flex-shrink-0" id="icon-acc-intro-ciclo"></i>
+                                    </button>
+                                    <div id="acc-intro-ciclo" class="hidden p-4 bg-white border-t border-sistran-border space-y-4">
+                                        <p class="text-body text-sistran-body leading-relaxed">
                                             O PSV-SP opera sob um modelo cíclico de governança integrada voltado para a melhoria contínua da mobilidade segura. O processo se renova em etapas sucessivas para readequar estratégias estaduais e municipais com foco em resultados eficientes para a preservação de vidas.
                                         </p>
 
-                                        <!-- Ciclo: layout 2 colunas (textos à esquerda, figura à direita) -->
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center my-6">
-                                            <!-- Coluna esquerda: textos explicativos -->
-                                            <div class="space-y-4">
-                                                <div class="flex items-start gap-3">
-                                                    <div class="font-bold text-emerald-600 bg-emerald-50 w-7 h-7 flex items-center justify-center rounded-full flex-shrink-0">1</div>
-                                                    <div>
-                                                        <strong class="text-xs text-sistran-heading block mb-0.5">Coleta e Registro de Dados</strong>
-                                                        <p class="text-[11px] text-sistran-body leading-snug">Ocorrências registradas pelo Infosiga servem como diagnóstico em tempo real dos pontos de sinistros.</p>
-                                                    </div>
-                                                </div>
-                                                <div class="flex items-start gap-3">
-                                                    <div class="font-bold text-amber-600 bg-amber-50 w-7 h-7 flex items-center justify-center rounded-full flex-shrink-0">2</div>
-                                                    <div>
-                                                        <strong class="text-xs text-sistran-heading block mb-0.5">Análise & Consolidação</strong>
-                                                        <p class="text-[11px] text-sistran-body leading-snug">O CETRAN-SP e a COST realizam cruzamentos periódicos de dados de decessos para verificar desvios de metas.</p>
-                                                    </div>
-                                                </div>
-                                                <div class="flex items-start gap-3">
-                                                    <div class="font-bold text-blue-600 bg-blue-50 w-7 h-7 flex items-center justify-center rounded-full flex-shrink-0">3</div>
-                                                    <div>
-                                                        <strong class="text-xs text-sistran-heading block mb-0.5">Implementação das Ações</strong>
-                                                        <p class="text-[11px] text-sistran-body leading-snug">A Matriz de Ações entra em execução pelas Secretarias vinculadas com verificação de conformidade.</p>
-                                                    </div>
-                                                </div>
-                                                <div class="flex items-start gap-3">
-                                                    <div class="font-bold text-sistran-gold bg-sistran-gold-surface w-7 h-7 flex items-center justify-center rounded-full flex-shrink-0">4</div>
-                                                    <div>
-                                                        <strong class="text-xs text-sistran-heading block mb-0.5">Ajustes de Trajetória</strong>
-                                                        <p class="text-[11px] text-sistran-body leading-snug">Revisão sistemática de meio-termo para ajustar prioridades regulatórias e de infraestrutura.</p>
-                                                    </div>
+                                        <div class="space-y-4">
+                                            <div class="flex items-start gap-3">
+                                                <div class="font-bold text-emerald-600 bg-emerald-50 w-7 h-7 flex items-center justify-center rounded-full flex-shrink-0">1</div>
+                                                <div>
+                                                    <strong class="text-xs text-sistran-heading block mb-0.5">Coleta e Registro de Dados</strong>
+                                                    <p class="text-[11px] text-sistran-body leading-snug">Ocorrências registradas pelo Infosiga servem como diagnóstico em tempo real dos pontos de sinistros.</p>
                                                 </div>
                                             </div>
-                                            <!-- Coluna direita: figura SVG do ciclo -->
-                                            <div class="flex justify-center">
-                                                <svg width="220" height="220" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <circle cx="120" cy="120" r="90" stroke="#262828" stroke-width="7" fill="none"/>
-                                                    <!-- Setas sentido horário -->
-                                                    <path d="M155 33 L160 42 L150 40 Z" fill="#262828"/>
-                                                    <path d="M207 155 L198 157 L200 147 Z" fill="#262828"/>
-                                                    <path d="M85 207 L80 198 L90 200 Z" fill="#262828"/>
-                                                    <path d="M33 85 L42 80 L40 90 Z" fill="#262828"/>
-                                                    <!-- Nó 1 (topo) -->
-                                                    <circle cx="120" cy="30" r="20" fill="#FECF03" stroke="#262828" stroke-width="2"/>
-                                                    <text x="120" y="36" text-anchor="middle" font-size="16" font-weight="bold" fill="#262828" font-family="Open Sans, sans-serif">1</text>
-                                                    <!-- Nó 2 (direita) -->
-                                                    <circle cx="210" cy="120" r="20" fill="#FECF03" stroke="#262828" stroke-width="2"/>
-                                                    <text x="210" y="126" text-anchor="middle" font-size="16" font-weight="bold" fill="#262828" font-family="Open Sans, sans-serif">2</text>
-                                                    <!-- Nó 3 (base) -->
-                                                    <circle cx="120" cy="210" r="20" fill="#FECF03" stroke="#262828" stroke-width="2"/>
-                                                    <text x="120" y="216" text-anchor="middle" font-size="16" font-weight="bold" fill="#262828" font-family="Open Sans, sans-serif">3</text>
-                                                    <!-- Nó 4 (esquerda) -->
-                                                    <circle cx="30" cy="120" r="20" fill="#FECF03" stroke="#262828" stroke-width="2"/>
-                                                    <text x="30" y="126" text-anchor="middle" font-size="16" font-weight="bold" fill="#262828" font-family="Open Sans, sans-serif">4</text>
-                                                </svg>
+                                            <div class="flex items-start gap-3">
+                                                <div class="font-bold text-amber-600 bg-amber-50 w-7 h-7 flex items-center justify-center rounded-full flex-shrink-0">2</div>
+                                                <div>
+                                                    <strong class="text-xs text-sistran-heading block mb-0.5">Análise & Consolidação</strong>
+                                                    <p class="text-[11px] text-sistran-body leading-snug">O CETRAN-SP e a COST realizam cruzamentos periódicos de dados de decessos para verificar desvios de metas.</p>
+                                                </div>
                                             </div>
-                                        </div>
-
-                                        <div>
-                                            <p class="text-xs font-semibold text-sistran-heading mb-2">Cronograma de Marcos PSV-SP (Alinhado aos PPAs)</p>
-                                            <div class="grid grid-cols-3 gap-2 text-center text-[10px] text-sistran-body font-semibold">
-                                                <div class="p-2 bg-sistran-gold-surface rounded">
-                                                    <span class="font-bold block text-sistran-gold">PPA 2024-2027</span>
-                                                    Curto Prazo
+                                            <div class="flex items-start gap-3">
+                                                <div class="font-bold text-blue-600 bg-blue-50 w-7 h-7 flex items-center justify-center rounded-full flex-shrink-0">3</div>
+                                                <div>
+                                                    <strong class="text-xs text-sistran-heading block mb-0.5">Implementação das Ações</strong>
+                                                    <p class="text-[11px] text-sistran-body leading-snug">A Matriz de Ações entra em execução pelas Secretarias vinculadas com verificação de conformidade.</p>
                                                 </div>
-                                                <div class="p-2 bg-gray-100 rounded">
-                                                    <span class="font-bold block">PPA 2028-2031</span>
-                                                    Médio Prazo
-                                                </div>
-                                                <div class="p-2 bg-gray-100 rounded">
-                                                    <span class="font-bold block">PPA 2032-2035</span>
-                                                    Longo Prazo
+                                            </div>
+                                            <div class="flex items-start gap-3">
+                                                <div class="font-bold text-sistran-gold bg-sistran-gold-surface w-7 h-7 flex items-center justify-center rounded-full flex-shrink-0">4</div>
+                                                <div>
+                                                    <strong class="text-xs text-sistran-heading block mb-0.5">Ajustes de Trajetória</strong>
+                                                    <p class="text-[11px] text-sistran-body leading-snug">Revisão sistemática de meio-termo para ajustar prioridades regulatórias e de infraestrutura.</p>
                                                 </div>
                                             </div>
                                         </div>
