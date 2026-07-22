@@ -987,12 +987,57 @@
 
                                     <!-- Seção Glossário -->
                                     <div id="secao-glossario" class="hidden">
-                                        <div class="bg-white border border-sistran-border rounded-lg p-5 mt-4 space-y-3">
-                                            <div class="border-b border-sistran-border pb-2"><strong class="text-xs text-sistran-heading">PSV-SP</strong><p class="text-[11px] text-sistran-body">Plano de Segurança Viária do Estado de São Paulo (2025-2035).</p></div>
-                                            <div class="border-b border-sistran-border pb-2"><strong class="text-xs text-sistran-heading">SISTRAN-SP</strong><p class="text-[11px] text-sistran-body">Sistema Estadual de Trânsito de São Paulo.</p></div>
-                                            <div class="border-b border-sistran-border pb-2"><strong class="text-xs text-sistran-heading">Infosiga</strong><p class="text-[11px] text-sistran-body">Sistema de informações gerenciais de acidentes de trânsito do Estado de São Paulo.</p></div>
-                                            <div class="border-b border-sistran-border pb-2"><strong class="text-xs text-sistran-heading">PNATRANS</strong><p class="text-[11px] text-sistran-body">Plano Nacional de Redução de Mortes e Lesões no Trânsito.</p></div>
-                                            <div><strong class="text-xs text-sistran-heading">Visão Zero</strong><p class="text-[11px] text-sistran-body">Abordagem que considera inaceitável qualquer morte ou lesão grave no trânsito.</p></div>
+                                        <div class="bg-white border border-sistran-border rounded-lg p-5 mt-4 space-y-2">
+                                            <!-- Glossário 1 -->
+                                            <div class="border border-sistran-border rounded-md overflow-hidden">
+                                                <button onclick="toggleAccordion('gloss-1')" class="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
+                                                    <strong class="text-xs text-sistran-heading">PSV-SP</strong>
+                                                    <i data-lucide="chevron-down" class="w-4 h-4 text-sistran-muted transition-transform flex-shrink-0" id="icon-gloss-1"></i>
+                                                </button>
+                                                <div id="gloss-1" class="hidden p-3 bg-white border-t border-sistran-border">
+                                                    <p class="text-[11px] text-sistran-body leading-relaxed">Plano de Segurança Viária do Estado de São Paulo (2025-2035).</p>
+                                                </div>
+                                            </div>
+                                            <!-- Glossário 2 -->
+                                            <div class="border border-sistran-border rounded-md overflow-hidden">
+                                                <button onclick="toggleAccordion('gloss-2')" class="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
+                                                    <strong class="text-xs text-sistran-heading">SISTRAN-SP</strong>
+                                                    <i data-lucide="chevron-down" class="w-4 h-4 text-sistran-muted transition-transform flex-shrink-0" id="icon-gloss-2"></i>
+                                                </button>
+                                                <div id="gloss-2" class="hidden p-3 bg-white border-t border-sistran-border">
+                                                    <p class="text-[11px] text-sistran-body leading-relaxed">Sistema Estadual de Trânsito de São Paulo.</p>
+                                                </div>
+                                            </div>
+                                            <!-- Glossário 3 -->
+                                            <div class="border border-sistran-border rounded-md overflow-hidden">
+                                                <button onclick="toggleAccordion('gloss-3')" class="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
+                                                    <strong class="text-xs text-sistran-heading">Infosiga</strong>
+                                                    <i data-lucide="chevron-down" class="w-4 h-4 text-sistran-muted transition-transform flex-shrink-0" id="icon-gloss-3"></i>
+                                                </button>
+                                                <div id="gloss-3" class="hidden p-3 bg-white border-t border-sistran-border">
+                                                    <p class="text-[11px] text-sistran-body leading-relaxed">Sistema de informações sobre sinistros de trânsito do Estado de São Paulo.</p>
+                                                </div>
+                                            </div>
+                                            <!-- Glossário 4 -->
+                                            <div class="border border-sistran-border rounded-md overflow-hidden">
+                                                <button onclick="toggleAccordion('gloss-4')" class="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
+                                                    <strong class="text-xs text-sistran-heading">PNATRANS</strong>
+                                                    <i data-lucide="chevron-down" class="w-4 h-4 text-sistran-muted transition-transform flex-shrink-0" id="icon-gloss-4"></i>
+                                                </button>
+                                                <div id="gloss-4" class="hidden p-3 bg-white border-t border-sistran-border">
+                                                    <p class="text-[11px] text-sistran-body leading-relaxed">Plano Nacional de Redução de Mortes e Lesões no Trânsito.</p>
+                                                </div>
+                                            </div>
+                                            <!-- Glossário 5 -->
+                                            <div class="border border-sistran-border rounded-md overflow-hidden">
+                                                <button onclick="toggleAccordion('gloss-5')" class="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
+                                                    <strong class="text-xs text-sistran-heading">Visão Zero</strong>
+                                                    <i data-lucide="chevron-down" class="w-4 h-4 text-sistran-muted transition-transform flex-shrink-0" id="icon-gloss-5"></i>
+                                                </button>
+                                                <div id="gloss-5" class="hidden p-3 bg-white border-t border-sistran-border">
+                                                    <p class="text-[11px] text-sistran-body leading-relaxed">Abordagem que considera inaceitável qualquer morte ou lesão grave no trânsito.</p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 
