@@ -1325,7 +1325,7 @@
                                         </div>
                                         <span class="bg-sistran-gold-surface text-sistran-gold px-3 py-1 rounded-pill text-[10px] font-semibold">Ano Base: 2024</span>
                                     </div>
-                                    <div class="h-[400px] w-full">
+                                    <div class="h-[480px] w-full">
                                         <canvas id="chartDesempenhoValorIndicador"></canvas>
                                     </div>
                                 </div>
@@ -5905,16 +5905,18 @@
             // Calcula posições dos separadores entre eixos e labels de eixo
             const eixoBoundaries = [];
             let lastEixo = '';
+            let lastEixoKey = '';
             desempenhoSpreadsheetData.forEach((d, idx) => {
                 const eixoNum = d.eixoKey ? d.eixoKey.replace(/\D/g, '').charAt(0) : '';
                 if (eixoNum !== lastEixo && lastEixo !== '') {
-                    eixoBoundaries.push({ index: idx, eixoLabel: 'Eixo ' + lastEixo, startIdx: eixoBoundaries.length > 0 ? eixoBoundaries[eixoBoundaries.length - 1].index : 0 });
+                    eixoBoundaries.push({ index: idx, eixoLabel: lastEixoKey, startIdx: eixoBoundaries.length > 0 ? eixoBoundaries[eixoBoundaries.length - 1].index : 0 });
                 }
                 lastEixo = eixoNum;
+                lastEixoKey = d.eixoKey || '';
             });
             // Último eixo
             if (lastEixo) {
-                eixoBoundaries.push({ index: desempenhoSpreadsheetData.length, eixoLabel: 'Eixo ' + lastEixo, startIdx: eixoBoundaries.length > 0 ? eixoBoundaries[eixoBoundaries.length - 1].index : 0 });
+                eixoBoundaries.push({ index: desempenhoSpreadsheetData.length, eixoLabel: lastEixoKey, startIdx: eixoBoundaries.length > 0 ? eixoBoundaries[eixoBoundaries.length - 1].index : 0 });
             }
 
             // Plugin para linhas verticais separadoras e rótulos de eixo
@@ -5942,15 +5944,15 @@
                     });
 
                     // Desenha rótulos de eixo entre os indicadores e o rótulo do eixo X
-                    ctx.font = 'bold 9px "Open Sans"';
-                    ctx.fillStyle = '#57595A';
+                    ctx.font = '600 8px "Open Sans"';
+                    ctx.fillStyle = '#C68B00';
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'top';
                     eixoBoundaries.forEach((boundary) => {
                         const startX = xAxis.getPixelForValue(boundary.startIdx);
                         const endX = xAxis.getPixelForValue(boundary.index - 1);
                         const centerX = (startX + endX) / 2;
-                        ctx.fillText(boundary.eixoLabel, centerX, yAxis.bottom + 18);
+                        ctx.fillText(boundary.eixoLabel, centerX, yAxis.bottom + 38);
                     });
 
                     ctx.restore();
@@ -5964,10 +5966,10 @@
                 data: { labels: labels, datasets: [{ label: 'Valor do Indicador', data: dataValues, backgroundColor: bgColors, borderRadius: 2 }] },
                 options: {
                     responsive: true, maintainAspectRatio: false,
-                    layout: { padding: { bottom: 45 } },
+                    layout: { padding: { bottom: 55 } },
                     plugins: { legend: { display: false }, tooltip: { callbacks: { title: function(items) { const idx = items[0].dataIndex; return desempenhoSpreadsheetData[idx] ? desempenhoSpreadsheetData[idx].indicadorKey : ''; }, label: function(ctx) { return ' Valor: ' + ctx.parsed.y; } } } },
                     scales: {
-                        x: { ticks: { font: { size: 9, family: 'Open Sans' }, maxRotation: 45 }, grid: { display: false }, title: { display: true, text: 'Indicador de Desempenho', font: { size: 11, family: 'Open Sans', weight: '600' }, padding: { top: 45 } } },
+                        x: { ticks: { font: { size: 9, family: 'Open Sans' }, maxRotation: 45 }, grid: { display: false }, title: { display: true, text: 'Indicador de Desempenho', font: { size: 11, family: 'Open Sans', weight: '600' }, padding: { top: 55 } } },
                         y: { beginAtZero: true, max: 100, title: { display: true, text: 'Resultado do Indicador de Desempenho', font: { size: 11, family: 'Open Sans', weight: '600' } }, ticks: { font: { size: 10 } }, grid: { color: 'rgba(0,0,0,0.05)' } }
                     }
                 }
