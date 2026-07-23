@@ -1302,13 +1302,31 @@
                                     </div>
                                 </div>
 
-                                <div class="p-5 bg-white border border-sistran-border rounded-md shadow-subtle">
-                                    <div class="flex justify-between items-center mb-2 font-semibold">
-                                        <span class="text-xs text-sistran-heading">Índice Geral de Desempenho do Plano (IGD)</span>
-                                        <span class="text-sm text-sistran-gold">58.1% Cumprido</span>
+                                <!-- Gráfico de Barras Horizontais: INDICE_Oliveira por Eixo -->
+                                <div class="bg-white border border-sistran-border rounded-md p-5">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <div>
+                                            <p class="text-xs font-bold text-sistran-heading">Índice de Desempenho Ponderado por Eixo (INDICE_Oliveira)</p>
+                                            <p class="text-[10px] text-sistran-body">Soma ponderada dos indicadores de desempenho agregados por eixo estratégico</p>
+                                        </div>
+                                        <span class="bg-sistran-gold-surface text-sistran-gold px-3 py-1 rounded-pill text-[10px] font-semibold">Ano Base: 2024</span>
                                     </div>
-                                    <div class="w-full bg-gray-100 rounded-pill h-3">
-                                        <div class="bg-sistran-yellow h-3 rounded-pill" style="width: 58.1%"></div>
+                                    <div class="h-[350px] w-full">
+                                        <canvas id="chartDesempenhoOliveiraEixo"></canvas>
+                                    </div>
+                                </div>
+
+                                <!-- Gráfico de Barras Verticais: Valor do indicador -->
+                                <div class="bg-white border border-sistran-border rounded-md p-5">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <div>
+                                            <p class="text-xs font-bold text-sistran-heading">Valor dos Indicadores de Desempenho</p>
+                                            <p class="text-[10px] text-sistran-body">Resultado individual de cada indicador (escala 0–100)</p>
+                                        </div>
+                                        <span class="bg-sistran-gold-surface text-sistran-gold px-3 py-1 rounded-pill text-[10px] font-semibold">Ano Base: 2024</span>
+                                    </div>
+                                    <div class="h-[400px] w-full">
+                                        <canvas id="chartDesempenhoValorIndicador"></canvas>
                                     </div>
                                 </div>
 
