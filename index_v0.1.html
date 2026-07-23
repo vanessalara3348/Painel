@@ -1331,96 +1331,42 @@
                                 </div>
 
                                 <div class="space-y-3">
-                                    <p class="text-xs font-bold text-sistran-heading mb-2">Desempenho de Metas por Eixo</p>
-                                    
-                                    <!-- EIXO 1 -->
-                                    <div class="border border-sistran-border rounded-md overflow-hidden">
-                                        <button onclick="toggleAccordion('acc-eixo1')" class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors">
-                                            <div class="flex items-center gap-3">
-                                                <span class="w-8 h-8 rounded-full bg-sistran-gold-surface text-sistran-gold text-xs font-bold flex items-center justify-center">E1</span>
-                                                <div class="text-left">
-                                                    <h4 class="text-xs font-bold text-sistran-heading">Gestão da Segurança Viária</h4>
-                                                    <p class="text-[10px] text-sistran-muted">Governança, descentralização e captação de fundos</p>
-                                                </div>
+                                    <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Resumo dos indicadores de desempenho por Fase de Implementação do Plano</p>
+
+                                    <div class="bg-gray-50 p-4 border border-sistran-border rounded-md space-y-4">
+                                        <p class="text-xs font-bold text-sistran-heading flex items-center gap-2">
+                                            <i data-lucide="filter" class="w-4 h-4 text-sistran-gold"></i>
+                                            Filtros
+                                        </p>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                                            <div>
+                                                <label class="block text-sistran-body font-semibold mb-1">Eixo</label>
+                                                <select id="filter-desempenho-eixo" onchange="filterDesempenhoTable()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                    <option value="all">Todos os Eixos</option>
+                                                </select>
                                             </div>
-                                            <div class="flex items-center gap-4">
-                                                <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">75.0%</span>
-                                                <i data-lucide="chevron-down" class="w-4 h-4 text-sistran-muted transition-transform" id="icon-acc-eixo1"></i>
-                                            </div>
-                                        </button>
-                                        
-                                        <div id="acc-eixo1" class="hidden p-4 bg-white border-t border-sistran-border space-y-4">
-                                            <p class="text-[11px] text-sistran-muted uppercase font-bold tracking-wider">Objetivos Estratégicos & Indicadores</p>
-                                            <div class="space-y-4 text-xs">
-                                                <div class="p-3 bg-gray-50 rounded-md">
-                                                    <div class="flex justify-between font-bold text-sistran-heading mb-2">
-                                                        <span>OE 1.1: Fortalecer a Governança do SISTRAN-SP</span>
-                                                        <span class="text-sistran-gold">75% Cumprido</span>
-                                                    </div>
-                                                    <div class="space-y-2">
-                                                        <div class="flex justify-between items-center text-[11px] border-b border-gray-100 py-1">
-                                                            <span>1.1.a Índice de maturidade da governança do PSV-SP</span>
-                                                            <span class="font-semibold text-sistran-heading">Média: 75%</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                            <div>
+                                                <label class="block text-sistran-body font-semibold mb-1">Busca Textual</label>
+                                                <input type="text" id="search-desempenho" onkeyup="filterDesempenhoTable()" placeholder="Código, indicador, objetivo..." class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
                                             </div>
                                         </div>
                                     </div>
 
-                                    <!-- EIXO 2 -->
-                                    <div class="border border-sistran-border rounded-md overflow-hidden">
-                                        <button onclick="toggleAccordion('acc-eixo2')" class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors">
-                                            <div class="flex items-center gap-3">
-                                                <span class="w-8 h-8 rounded-full bg-sistran-gold-surface text-sistran-gold text-xs font-bold flex items-center justify-center">E2</span>
-                                                <div class="text-left">
-                                                    <h4 class="text-xs font-bold text-sistran-heading">Gestão da Informação e Dados</h4>
-                                                    <p class="text-[10px] text-sistran-muted">Integração cadastral, Infosiga e transparência de acidentes</p>
-                                                </div>
-                                            </div>
-                                            <div class="flex items-center gap-4">
-                                                <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">88.0%</span>
-                                                <i data-lucide="chevron-down" class="w-4 h-4 text-sistran-muted transition-transform" id="icon-acc-eixo2"></i>
-                                            </div>
-                                        </button>
-                                        <div id="acc-eixo2" class="hidden p-4 bg-white border-t border-sistran-border text-xs text-sistran-body">
-                                            <p class="font-bold text-sistran-heading mb-2">Principais Indicadores:</p>
-                                            <ul class="list-disc pl-5 space-y-1">
-                                                <li>Tempo médio de conciliação de óbitos: <strong>12 dias</strong></li>
-                                                <li>Integração das bases de dados municipais de sinistros: <strong>88% concluído</strong></li>
-                                            </ul>
-                                        </div>
+                                    <div class="table-container overflow-x-auto border border-sistran-border rounded-md">
+                                        <table class="w-full text-left border-collapse text-xs">
+                                            <thead>
+                                                <tr class="bg-sistran-surface-muted text-sistran-heading font-bold border-b border-sistran-border">
+                                                    <th class="p-3">Eixo</th>
+                                                    <th class="p-3">Objetivo Estratégico</th>
+                                                    <th class="p-3">Indicador</th>
+                                                    <th class="p-3">O que Mede</th>
+                                                    <th class="p-3">Fonte</th>
+                                                    <th class="p-3 text-center">Valor do Indicador</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="table-desempenho-body" class="divide-y divide-gray-100"></tbody>
+                                        </table>
                                     </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-white border border-sistran-border rounded-md p-6 shadow-subtle space-y-4">
-                                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                                    <h3 class="text-base font-bold text-sistran-heading">Matriz Analítica de Indicadores de Desempenho</h3>
-                                    <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-                                        <select id="filter-desempenho-eixo" onchange="filterDesempenhoTable()" class="text-xs p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
-                                            <option value="all">Filtrar por Todos os Eixos</option>
-                                            <option value="Eixo 1">Apenas Eixo 1</option>
-                                            <option value="Eixo 2">Apenas Eixo 2</option>
-                                        </select>
-                                        <input type="text" id="search-desempenho" onkeyup="filterDesempenhoTable()" placeholder="Pesquisar..." class="text-xs p-2 bg-white border border-sistran-border rounded-sm flex-1 sm:w-60 focus:outline-none focus:ring-1 focus:ring-sistran-gold">
-                                    </div>
-                                </div>
-
-                                <div class="table-container overflow-x-auto border border-sistran-border rounded-md">
-                                    <table class="w-full text-left border-collapse text-xs">
-                                        <thead>
-                                            <tr class="bg-sistran-surface-muted text-sistran-heading font-bold border-b border-sistran-border">
-                                                <th class="p-3">Eixo</th>
-                                                <th class="p-3">Objetivo Estratégico</th>
-                                                <th class="p-3">Indicador</th>
-                                                <th class="p-3">O que Mede</th>
-                                                <th class="p-3">Fonte</th>
-                                                <th class="p-3 text-right">Resultado</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="table-desempenho-body" class="divide-y divide-gray-100"></tbody>
-                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -2587,7 +2533,6 @@
             loadMonitoramentoData();
             loadDesempenhoSpreadsheetData();
             
-            buildDesempenhoTable();
             initCharts();
 
             renderValidationCards();
@@ -3474,51 +3419,57 @@
             if (!tbody) return;
             tbody.innerHTML = '';
 
-            dbDesempenho.forEach(item => {
+            if (desempenhoSpreadsheetData.length === 0) return;
+
+            // Popula filtro de Eixo dinamicamente
+            const filterEixo = document.getElementById('filter-desempenho-eixo');
+            if (filterEixo) {
+                const eixosUnicos = [...new Set(desempenhoSpreadsheetData.map(d => d.eixoKey).filter(Boolean))];
+                eixosUnicos.sort((a, b) => (parseInt(a.replace(/\D/g, '')) || 0) - (parseInt(b.replace(/\D/g, '')) || 0));
+                const eixoAtual = filterEixo.value;
+                filterEixo.innerHTML = '<option value="all">Todos os Eixos</option>';
+                eixosUnicos.forEach(e => { const o = document.createElement('option'); o.value = e; o.textContent = e; filterEixo.appendChild(o); });
+                filterEixo.value = eixoAtual || 'all';
+            }
+
+            const valEixo = filterEixo ? filterEixo.value : 'all';
+            const valSearch = (document.getElementById('search-desempenho') ? document.getElementById('search-desempenho').value : '').toLowerCase();
+
+            desempenhoSpreadsheetData.forEach(item => {
+                // Filtro por eixo
+                if (valEixo !== 'all' && item.eixoKey !== valEixo) return;
+
+                // Filtro por busca textual
+                if (valSearch) {
+                    const searchable = `${item.eixoKey} ${item.objKey} ${item.indicadorKey} ${item.codIndicador}`.toLowerCase();
+                    if (!searchable.includes(valSearch)) return;
+                }
+
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-gray-50 border-b border-gray-100 transition-colors';
-                
-                let badgeClass = 'bg-rose-50 text-rose-500';
-                if (item.percentual >= 80) badgeClass = 'bg-emerald-50 text-emerald-600';
-                else if (item.percentual >= 50) badgeClass = 'bg-amber-50 text-amber-500';
+
+                const valor = item.valorIndicador != null ? item.valorIndicador : '—';
+                let badgeClass = 'bg-gray-100 text-sistran-body';
+                if (typeof valor === 'number') {
+                    if (valor >= 80) badgeClass = 'bg-emerald-50 text-emerald-600';
+                    else if (valor >= 50) badgeClass = 'bg-amber-50 text-amber-500';
+                    else badgeClass = 'bg-rose-50 text-rose-500';
+                }
 
                 tr.innerHTML = `
-                    <td class="p-3 font-semibold text-sistran-heading">${item.eixo}</td>
-                    <td class="p-3 font-medium text-sistran-body">${item.objetivo}</td>
-                    <td class="p-3 font-semibold text-sistran-heading">${item.indicador}</td>
-                    <td class="p-3 text-sistran-body max-w-xs">${item.oqueMede}</td>
-                    <td class="p-3 text-sistran-muted">
-                        <span class="block text-[11px] font-semibold">${item.fonte}</span>
-                        <span>${item.periodicidade}</span>
-                    </td>
-                    <td class="p-3 text-right">
-                        <span class="px-2.5 py-1 rounded text-xs font-bold ${badgeClass}">
-                            ${item.resultado}
-                        </span>
-                    </td>
+                    <td class="p-3 font-semibold text-sistran-heading text-[10px] max-w-[150px]">${item.eixoKey || '—'}</td>
+                    <td class="p-3 text-sistran-body text-[10px] max-w-[180px]">${item.objKey || '—'}</td>
+                    <td class="p-3 font-semibold text-sistran-heading text-[10px] max-w-[180px]">${item.indicadorKey || '—'}</td>
+                    <td class="p-3 text-sistran-body text-[10px] max-w-[250px]">${item.oqueMede || '—'}</td>
+                    <td class="p-3 text-sistran-muted text-[10px]">${item.fonte || '—'}</td>
+                    <td class="p-3 text-center"><span class="px-2.5 py-1 rounded text-xs font-bold ${badgeClass}">${valor}</span></td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
         function filterDesempenhoTable() {
-            const valEixo = document.getElementById('filter-desempenho-eixo').value;
-            const valSearch = document.getElementById('search-desempenho').value.toLowerCase();
-            const rows = document.querySelectorAll('#table-desempenho-body tr');
-
-            rows.forEach(row => {
-                const text = row.innerText.toLowerCase();
-                const colEixo = row.cells[0].innerText;
-
-                const matchesEixo = (valEixo === 'all' || colEixo.includes(valEixo));
-                const matchesSearch = text.includes(valSearch);
-
-                if (matchesEixo && matchesSearch) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
+            buildDesempenhoTable();
         }
 
         // === CARREGAMENTO DE MONITORAMENTO_INDICADORES.XLSX ===
@@ -5837,6 +5788,8 @@
                         const colD = row[3] != null ? String(row[3]).trim() : '';
                         const colE = row[4] != null ? String(row[4]).trim() : '';
                         const colF = row[5] != null ? String(row[5]).trim() : '';
+                        const colG = row[6] != null ? String(row[6]).trim() : ''; // O que mede
+                        const colI = row[8] != null ? String(row[8]).trim() : ''; // Fonte
                         const colO = row[14] != null ? parseFloat(row[14]) : 0;
                         const colU = row[20] != null ? parseFloat(row[20]) : 0;
                         if (!colA && !colB && !colE && !colF) continue;
@@ -5849,6 +5802,8 @@
                                 objKey: obj,
                                 indicadorKey: indicador,
                                 codIndicador: colE,
+                                oqueMede: colG,
+                                fonte: colI,
                                 valorIndicador: isNaN(colO) ? 0 : colO,
                                 indiceOliveira: isNaN(colU) ? 0 : colU,
                                 ano: 2024
@@ -5858,15 +5813,17 @@
                     console.log('[SIMO] Desempenho spreadsheet loaded:', desempenhoSpreadsheetData.length, 'indicadores');
                     buildDesempCascadingDropdowns();
                     renderDesempenhoCharts();
+                    buildDesempenhoTable();
                 })
                 .catch(function(err) {
                     console.warn('[SIMO] Erro ao carregar DRMLT_Indicadores-desempenho_Final.xlsx:', err);
                     desempenhoSpreadsheetData = [
-                        { eixoKey: "Eixo 1 - Gestão da Segurança Viária", objKey: "1.1 - Fortalecimento da governança", indicadorKey: "1.1.a - Índice de maturidade", codIndicador: "1.1.a", valorIndicador: 100, indiceOliveira: 3.02, ano: 2024 },
-                        { eixoKey: "Eixo 2 - Gestão da Informação", objKey: "2.1 - Unificação da base de dados", indicadorKey: "2.1.a - Tempo de conciliação", codIndicador: "2.1.a", valorIndicador: 100, indiceOliveira: 1.72, ano: 2024 }
+                        { eixoKey: "Eixo 1 - Gestão da Segurança Viária", objKey: "1.1 - Fortalecimento da governança", indicadorKey: "1.1.a - Índice de maturidade", codIndicador: "1.1.a", oqueMede: "Avalia o grau de consolidação da estrutura de governança", fonte: "Portal Sistran-SP", valorIndicador: 100, indiceOliveira: 3.02, ano: 2024 },
+                        { eixoKey: "Eixo 2 - Gestão da Informação", objKey: "2.1 - Unificação da base de dados", indicadorKey: "2.1.a - Tempo de conciliação", codIndicador: "2.1.a", oqueMede: "Mede o intervalo entre o óbito e o lançamento no Infosiga", fonte: "Infosiga SP", valorIndicador: 100, indiceOliveira: 1.72, ano: 2024 }
                     ];
                     buildDesempCascadingDropdowns();
                     renderDesempenhoCharts();
+                    buildDesempenhoTable();
                 });
         }
 
