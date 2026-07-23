@@ -2567,6 +2567,7 @@
             lucide.createIcons();
             loadSpreadsheetData();
             loadMonitoramentoData();
+            loadDesempenhoSpreadsheetData();
             
             buildDesempenhoTable();
             initCharts();
@@ -5818,25 +5819,97 @@
                         const colD = row[3] != null ? String(row[3]).trim() : '';
                         const colE = row[4] != null ? String(row[4]).trim() : '';
                         const colF = row[5] != null ? String(row[5]).trim() : '';
+                        const colO = row[14] != null ? parseFloat(row[14]) : 0;
+                        const colU = row[20] != null ? parseFloat(row[20]) : 0;
                         if (!colA && !colB && !colE && !colF) continue;
                         const eixo = colA && colB ? `Eixo ${colA} - ${colB}` : '';
                         const obj = colC && colD ? `${colC} - ${colD}` : (colD || '');
                         const indicador = colE && colF ? `${colE} - ${colF}` : (colF || colE || '');
-                        if (eixo) {
-                            desempenhoSpreadsheetData.push({ eixoKey: eixo, objKey: obj, indicadorKey: indicador });
+                        if (eixo && indicador) {
+                            desempenhoSpreadsheetData.push({
+                                eixoKey: eixo,
+                                objKey: obj,
+                                indicadorKey: indicador,
+                                codIndicador: colE,
+                                valorIndicador: isNaN(colO) ? 0 : colO,
+                                indiceOliveira: isNaN(colU) ? 0 : colU,
+                                ano: 2024
+                            });
                         }
                     }
                     console.log('[SIMO] Desempenho spreadsheet loaded:', desempenhoSpreadsheetData.length, 'indicadores');
                     buildDesempCascadingDropdowns();
+                    renderDesempenhoCharts();
                 })
                 .catch(function(err) {
                     console.warn('[SIMO] Erro ao carregar DRMLT_Indicadores-desempenho_Final.xlsx:', err);
                     desempenhoSpreadsheetData = [
-                        { eixoKey: "Eixo 1 - Gestão da Segurança Viária", objKey: "1.1 - Fortalecimento da governança e institucionalização da segurança viária", indicadorKey: "1.1.a - Índice de maturidade da governança do PSV-SP" },
-                        { eixoKey: "Eixo 2 - Gestão da Informação", objKey: "2.1 - Unificação e qualificação da base de dados", indicadorKey: "2.1.a - Tempo médio de conciliação de óbitos" }
+                        { eixoKey: "Eixo 1 - Gestão da Segurança Viária", objKey: "1.1 - Fortalecimento da governança", indicadorKey: "1.1.a - Índice de maturidade", codIndicador: "1.1.a", valorIndicador: 100, indiceOliveira: 3.02, ano: 2024 },
+                        { eixoKey: "Eixo 2 - Gestão da Informação", objKey: "2.1 - Unificação da base de dados", indicadorKey: "2.1.a - Tempo de conciliação", codIndicador: "2.1.a", valorIndicador: 100, indiceOliveira: 1.72, ano: 2024 }
                     ];
                     buildDesempCascadingDropdowns();
+                    renderDesempenhoCharts();
                 });
+        }
+
+        // === GRÁFICOS DE DESEMPENHO ===
+        function renderDesempenhoCharts() {
+            renderChartOliveiraEixo();
+            renderChartValorIndicador();
+        }
+
+        function renderChartOliveiraEixo() {
+            const canvas = document.getElementById('chartDesempenhoOliveiraEixo');
+            if (!canvas || desempenhoSpreadsheetData.length === 0) return;
+            const eixosMap = {};
+            desempenhoSpreadsheetData.forEach(d => {
+                if (!d.eixoKey) return;
+                if (!eixosMap[d.eixoKey]) eixosMap[d.eixoKey] = 0;
+                eixosMap[d.eixoKey] += d.indiceOliveira || 0;
+            });
+            const eixosOrdenados = Object.keys(eixosMap).sort((a, b) => {
+                return (parseInt(a.replace(/\D/g, '')) || 0) - (parseInt(b.replace(/\D/g, '')) || 0);
+            });
+            const labels = eixosOrdenados.map(e => {
+                const parts = e.split(' - ');
+                return parts.length > 1 ? [parts[0] + ' -', parts.slice(1).join(' - ')] : e;
+            });
+            const dataValues = eixosOrdenados.map(e => parseFloat(eixosMap[e].toFixed(2)));
+            if (charts.chartDesempenhoOliveira) charts.chartDesempenhoOliveira.destroy();
+            charts.chartDesempenhoOliveira = new Chart(canvas.getContext('2d'), {
+                type: 'bar',
+                data: { labels: labels, datasets: [{ label: 'INDICE_Oliveira (soma)', data: dataValues, backgroundColor: '#C68B00', borderRadius: 3 }] },
+                options: {
+                    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(ctx) { return ' ' + ctx.parsed.x.toFixed(2); } } } },
+                    scales: {
+                        x: { beginAtZero: true, title: { display: true, text: 'Índice de Desempenho Ponderado', font: { size: 11, family: 'Open Sans', weight: '600' } }, ticks: { font: { size: 10 } }, grid: { color: 'rgba(0,0,0,0.05)' } },
+                        y: { ticks: { font: { size: 11, family: 'Open Sans' } }, grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        function renderChartValorIndicador() {
+            const canvas = document.getElementById('chartDesempenhoValorIndicador');
+            if (!canvas || desempenhoSpreadsheetData.length === 0) return;
+            const labels = desempenhoSpreadsheetData.map(d => d.codIndicador || '');
+            const dataValues = desempenhoSpreadsheetData.map(d => d.valorIndicador || 0);
+            const eixoColors = { '1': '#C68B00', '2': '#FECF03', '3': '#10B981', '4': '#2563EB', '5': '#7C3AED', '6': '#D97706', '7': '#EC4899', '8': '#6B7280' };
+            const bgColors = desempenhoSpreadsheetData.map(d => { const n = d.eixoKey ? d.eixoKey.replace(/\D/g, '').charAt(0) : '1'; return eixoColors[n] || '#C68B00'; });
+            if (charts.chartDesempenhoValor) charts.chartDesempenhoValor.destroy();
+            charts.chartDesempenhoValor = new Chart(canvas.getContext('2d'), {
+                type: 'bar',
+                data: { labels: labels, datasets: [{ label: 'Valor do Indicador', data: dataValues, backgroundColor: bgColors, borderRadius: 2 }] },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { title: function(items) { const idx = items[0].dataIndex; return desempenhoSpreadsheetData[idx] ? desempenhoSpreadsheetData[idx].indicadorKey : ''; }, label: function(ctx) { return ' Valor: ' + ctx.parsed.y; } } } },
+                    scales: {
+                        x: { ticks: { font: { size: 9, family: 'Open Sans' }, maxRotation: 45 }, grid: { display: false } },
+                        y: { beginAtZero: true, max: 110, title: { display: true, text: 'Valor do Indicador (0–100)', font: { size: 11, family: 'Open Sans', weight: '600' } }, ticks: { font: { size: 10 } }, grid: { color: 'rgba(0,0,0,0.05)' } }
+                    }
+                }
+            });
         }
 
         function buildDesempCascadingDropdowns() {
@@ -5958,14 +6031,6 @@
             buildDesempCascadingDropdowns();
         }
 
-        // Carrega a planilha de desempenho ao iniciar (chamado após onload)
-        (function() {
-            const originalOnload = window.onload;
-            window.onload = function() {
-                if (originalOnload) originalOnload();
-                loadDesempenhoSpreadsheetData();
-            };
-        })();
     </script>
 </body>
 </html>
