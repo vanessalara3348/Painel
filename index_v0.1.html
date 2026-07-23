@@ -488,6 +488,10 @@
                             <i data-lucide="history" class="w-4 h-4 text-sistran-muted flex-shrink-0"></i>
                             <span>Produtos Validados</span>
                         </button>
+                        <button onclick="selectValidacaoSubitem('form-desempenho')" id="subitem-form-desempenho" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-medium text-sistran-body hover:bg-zinc-100 hover:text-sistran-heading transition-colors text-left">
+                            <i data-lucide="bar-chart-2" class="w-4 h-4 text-sistran-muted flex-shrink-0"></i>
+                            <span>Formulário Submissão Dados de Desempenho</span>
+                        </button>
                     </div>
                 </div>
 
@@ -1722,6 +1726,131 @@
                         </div>
                     </div><!-- fecha sub-tab-validacao-produtos-validados -->
 
+                    <!-- SUB-ABA: Formulário Submissão Dados de Desempenho -->
+                    <div id="sub-tab-validacao-form-desempenho" class="validacao-sub-content hidden">
+                        <div class="bg-white rounded-md shadow-card border border-sistran-border p-6 max-w-5xl mx-auto space-y-6">
+                            <div class="border-b border-sistran-border pb-4">
+                                <h2 class="text-2xl font-bold text-sistran-heading flex items-center gap-2.5">
+                                    <span class="w-8 h-8 bg-sistran-ink rounded-full flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="bar-chart-2" class="w-5 h-5 text-sistran-yellow"></i>
+                                    </span>
+                                    Formulário de Submissão de Resultados referentes aos Indicadores de Desempenho
+                                </h2>
+                                <div class="text-xs text-sistran-body mt-3 space-y-2 leading-relaxed">
+                                    <p>A submissão dos resultados dos indicadores de desempenho será realizada por meio do formulário abaixo.</p>
+                                    <p>Nele, você deverá <strong>preencher as seguintes informações</strong>:</p>
+                                    <ul class="list-disc pl-10 space-y-1 text-xs text-sistran-body">
+                                        <li>Eixo;</li>
+                                        <li>Objetivo estratégico;</li>
+                                        <li>Indicador;</li>
+                                        <li>Ano de referência;</li>
+                                        <li>Valor do resultado;</li>
+                                        <li>Documentos comprobatórios (referentes à execução do produto no ano de referência e com o valor do resultado informados);</li>
+                                        <li>Observações.</li>
+                                    </ul>
+                                    <p>O preenchimento pode ser realizado de <strong>duas formas</strong>:</p>
+                                    <ul class="list-disc pl-10 space-y-1 text-xs text-sistran-body">
+                                        <li>Automaticamente, por meio da busca do indicadores de desempenho; ou</li>
+                                        <li>Sequencialmente, mediante o preenchimento das informações de eixo, objetivo estratégico, e demais campos até a identificação do indicador desejado.</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <form id="form-desempenho-dados" class="space-y-4" onsubmit="handleFormSubmitDesempenho(event)">
+                                <!-- Botão Limpar Dados -->
+                                <div class="flex justify-end">
+                                    <button type="button" onclick="limparFormularioDesempenho()" class="bg-white border border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-semibold text-[10px] px-4 py-1.5 rounded-pill transition flex items-center gap-1.5">
+                                        <i class="fa-solid fa-eraser"></i> Limpar Dados
+                                    </button>
+                                </div>
+
+                                <!-- Busca rápida por Indicador -->
+                                <div>
+                                    <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Buscar Indicador de Desempenho (preenchimento automático)</label>
+                                    <div class="search-select-wrapper" id="ss-desemp-busca-indicador"></div>
+                                </div>
+
+                                <hr class="border-sistran-border my-6">
+
+                                <!-- Eixo -->
+                                <div>
+                                    <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Eixo *</label>
+                                    <div class="search-select-wrapper" id="ss-desemp-eixo"></div>
+                                </div>
+
+                                <!-- Objetivo Estratégico -->
+                                <div>
+                                    <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Objetivo Estratégico *</label>
+                                    <div class="search-select-wrapper" id="ss-desemp-objetivo"></div>
+                                </div>
+
+                                <!-- Indicador -->
+                                <div>
+                                    <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Indicador *</label>
+                                    <div class="search-select-wrapper" id="ss-desemp-indicador"></div>
+                                </div>
+
+                                <!-- Ano de Referência & Valor do Resultado -->
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Ano de Referência *</label>
+                                        <select id="form-desemp-ano" class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-body focus:outline-none focus:ring-1 focus:ring-sistran-gold" required>
+                                            <option value="2025">2025</option>
+                                            <option value="2026" selected>2026</option>
+                                            <option value="2027">2027</option>
+                                            <option value="2028">2028</option>
+                                            <option value="2029">2029</option>
+                                            <option value="2030">2030</option>
+                                            <option value="2031">2031</option>
+                                            <option value="2032">2032</option>
+                                            <option value="2033">2033</option>
+                                            <option value="2034">2034</option>
+                                            <option value="2035">2035</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Valor do Resultado *</label>
+                                        <input type="text" id="form-desemp-valor" placeholder="Escrita livre (ex: 75%, 12 dias, concluído)" class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-body focus:outline-none focus:ring-1 focus:ring-sistran-gold" required>
+                                    </div>
+                                </div>
+
+                                <!-- Documento(s) Comprobatório(s) -->
+                                <div>
+                                    <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Documento(s) Comprobatório(s) *</label>
+                                    <label class="block text-[10px] text-sistran-body mb-1">Upload de Arquivos Comprobatórios (PDF, JPEG, PNG, TIFF)</label>
+                                    <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-sistran-border border-dashed rounded-md bg-sistran-surface-muted hover:bg-zinc-50 transition relative">
+                                        <div class="space-y-1 text-center">
+                                            <i class="fa-solid fa-cloud-arrow-up text-3xl text-sistran-gold mb-2 block"></i>
+                                            <div class="flex text-xs text-sistran-body justify-center">
+                                                <label for="form-desemp-file" class="relative cursor-pointer bg-white rounded-md font-semibold text-sistran-gold hover:text-sistran-heading focus-within:outline-none">
+                                                    <span>Carregar arquivo comprovatório</span>
+                                                    <input id="form-desemp-file" name="form-desemp-file" type="file" accept=".pdf, .jpeg, .jpg, .png, .tiff" class="sr-only" onchange="handleDesempFileChange(event)">
+                                                </label>
+                                            </div>
+                                            <p class="text-[10px] text-sistran-muted">PDF, JPEG, PNG ou TIFF de até 15MB</p>
+                                            <p id="desemp-file-upload-name" class="text-xs font-bold text-emerald-600 mt-2"></p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-[10px] text-sistran-body mb-1">Caso seja necessário enviar arquivos maiores que 15MB, forneça um link para uma pasta compartilhada:</label>
+                                    <input type="text" id="form-desemp-link" placeholder="Ex: https://drive.google.com/drive/folders/..." class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-body focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                </div>
+
+                                <!-- Observações -->
+                                <div>
+                                    <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Observações</label>
+                                    <textarea id="form-desemp-descricao" rows="3" placeholder="Insira observações adicionais, se necessário..." class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-body focus:outline-none focus:ring-1 focus:ring-sistran-gold"></textarea>
+                                </div>
+
+                                <button type="submit" class="w-full bg-sistran-yellow hover:bg-sistran-yellow-hover text-sistran-ink font-bold py-3 rounded-pill text-xs transition duration-150 flex items-center justify-center gap-2 shadow-sm">
+                                    <i class="fa-solid fa-paper-plane"></i> Submeter para Avaliação
+                                </button>
+                            </form>
+                        </div>
+                    </div><!-- fecha sub-tab-validacao-form-desempenho -->
+
                     </div><!-- fecha validacao-content -->
                 </section>
 
@@ -2496,7 +2625,8 @@
                 'formulario': 'Formulário de Submissão',
                 'historico': 'Histórico de Produtos',
                 'validacao-sub': 'Validação',
-                'produtos-validados': 'Produtos Validados'
+                'produtos-validados': 'Produtos Validados',
+                'form-desempenho': 'Formulário Submissão Dados de Desempenho'
             };
 
             let html = '';
@@ -5298,7 +5428,8 @@
             if (targetSub) targetSub.classList.remove('hidden');
 
             activeValidacaoSubTab = subTabId;
-            updateBreadcrumbs('validacao', subTabId === 'validacao' ? 'validacao-sub' : 'produtos-validados');
+            const breadcrumbMap = { 'validacao': 'validacao-sub', 'produtos-validados': 'produtos-validados', 'form-desempenho': 'form-desempenho' };
+            updateBreadcrumbs('validacao', breadcrumbMap[subTabId] || subTabId);
 
             // Highlight no submenu
             document.querySelectorAll('#submenu-validacao button').forEach(btn => {
@@ -5661,6 +5792,180 @@
             document.body.removeChild(link);
             showToast("Matriz de Implementação exportada em CSV!");
         }
+        // === FORMULÁRIO DE DESEMPENHO: Dados e lógica em cascata ===
+        let desempenhoSpreadsheetData = [];
+        let desempFile = null;
+
+        function loadDesempenhoSpreadsheetData() {
+            fetch('DRMLT_Indicadores-desempenho_Final.xlsx')
+                .then(function(response) {
+                    if (!response.ok) throw new Error('HTTP ' + response.status);
+                    return response.arrayBuffer();
+                })
+                .then(function(buffer) {
+                    const data = new Uint8Array(buffer);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+
+                    desempenhoSpreadsheetData = [];
+                    for (let i = 1; i < rows.length; i++) {
+                        const row = rows[i];
+                        if (!row || row.length === 0) continue;
+                        const colA = row[0] != null ? String(row[0]).trim() : '';
+                        const colB = row[1] != null ? String(row[1]).trim() : '';
+                        const colC = row[2] != null ? String(row[2]).trim() : '';
+                        const colD = row[3] != null ? String(row[3]).trim() : '';
+                        const colE = row[4] != null ? String(row[4]).trim() : '';
+                        const colF = row[5] != null ? String(row[5]).trim() : '';
+                        if (!colA && !colB && !colE && !colF) continue;
+                        const eixo = colA && colB ? `Eixo ${colA} - ${colB}` : '';
+                        const obj = colC && colD ? `${colC} - ${colD}` : (colD || '');
+                        const indicador = colE && colF ? `${colE} - ${colF}` : (colF || colE || '');
+                        if (eixo) {
+                            desempenhoSpreadsheetData.push({ eixoKey: eixo, objKey: obj, indicadorKey: indicador });
+                        }
+                    }
+                    console.log('[SIMO] Desempenho spreadsheet loaded:', desempenhoSpreadsheetData.length, 'indicadores');
+                    buildDesempCascadingDropdowns();
+                })
+                .catch(function(err) {
+                    console.warn('[SIMO] Erro ao carregar DRMLT_Indicadores-desempenho_Final.xlsx:', err);
+                    desempenhoSpreadsheetData = [
+                        { eixoKey: "Eixo 1 - Gestão da Segurança Viária", objKey: "1.1 - Fortalecimento da governança e institucionalização da segurança viária", indicadorKey: "1.1.a - Índice de maturidade da governança do PSV-SP" },
+                        { eixoKey: "Eixo 2 - Gestão da Informação", objKey: "2.1 - Unificação e qualificação da base de dados", indicadorKey: "2.1.a - Tempo médio de conciliação de óbitos" }
+                    ];
+                    buildDesempCascadingDropdowns();
+                });
+        }
+
+        function buildDesempCascadingDropdowns() {
+            const uniqueEixos = [...new Set(desempenhoSpreadsheetData.map(d => d.eixoKey))].filter(Boolean);
+            uniqueEixos.sort((a, b) => { const nA = parseInt(a.replace(/\D/g, '')) || 0; const nB = parseInt(b.replace(/\D/g, '')) || 0; return nA - nB; });
+
+            createSearchableSelect('ss-desemp-eixo', 'Selecione ou pesquise o Eixo...', handleDesempEixoChange, false);
+            createSearchableSelect('ss-desemp-objetivo', 'Selecione o Eixo primeiro...', handleDesempObjetivoChange, true);
+            createSearchableSelect('ss-desemp-indicador', 'Selecione o Objetivo Estratégico primeiro...', null, true);
+
+            const wEixo = document.getElementById('ss-desemp-eixo');
+            if (wEixo) wEixo._options = uniqueEixos;
+
+            // Busca por indicador
+            const allIndicadores = [...new Set(desempenhoSpreadsheetData.map(d => d.indicadorKey))].filter(Boolean);
+            createSearchableSelect('ss-desemp-busca-indicador', 'Digite o código ou nome do indicador para buscar...', handleDesempBuscaIndicadorChange, false);
+            const wBusca = document.getElementById('ss-desemp-busca-indicador');
+            if (wBusca) wBusca._options = allIndicadores;
+        }
+
+        function handleDesempEixoChange() {
+            const wEixo = document.getElementById('ss-desemp-eixo');
+            const selectedEixo = wEixo ? wEixo._value : '';
+            if (!selectedEixo) {
+                setSearchableOptions('ss-desemp-objetivo', [], 'Selecione o Eixo primeiro...', true);
+                setSearchableOptions('ss-desemp-indicador', [], 'Selecione o Objetivo Estratégico primeiro...', true);
+                return;
+            }
+            const objs = [...new Set(desempenhoSpreadsheetData.filter(d => d.eixoKey === selectedEixo).map(d => d.objKey))].filter(Boolean);
+            setSearchableOptions('ss-desemp-objetivo', objs, 'Selecione ou pesquise o Objetivo Estratégico...', false);
+            setSearchableOptions('ss-desemp-indicador', [], 'Selecione o Objetivo Estratégico primeiro...', true);
+        }
+
+        function handleDesempObjetivoChange() {
+            const wEixo = document.getElementById('ss-desemp-eixo');
+            const wObj = document.getElementById('ss-desemp-objetivo');
+            const selectedEixo = wEixo ? wEixo._value : '';
+            const selectedObj = wObj ? wObj._value : '';
+            if (!selectedObj) {
+                setSearchableOptions('ss-desemp-indicador', [], 'Selecione o Objetivo Estratégico primeiro...', true);
+                return;
+            }
+            const inds = [...new Set(desempenhoSpreadsheetData.filter(d => d.eixoKey === selectedEixo && d.objKey === selectedObj).map(d => d.indicadorKey))].filter(Boolean);
+            setSearchableOptions('ss-desemp-indicador', inds, 'Selecione ou pesquise o Indicador...', false);
+            if (inds.length === 1) {
+                const wInd = document.getElementById('ss-desemp-indicador');
+                if (wInd) { wInd._value = inds[0]; wInd._input.value = inds[0]; }
+            }
+        }
+
+        function handleDesempBuscaIndicadorChange() {
+            const wBusca = document.getElementById('ss-desemp-busca-indicador');
+            const selected = wBusca ? wBusca._value : '';
+            if (!selected) return;
+            const registro = desempenhoSpreadsheetData.find(d => d.indicadorKey === selected);
+            if (!registro) return;
+            const wEixo = document.getElementById('ss-desemp-eixo');
+            if (wEixo && registro.eixoKey) { wEixo._value = registro.eixoKey; wEixo._input.value = registro.eixoKey; handleDesempEixoChange(); }
+            setTimeout(() => {
+                const wObj = document.getElementById('ss-desemp-objetivo');
+                if (wObj && registro.objKey) { wObj._value = registro.objKey; wObj._input.value = registro.objKey; handleDesempObjetivoChange(); }
+                setTimeout(() => {
+                    const wInd = document.getElementById('ss-desemp-indicador');
+                    if (wInd && registro.indicadorKey) { wInd._value = registro.indicadorKey; wInd._input.value = registro.indicadorKey; }
+                    showNotification("Indicador encontrado!", "Campos preenchidos automaticamente.", "emerald");
+                }, 50);
+            }, 50);
+        }
+
+        function handleDesempFileChange(event) {
+            const file = event.target.files[0];
+            const nameEl = document.getElementById('desemp-file-upload-name');
+            nameEl.textContent = "";
+            if (!file) { desempFile = null; return; }
+            const allowedExtensions = /(\.pdf|\.jpeg|\.jpg|\.png|\.tiff)$/i;
+            if (!allowedExtensions.exec(file.name)) { showNotification("Erro!", "Formato inválido.", "rose"); event.target.value = ''; desempFile = null; return; }
+            if (file.size > 15 * 1024 * 1024) { showNotification("Erro!", "Arquivo excede 15MB.", "rose"); event.target.value = ''; desempFile = null; return; }
+            desempFile = file;
+            nameEl.textContent = `✓ ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+            nameEl.className = "text-xs font-bold text-emerald-600 mt-2";
+        }
+
+        function limparFormularioDesempenho() {
+            document.getElementById('form-desempenho-dados').reset();
+            desempFile = null;
+            document.getElementById('desemp-file-upload-name').textContent = '';
+            buildDesempCascadingDropdowns();
+            showNotification("Formulário limpo", "Todos os campos foram limpos.", "blue");
+        }
+
+        function handleFormSubmitDesempenho(event) {
+            event.preventDefault();
+            const wEixo = document.getElementById('ss-desemp-eixo');
+            const wObj = document.getElementById('ss-desemp-objetivo');
+            const wInd = document.getElementById('ss-desemp-indicador');
+            const eixo = wEixo ? wEixo._value : '';
+            const objetivo = wObj ? wObj._value : '';
+            const indicador = wInd ? wInd._value : '';
+            const ano = document.getElementById('form-desemp-ano').value;
+            const valor = document.getElementById('form-desemp-valor').value;
+            const link = document.getElementById('form-desemp-link').value;
+            const descricao = document.getElementById('form-desemp-descricao').value;
+
+            if (!eixo || !objetivo || !indicador) {
+                showNotification("Erro!", "Preencha Eixo, Objetivo Estratégico e Indicador.", "rose");
+                return;
+            }
+            if (!desempFile && !link) {
+                showNotification("Erro!", "Anexe um arquivo ou forneça um link.", "rose");
+                return;
+            }
+
+            const id = Math.floor(1000000 + Math.random() * 9000000);
+            showNotification("Indicador Enviado!", `Submissão #${id} recebida com sucesso e aguarda validação.`, "emerald");
+
+            document.getElementById('form-desempenho-dados').reset();
+            desempFile = null;
+            document.getElementById('desemp-file-upload-name').textContent = '';
+            buildDesempCascadingDropdowns();
+        }
+
+        // Carrega a planilha de desempenho ao iniciar (chamado após onload)
+        (function() {
+            const originalOnload = window.onload;
+            window.onload = function() {
+                if (originalOnload) originalOnload();
+                loadDesempenhoSpreadsheetData();
+            };
+        })();
     </script>
 </body>
 </html>
