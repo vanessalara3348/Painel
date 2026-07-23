@@ -1320,8 +1320,8 @@
                                 <div class="bg-white border border-sistran-border rounded-md p-5">
                                     <div class="flex items-center justify-between mb-3">
                                         <div>
-                                            <p class="text-xs font-bold text-sistran-heading">Valor dos Indicadores de Desempenho</p>
-                                            <p class="text-[10px] text-sistran-body">Resultado individual de cada indicador (escala 0–100)</p>
+                                            <p class="text-xs font-bold text-sistran-heading">Indicadores de Desempenho</p>
+                                            <p class="text-[10px] text-sistran-body">Resultados dos indicadores de desempenho por fase de implementação. Os valores dos indicadores variam entre 0 e 100.</p>
                                         </div>
                                         <span class="bg-sistran-gold-surface text-sistran-gold px-3 py-1 rounded-pill text-[10px] font-semibold">Ano Base: 2024</span>
                                     </div>
@@ -1339,7 +1339,7 @@
                                             Filtros
                                             <button onclick="limparFiltrosDesempenho()" class="ml-auto bg-white border border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-semibold text-[10px] px-3 py-1 rounded-pill transition">Limpar Filtros</button>
                                         </p>
-                                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
                                             <div>
                                                 <label class="block text-sistran-body font-semibold mb-1">Eixo</label>
                                                 <select id="filter-desempenho-eixo" onchange="filterDesempenhoTable()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
@@ -1350,12 +1350,6 @@
                                                 <label class="block text-sistran-body font-semibold mb-1">Objetivo Estratégico</label>
                                                 <select id="filter-desempenho-objetivo" onchange="filterDesempenhoTable()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
                                                     <option value="all">Todos os Objetivos</option>
-                                                </select>
-                                            </div>
-                                            <div>
-                                                <label class="block text-sistran-body font-semibold mb-1">Indicador</label>
-                                                <select id="filter-desempenho-indicador" onchange="filterDesempenhoTable()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
-                                                    <option value="all">Todos os Indicadores</option>
                                                 </select>
                                             </div>
                                             <div>
@@ -3458,30 +3452,13 @@
                 filterObj.value = objAtual || 'all';
             }
 
-            // Popula filtro de Indicador dinamicamente
-            const filterInd = document.getElementById('filter-desempenho-indicador');
-            if (filterInd) {
-                const valEixoForInd = filterEixo ? filterEixo.value : 'all';
-                const valObjForInd = filterObj ? filterObj.value : 'all';
-                let indsFiltrados = desempenhoSpreadsheetData;
-                if (valEixoForInd !== 'all') indsFiltrados = indsFiltrados.filter(d => d.eixoKey === valEixoForInd);
-                if (valObjForInd !== 'all') indsFiltrados = indsFiltrados.filter(d => d.objKey === valObjForInd);
-                const indsUnicos = [...new Set(indsFiltrados.map(d => d.indicadorKey).filter(Boolean))];
-                const indAtual = filterInd.value;
-                filterInd.innerHTML = '<option value="all">Todos os Indicadores</option>';
-                indsUnicos.forEach(i => { const opt = document.createElement('option'); opt.value = i; opt.textContent = i; filterInd.appendChild(opt); });
-                filterInd.value = indAtual || 'all';
-            }
-
             const valEixo = filterEixo ? filterEixo.value : 'all';
             const valObj = filterObj ? filterObj.value : 'all';
-            const valInd = filterInd ? filterInd.value : 'all';
             const valSearch = (document.getElementById('search-desempenho') ? document.getElementById('search-desempenho').value : '').toLowerCase();
 
             desempenhoSpreadsheetData.forEach(item => {
                 if (valEixo !== 'all' && item.eixoKey !== valEixo) return;
                 if (valObj !== 'all' && item.objKey !== valObj) return;
-                if (valInd !== 'all' && item.indicadorKey !== valInd) return;
                 if (valSearch) {
                     const searchable = `${item.eixoKey} ${item.objKey} ${item.indicadorKey} ${item.codIndicador}`.toLowerCase();
                     if (!searchable.includes(valSearch)) return;
@@ -3517,11 +3494,9 @@
         function limparFiltrosDesempenho() {
             const filterEixo = document.getElementById('filter-desempenho-eixo');
             const filterObj = document.getElementById('filter-desempenho-objetivo');
-            const filterInd = document.getElementById('filter-desempenho-indicador');
             const search = document.getElementById('search-desempenho');
             if (filterEixo) filterEixo.value = 'all';
             if (filterObj) filterObj.value = 'all';
-            if (filterInd) filterInd.value = 'all';
             if (search) search.value = '';
             buildDesempenhoTable();
         }
@@ -5912,7 +5887,7 @@
                     indexAxis: 'y', responsive: true, maintainAspectRatio: false,
                     plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(ctx) { return ' ' + ctx.parsed.x.toFixed(2); } } } },
                     scales: {
-                        x: { beginAtZero: true, title: { display: true, text: 'Índice de Desempenho Ponderado', font: { size: 11, family: 'Open Sans', weight: '600' } }, ticks: { font: { size: 10 } }, grid: { color: 'rgba(0,0,0,0.05)' } },
+                        x: { beginAtZero: true, title: { display: true, text: 'Valor Parcial do Indicador de Desempenho por Eixo', font: { size: 11, family: 'Open Sans', weight: '600' } }, ticks: { font: { size: 10 } }, grid: { color: 'rgba(0,0,0,0.05)' } },
                         y: { ticks: { font: { size: 11, family: 'Open Sans' } }, grid: { display: false } }
                     }
                 }
@@ -5934,8 +5909,8 @@
                     responsive: true, maintainAspectRatio: false,
                     plugins: { legend: { display: false }, tooltip: { callbacks: { title: function(items) { const idx = items[0].dataIndex; return desempenhoSpreadsheetData[idx] ? desempenhoSpreadsheetData[idx].indicadorKey : ''; }, label: function(ctx) { return ' Valor: ' + ctx.parsed.y; } } } },
                     scales: {
-                        x: { ticks: { font: { size: 9, family: 'Open Sans' }, maxRotation: 45 }, grid: { display: false } },
-                        y: { beginAtZero: true, max: 110, title: { display: true, text: 'Valor do Indicador (0–100)', font: { size: 11, family: 'Open Sans', weight: '600' } }, ticks: { font: { size: 10 } }, grid: { color: 'rgba(0,0,0,0.05)' } }
+                        x: { ticks: { font: { size: 9, family: 'Open Sans' }, maxRotation: 45 }, grid: { display: false }, title: { display: true, text: 'Indicador de Desempenho', font: { size: 11, family: 'Open Sans', weight: '600' } } },
+                        y: { beginAtZero: true, max: 100, title: { display: true, text: 'Resultado do Indicador de Desempenho', font: { size: 11, family: 'Open Sans', weight: '600' } }, ticks: { font: { size: 10 } }, grid: { color: 'rgba(0,0,0,0.05)' } }
                     }
                 }
             });
