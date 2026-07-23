@@ -1306,8 +1306,8 @@
                                 <div class="bg-white border border-sistran-border rounded-md p-5">
                                     <div class="flex items-center justify-between mb-3">
                                         <div>
-                                            <p class="text-xs font-bold text-sistran-heading">Índice de Desempenho Ponderado por Eixo (INDICE_Oliveira)</p>
-                                            <p class="text-[10px] text-sistran-body">Soma ponderada dos indicadores de desempenho agregados por eixo estratégico</p>
+                                            <p class="text-xs font-bold text-sistran-heading">Índice de Desempenho Segregado por Eixo</p>
+                                            <p class="text-[10px] text-sistran-body">Contribuição de cada eixo para a determinação do Índice de Desempenho</p>
                                         </div>
                                         <span class="bg-sistran-gold-surface text-sistran-gold px-3 py-1 rounded-pill text-[10px] font-semibold">Ano Base: 2024</span>
                                     </div>
@@ -1337,12 +1337,25 @@
                                         <p class="text-xs font-bold text-sistran-heading flex items-center gap-2">
                                             <i data-lucide="filter" class="w-4 h-4 text-sistran-gold"></i>
                                             Filtros
+                                            <button onclick="limparFiltrosDesempenho()" class="ml-auto bg-white border border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-semibold text-[10px] px-3 py-1 rounded-pill transition">Limpar Filtros</button>
                                         </p>
-                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
                                             <div>
                                                 <label class="block text-sistran-body font-semibold mb-1">Eixo</label>
                                                 <select id="filter-desempenho-eixo" onchange="filterDesempenhoTable()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
                                                     <option value="all">Todos os Eixos</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sistran-body font-semibold mb-1">Objetivo Estratégico</label>
+                                                <select id="filter-desempenho-objetivo" onchange="filterDesempenhoTable()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                    <option value="all">Todos os Objetivos</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sistran-body font-semibold mb-1">Indicador</label>
+                                                <select id="filter-desempenho-indicador" onchange="filterDesempenhoTable()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                    <option value="all">Todos os Indicadores</option>
                                                 </select>
                                             </div>
                                             <div>
@@ -1353,15 +1366,15 @@
                                     </div>
 
                                     <div class="table-container overflow-x-auto border border-sistran-border rounded-md">
-                                        <table class="w-full text-left border-collapse text-xs">
+                                        <table class="w-full text-left border-collapse text-xs min-w-[1100px]">
                                             <thead>
                                                 <tr class="bg-sistran-surface-muted text-sistran-heading font-bold border-b border-sistran-border">
-                                                    <th class="p-3">Eixo</th>
-                                                    <th class="p-3">Objetivo Estratégico</th>
-                                                    <th class="p-3">Indicador</th>
+                                                    <th class="p-3 w-[130px]">Eixo</th>
+                                                    <th class="p-3 w-[160px]">Objetivo Estratégico</th>
+                                                    <th class="p-3 w-[160px]">Indicador</th>
                                                     <th class="p-3">O que Mede</th>
-                                                    <th class="p-3">Fonte</th>
-                                                    <th class="p-3 text-center">Valor do Indicador</th>
+                                                    <th class="p-3 w-[160px]">Fonte</th>
+                                                    <th class="p-3 w-[100px] text-center">Valor do Indicador</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="table-desempenho-body" class="divide-y divide-gray-100"></tbody>
@@ -3432,14 +3445,43 @@
                 filterEixo.value = eixoAtual || 'all';
             }
 
+            // Popula filtro de Objetivo Estratégico dinamicamente
+            const filterObj = document.getElementById('filter-desempenho-objetivo');
+            if (filterObj) {
+                const valEixoForObj = filterEixo ? filterEixo.value : 'all';
+                let objsFiltrados = desempenhoSpreadsheetData;
+                if (valEixoForObj !== 'all') objsFiltrados = objsFiltrados.filter(d => d.eixoKey === valEixoForObj);
+                const objsUnicos = [...new Set(objsFiltrados.map(d => d.objKey).filter(Boolean))];
+                const objAtual = filterObj.value;
+                filterObj.innerHTML = '<option value="all">Todos os Objetivos</option>';
+                objsUnicos.forEach(o => { const opt = document.createElement('option'); opt.value = o; opt.textContent = o; filterObj.appendChild(opt); });
+                filterObj.value = objAtual || 'all';
+            }
+
+            // Popula filtro de Indicador dinamicamente
+            const filterInd = document.getElementById('filter-desempenho-indicador');
+            if (filterInd) {
+                const valEixoForInd = filterEixo ? filterEixo.value : 'all';
+                const valObjForInd = filterObj ? filterObj.value : 'all';
+                let indsFiltrados = desempenhoSpreadsheetData;
+                if (valEixoForInd !== 'all') indsFiltrados = indsFiltrados.filter(d => d.eixoKey === valEixoForInd);
+                if (valObjForInd !== 'all') indsFiltrados = indsFiltrados.filter(d => d.objKey === valObjForInd);
+                const indsUnicos = [...new Set(indsFiltrados.map(d => d.indicadorKey).filter(Boolean))];
+                const indAtual = filterInd.value;
+                filterInd.innerHTML = '<option value="all">Todos os Indicadores</option>';
+                indsUnicos.forEach(i => { const opt = document.createElement('option'); opt.value = i; opt.textContent = i; filterInd.appendChild(opt); });
+                filterInd.value = indAtual || 'all';
+            }
+
             const valEixo = filterEixo ? filterEixo.value : 'all';
+            const valObj = filterObj ? filterObj.value : 'all';
+            const valInd = filterInd ? filterInd.value : 'all';
             const valSearch = (document.getElementById('search-desempenho') ? document.getElementById('search-desempenho').value : '').toLowerCase();
 
             desempenhoSpreadsheetData.forEach(item => {
-                // Filtro por eixo
                 if (valEixo !== 'all' && item.eixoKey !== valEixo) return;
-
-                // Filtro por busca textual
+                if (valObj !== 'all' && item.objKey !== valObj) return;
+                if (valInd !== 'all' && item.indicadorKey !== valInd) return;
                 if (valSearch) {
                     const searchable = `${item.eixoKey} ${item.objKey} ${item.indicadorKey} ${item.codIndicador}`.toLowerCase();
                     if (!searchable.includes(valSearch)) return;
@@ -3457,10 +3499,10 @@
                 }
 
                 tr.innerHTML = `
-                    <td class="p-3 font-semibold text-sistran-heading text-[10px] max-w-[150px]">${item.eixoKey || '—'}</td>
-                    <td class="p-3 text-sistran-body text-[10px] max-w-[180px]">${item.objKey || '—'}</td>
-                    <td class="p-3 font-semibold text-sistran-heading text-[10px] max-w-[180px]">${item.indicadorKey || '—'}</td>
-                    <td class="p-3 text-sistran-body text-[10px] max-w-[250px]">${item.oqueMede || '—'}</td>
+                    <td class="p-3 font-semibold text-sistran-heading text-[10px]">${item.eixoKey || '—'}</td>
+                    <td class="p-3 text-sistran-body text-[10px]">${item.objKey || '—'}</td>
+                    <td class="p-3 font-semibold text-sistran-heading text-[10px]">${item.indicadorKey || '—'}</td>
+                    <td class="p-3 text-sistran-body text-[10px]">${item.oqueMede || '—'}</td>
                     <td class="p-3 text-sistran-muted text-[10px]">${item.fonte || '—'}</td>
                     <td class="p-3 text-center"><span class="px-2.5 py-1 rounded text-xs font-bold ${badgeClass}">${valor}</span></td>
                 `;
@@ -3469,6 +3511,18 @@
         }
 
         function filterDesempenhoTable() {
+            buildDesempenhoTable();
+        }
+
+        function limparFiltrosDesempenho() {
+            const filterEixo = document.getElementById('filter-desempenho-eixo');
+            const filterObj = document.getElementById('filter-desempenho-objetivo');
+            const filterInd = document.getElementById('filter-desempenho-indicador');
+            const search = document.getElementById('search-desempenho');
+            if (filterEixo) filterEixo.value = 'all';
+            if (filterObj) filterObj.value = 'all';
+            if (filterInd) filterInd.value = 'all';
+            if (search) search.value = '';
             buildDesempenhoTable();
         }
 
