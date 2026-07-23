@@ -1464,7 +1464,7 @@
                                     </p>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
                                         <div>
-                                            <label class="block text-sistran-body font-semibold mb-1">Eixo Temático</label>
+                                            <label class="block text-sistran-body font-semibold mb-1">Eixo</label>
                                             <select id="filter-imp-eixo" onchange="filterImplementacao()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
                                                 <option value="all" selected>Todos os Eixos</option>
                                             </select>
@@ -1496,7 +1496,7 @@
                                     <table class="w-full text-left border-collapse text-xs">
                                         <thead>
                                             <tr class="bg-sistran-surface-muted text-sistran-heading font-bold border-b border-sistran-border">
-                                                <th class="p-3">Eixo Temático</th>
+                                                <th class="p-3">Eixo</th>
                                                 <th class="p-3">Produto</th>
                                                 <th class="p-3">Indicador</th>
                                                 <th class="p-3">Órgão</th>
@@ -1584,7 +1584,7 @@
                                     </select>
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-semibold text-sistran-body mb-1">Eixo Temático</label>
+                                    <label class="block text-xs font-semibold text-sistran-body mb-1">Eixo</label>
                                     <select id="filtro-eixo-validacao" onchange="renderValidationCards()" class="w-full text-xs p-2.5 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
                                         <option value="todos" selected>Todos os Eixos</option>
                                         <option value="Eixo 1">Eixo 1 - Gestão da Segurança</option>
@@ -1653,7 +1653,7 @@
                                         </select>
                                     </div>
                                     <div>
-                                        <label class="block text-xs font-semibold text-sistran-body mb-1">Eixo Temático</label>
+                                        <label class="block text-xs font-semibold text-sistran-body mb-1">Eixo</label>
                                         <select id="filtro-validados-eixo" onchange="renderProdutosValidados()" class="w-full text-xs p-2.5 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
                                             <option value="todos">Todos os Eixos</option>
                                         </select>
@@ -1678,7 +1678,7 @@
                                     <thead>
                                         <tr class="bg-sistran-surface-muted text-sistran-heading font-bold border-b border-sistran-border">
                                             <th class="p-3 w-20">ID</th>
-                                            <th class="p-3">Eixo Temático</th>
+                                            <th class="p-3">Eixo</th>
                                             <th class="p-3">Produto</th>
                                             <th class="p-3">Órgão</th>
                                             <th class="p-3">Indicador</th>
@@ -1912,9 +1912,9 @@
 
                                     <hr class="border-sistran-border my-6">
 
-                                    <!-- Eixo Temático -->
+                                    <!-- Eixo -->
                                     <div>
-                                        <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Eixo Temático *</label>
+                                        <label class="block text-[10px] font-bold text-sistran-heading uppercase mb-1">Eixo *</label>
                                         <div class="search-select-wrapper" id="ss-eixo"></div>
                                         <select id="form-coleta-eixo" class="hidden" required></select>
                                     </div>
@@ -2035,7 +2035,7 @@
                                 </p>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
-                                        <label class="block text-xs font-semibold text-sistran-body mb-1">Eixo Temático</label>
+                                        <label class="block text-xs font-semibold text-sistran-body mb-1">Eixo</label>
                                         <select id="filtro-historico-eixo" onchange="renderColetaHistorico()" class="w-full text-xs p-2.5 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
                                             <option value="todos">Todos os Eixos</option>
                                         </select>
@@ -2065,7 +2065,7 @@
                                     <thead>
                                         <tr class="bg-sistran-surface-muted text-sistran-heading font-bold border-b border-sistran-border">
                                             <th class="p-3 w-20">ID</th>
-                                            <th class="p-3">Eixo Temático</th>
+                                            <th class="p-3">Eixo</th>
                                             <th class="p-3">Objetivo Estratégico</th>
                                             <th class="p-3">Ação</th>
                                             <th class="p-3">Produto</th>
@@ -4178,8 +4178,8 @@
             
             console.log('buildCascadingDropdowns - Eixos disponíveis:', uniqueEixes);
 
-            createSearchableSelect('ss-eixo', 'Selecione ou pesquise o Eixo Temático...', handleEixoChange, false);
-            createSearchableSelect('ss-objetivo', 'Selecione o Eixo Temático primeiro...', handleObjetivoChange, true);
+            createSearchableSelect('ss-eixo', 'Selecione ou pesquise o Eixo...', handleEixoChange, false);
+            createSearchableSelect('ss-objetivo', 'Selecione o Eixo primeiro...', handleObjetivoChange, true);
             createSearchableSelect('ss-acao', 'Selecione o Objetivo Estratégico primeiro...', handleAcaoChange, true);
             createSearchableSelect('ss-produto', 'Selecione a Ação primeiro...', handleProdutoChange, true);
             createSearchableSelect('ss-indicador', 'Selecione o Produto primeiro...', null, true);
@@ -4275,7 +4275,7 @@
             console.log('handleEixoChange - Eixo selecionado:', selectedEixo);
 
             if (!selectedEixo) {
-                setSearchableOptions('ss-objetivo', [], 'Selecione o Eixo Temático primeiro...', true);
+                setSearchableOptions('ss-objetivo', [], 'Selecione o Eixo primeiro...', true);
                 setSearchableOptions('ss-acao', [], 'Selecione o Objetivo Estratégico primeiro...', true);
                 setSearchableOptions('ss-produto', [], 'Selecione a Ação primeiro...', true);
                 setSearchableOptions('ss-indicador', [], 'Selecione o Produto primeiro...', true);
@@ -4865,7 +4865,7 @@
                 return;
             }
 
-            // Popula filtro de Eixo Temático dinamicamente
+            // Popula filtro de Eixo dinamicamente
             const filtroEixoSelect = document.getElementById('filtro-historico-eixo');
             if (filtroEixoSelect) {
                 const eixosUnicos = [...new Set(minhasAcoes.map(a => a.eixo).filter(Boolean))];
@@ -5011,7 +5011,7 @@
             // Monta os dados para a planilha
             const dados = sorted.map(acao => ({
                 'ID': acao.id,
-                'Eixo Temático': acao.eixo || '',
+                'Eixo': acao.eixo || '',
                 'Objetivo Estratégico': acao.objetivo || '',
                 'Ação': acao.acao || '',
                 'Produto': acao.produto || '',
@@ -5542,7 +5542,7 @@
 
             const dados = validados.map(acao => ({
                 'ID': acao.id,
-                'Eixo Temático': acao.eixo || '',
+                'Eixo': acao.eixo || '',
                 'Produto': acao.produto || '',
                 'Órgão': acao.orgao || '',
                 'Indicador': acao.indicador || '',
@@ -5729,7 +5729,7 @@
 
             const dados = monitoramentoData.map(item => ({
                 'Código': item.cod || '',
-                'Eixo Temático': item.eixo || '',
+                'Eixo': item.eixo || '',
                 'Objetivo Estratégico': item.objetivo || '',
                 'Ação': item.acao || '',
                 'Produto': item.produto || '',
