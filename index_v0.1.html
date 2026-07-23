@@ -1302,6 +1302,31 @@
                                     </div>
                                 </div>
 
+                                <!-- Gráfico: Índice de Desempenho Global -->
+                                <div class="bg-white border border-sistran-border rounded-md p-6">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <div>
+                                            <p class="text-xs font-bold text-sistran-heading">Índice de Desempenho Global</p>
+                                            <p class="text-[10px] text-sistran-body">Soma do INDICE_Oliveira de todos os indicadores (escala 0–100)</p>
+                                        </div>
+                                        <span class="bg-sistran-gold-surface text-sistran-gold px-3 py-1 rounded-pill text-[10px] font-semibold">Ano Base: 2024</span>
+                                    </div>
+                                    <div class="flex items-center justify-center">
+                                        <div class="w-[280px] h-[160px] relative">
+                                            <canvas id="chartDesempenhoGlobal"></canvas>
+                                            <div class="absolute inset-0 flex flex-col items-center justify-end pb-2">
+                                                <span id="desempenho-global-valor" class="text-3xl font-extrabold text-sistran-heading">—</span>
+                                                <span class="text-[10px] text-sistran-muted font-semibold">de 100</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-center gap-4 mt-4 text-[10px] font-semibold">
+                                        <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-rose-500"></span> Crítico (0–40)</div>
+                                        <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-amber-500"></span> Regular (40–70)</div>
+                                        <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-emerald-500"></span> Bom (70–100)</div>
+                                    </div>
+                                </div>
+
                                 <!-- Gráfico de Barras Horizontais: INDICE_Oliveira por Eixo -->
                                 <div class="bg-white border border-sistran-border rounded-md p-5">
                                     <div class="flex items-center justify-between mb-3">
@@ -5858,8 +5883,58 @@
 
         // === GRÁFICOS DE DESEMPENHO ===
         function renderDesempenhoCharts() {
+            renderChartDesempenhoGlobal();
             renderChartOliveiraEixo();
             renderChartValorIndicador();
+        }
+
+        function renderChartDesempenhoGlobal() {
+            const canvas = document.getElementById('chartDesempenhoGlobal');
+            if (!canvas || desempenhoSpreadsheetData.length === 0) return;
+
+            // Soma total do INDICE_Oliveira (máximo teórico = 100)
+            const totalOliveira = desempenhoSpreadsheetData.reduce((sum, d) => sum + (d.indiceOliveira || 0), 0);
+            const valor = Math.min(parseFloat(totalOliveira.toFixed(1)), 100);
+            const restante = Math.max(100 - valor, 0);
+
+            // Atualiza o valor numérico central
+            const valorEl = document.getElementById('desempenho-global-valor');
+            if (valorEl) valorEl.textContent = valor.toFixed(1);
+
+            // Cor baseada na faixa
+            let corPrincipal = '#10B981'; // Bom (verde)
+            if (valor < 40) corPrincipal = '#EF4444'; // Crítico (rosa)
+            else if (valor < 70) corPrincipal = '#D97706'; // Regular (amber)
+
+            if (charts.chartDesempenhoGlobal) charts.chartDesempenhoGlobal.destroy();
+
+            charts.chartDesempenhoGlobal = new Chart(canvas.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Índice de Desempenho', 'Restante'],
+                    datasets: [{
+                        data: [valor, restante],
+                        backgroundColor: [corPrincipal, '#F3F4F6'],
+                        borderWidth: 0,
+                        circumference: 180,
+                        rotation: 270
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            filter: function(tooltipItem) { return tooltipItem.dataIndex === 0; },
+                            callbacks: {
+                                label: function(ctx) { return ' Índice: ' + ctx.parsed.toFixed(1) + ' / 100'; }
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         function renderChartOliveiraEixo() {
