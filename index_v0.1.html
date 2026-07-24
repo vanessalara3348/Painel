@@ -6048,7 +6048,7 @@
                 return parts.length > 1 ? [parts[0] + ' -', parts.slice(1).join(' - ')] : e;
             });
             const dataValues = eixosRef.map(e => eixosMap[e] !== null ? parseFloat(eixosMap[e].toFixed(2)) : 0);
-            const eixoColors = { '1': '#C68B00', '2': '#FECF03', '3': '#10B981', '4': '#2563EB', '5': '#7C3AED', '6': '#D97706', '7': '#EC4899', '8': '#6B7280' };
+            const eixoColors = { '1': '#C68B00', '2': '#D4A020', '3': '#E0B440', '4': '#EBBF00', '5': '#FECF03', '6': '#F5D547', '7': '#FFE066', '8': '#FFF1C9' };
             const bgColors = eixosRef.map(e => { const n = e.replace(/\D/g, '').charAt(0); return eixoColors[n] || '#C68B00'; });
 
             if (charts.chartDesempenhoOliveira) charts.chartDesempenhoOliveira.destroy();
@@ -6109,7 +6109,7 @@
 
             const labels = dadosFiltrados.map(d => d.codIndicador || '');
             const dataValues = dadosFiltrados.map(d => d.valorIndicador || 0);
-            const eixoColors = { '1': '#C68B00', '2': '#FECF03', '3': '#10B981', '4': '#2563EB', '5': '#7C3AED', '6': '#D97706', '7': '#EC4899', '8': '#6B7280' };
+            const eixoColors = { '1': '#C68B00', '2': '#D4A020', '3': '#E0B440', '4': '#EBBF00', '5': '#FECF03', '6': '#F5D547', '7': '#FFE066', '8': '#FFF1C9' };
             const bgColors = dadosFiltrados.map(d => { const n = d.eixoKey ? d.eixoKey.replace(/\D/g, '').charAt(0) : '1'; return eixoColors[n] || '#C68B00'; });
 
             // Calcula posições dos separadores entre eixos e labels de eixo
