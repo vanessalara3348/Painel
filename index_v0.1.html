@@ -1364,7 +1364,7 @@
                                             Filtros
                                             <button onclick="limparFiltrosDesempenho()" class="ml-auto bg-white border border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-semibold text-[10px] px-3 py-1 rounded-pill transition">Limpar Filtros</button>
                                         </p>
-                                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
                                             <div>
                                                 <label class="block text-sistran-body font-semibold mb-1">Eixo</label>
                                                 <select id="filter-desempenho-eixo" onchange="filterDesempenhoTable()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
@@ -1375,6 +1375,13 @@
                                                 <label class="block text-sistran-body font-semibold mb-1">Objetivo Estratégico</label>
                                                 <select id="filter-desempenho-objetivo" onchange="filterDesempenhoTable()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
                                                     <option value="all">Todos os Objetivos</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sistran-body font-semibold mb-1">Ano de Referência</label>
+                                                <select id="filter-desempenho-ano" onchange="filterDesempenhoTable()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                    <option value="all">Todos os Anos</option>
+                                                    <option value="2024" selected>2024 (Base)</option>
                                                 </select>
                                             </div>
                                             <div>
@@ -3446,17 +3453,40 @@
             }
         }
 
+        // Armazena submissões de desempenho aprovadas
+        let desempenhoSubmissoes = [];
+
+        function getDesempenhoDataComSubmissoes() {
+            // Combina dados base (2024) com submissões do formulário
+            const allData = [...desempenhoSpreadsheetData];
+            desempenhoSubmissoes.forEach(sub => {
+                allData.push({
+                    eixoKey: sub.eixo || '',
+                    objKey: sub.objetivo || '',
+                    indicadorKey: sub.indicador || '',
+                    codIndicador: sub.indicador ? sub.indicador.split(' - ')[0] : '',
+                    oqueMede: '—',
+                    fonte: 'Submissão via Formulário',
+                    valorIndicador: parseFloat(sub.valor) || 0,
+                    indiceOliveira: 0,
+                    ano: parseInt(sub.ano) || 2026
+                });
+            });
+            return allData;
+        }
+
         function buildDesempenhoTable() {
             const tbody = document.getElementById('table-desempenho-body');
             if (!tbody) return;
             tbody.innerHTML = '';
 
-            if (desempenhoSpreadsheetData.length === 0) return;
+            const allData = getDesempenhoDataComSubmissoes();
+            if (allData.length === 0) return;
 
             // Popula filtro de Eixo dinamicamente
             const filterEixo = document.getElementById('filter-desempenho-eixo');
             if (filterEixo) {
-                const eixosUnicos = [...new Set(desempenhoSpreadsheetData.map(d => d.eixoKey).filter(Boolean))];
+                const eixosUnicos = [...new Set(allData.map(d => d.eixoKey).filter(Boolean))];
                 eixosUnicos.sort((a, b) => (parseInt(a.replace(/\D/g, '')) || 0) - (parseInt(b.replace(/\D/g, '')) || 0));
                 const eixoAtual = filterEixo.value;
                 filterEixo.innerHTML = '<option value="all">Todos os Eixos</option>';
@@ -3468,7 +3498,7 @@
             const filterObj = document.getElementById('filter-desempenho-objetivo');
             if (filterObj) {
                 const valEixoForObj = filterEixo ? filterEixo.value : 'all';
-                let objsFiltrados = desempenhoSpreadsheetData;
+                let objsFiltrados = allData;
                 if (valEixoForObj !== 'all') objsFiltrados = objsFiltrados.filter(d => d.eixoKey === valEixoForObj);
                 const objsUnicos = [...new Set(objsFiltrados.map(d => d.objKey).filter(Boolean))];
                 const objAtual = filterObj.value;
@@ -3477,13 +3507,30 @@
                 filterObj.value = objAtual || 'all';
             }
 
+            // Popula filtro de Ano dinamicamente
+            const filterAno = document.getElementById('filter-desempenho-ano');
+            if (filterAno) {
+                const anosUnicos = [...new Set(allData.map(d => d.ano).filter(Boolean))].sort();
+                const anoAtual = filterAno.value;
+                filterAno.innerHTML = '<option value="all">Todos os Anos</option>';
+                anosUnicos.forEach(a => {
+                    const opt = document.createElement('option');
+                    opt.value = a;
+                    opt.textContent = a === 2024 ? a + ' (Base)' : a;
+                    filterAno.appendChild(opt);
+                });
+                filterAno.value = anoAtual || 'all';
+            }
+
             const valEixo = filterEixo ? filterEixo.value : 'all';
             const valObj = filterObj ? filterObj.value : 'all';
+            const valAno = filterAno ? filterAno.value : 'all';
             const valSearch = (document.getElementById('search-desempenho') ? document.getElementById('search-desempenho').value : '').toLowerCase();
 
-            desempenhoSpreadsheetData.forEach(item => {
+            allData.forEach(item => {
                 if (valEixo !== 'all' && item.eixoKey !== valEixo) return;
                 if (valObj !== 'all' && item.objKey !== valObj) return;
+                if (valAno !== 'all' && String(item.ano) !== valAno) return;
                 if (valSearch) {
                     const searchable = `${item.eixoKey} ${item.objKey} ${item.indicadorKey} ${item.codIndicador}`.toLowerCase();
                     if (!searchable.includes(valSearch)) return;
@@ -3519,9 +3566,11 @@
         function limparFiltrosDesempenho() {
             const filterEixo = document.getElementById('filter-desempenho-eixo');
             const filterObj = document.getElementById('filter-desempenho-objetivo');
+            const filterAno = document.getElementById('filter-desempenho-ano');
             const search = document.getElementById('search-desempenho');
             if (filterEixo) filterEixo.value = 'all';
             if (filterObj) filterObj.value = 'all';
+            if (filterAno) filterAno.value = 'all';
             if (search) search.value = '';
             buildDesempenhoTable();
         }
@@ -6169,12 +6218,23 @@
             }
 
             const id = Math.floor(1000000 + Math.random() * 9000000);
+
+            // Armazena a submissão para alimentar a tabela de Desempenho
+            desempenhoSubmissoes.push({
+                eixo: eixo,
+                objetivo: objetivo,
+                indicador: indicador,
+                ano: ano,
+                valor: valor
+            });
+
             showNotification("Indicador Enviado!", `Submissão #${id} recebida com sucesso e aguarda validação.`, "emerald");
 
             document.getElementById('form-desempenho-dados').reset();
             desempFile = null;
             document.getElementById('desemp-file-upload-name').textContent = '';
             buildDesempCascadingDropdowns();
+            buildDesempenhoTable();
         }
 
     </script>
