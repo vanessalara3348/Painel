@@ -1334,7 +1334,12 @@
                                             <p class="text-xs font-bold text-sistran-heading">Índice de Desempenho Parcial</p>
                                             <p class="text-[10px] text-sistran-body">Contribuição de cada eixo para a determinação do Índice de Desempenho</p>
                                         </div>
-                                        <span class="bg-sistran-gold-surface text-sistran-gold px-3 py-1 rounded-pill text-[10px] font-semibold">Ano Base: 2024</span>
+                                        <div class="flex items-center gap-2">
+                                            <label class="text-[10px] font-semibold text-sistran-body">Ano:</label>
+                                            <select id="filter-chart-parcial-ano" onchange="renderChartOliveiraEixo()" class="text-[10px] p-1.5 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold font-semibold">
+                                                <option value="2024" selected>2024 (Base)</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div class="h-[350px] w-full">
                                         <canvas id="chartDesempenhoOliveiraEixo"></canvas>
@@ -5994,25 +5999,60 @@
 
         function renderChartOliveiraEixo() {
             const canvas = document.getElementById('chartDesempenhoOliveiraEixo');
-            if (!canvas || desempenhoSpreadsheetData.length === 0) return;
+            if (!canvas) return;
+
+            // Pesos por eixo para cálculo do Índice Parcial
+            const pesosEixo = { '1': 0.03, '2': 0.017, '3': 0.004, '4': 0.034, '5': 0.022, '6': 0.026, '7': 0.009, '8': 0.013 };
+
+            // Popula filtro de ano dinamicamente
+            const filterAnoParcial = document.getElementById('filter-chart-parcial-ano');
+            if (filterAnoParcial) {
+                const allData = getDesempenhoDataComSubmissoes();
+                const anosUnicos = [...new Set(allData.map(d => d.ano).filter(Boolean))].sort();
+                const anoAtual = filterAnoParcial.value;
+                filterAnoParcial.innerHTML = '';
+                anosUnicos.forEach(a => {
+                    const opt = document.createElement('option');
+                    opt.value = a;
+                    opt.textContent = a === 2024 ? a + ' (Base)' : a;
+                    filterAnoParcial.appendChild(opt);
+                });
+                filterAnoParcial.value = anoAtual && anosUnicos.includes(parseInt(anoAtual)) ? anoAtual : '2024';
+            }
+
+            const anoSelecionado = filterAnoParcial ? parseInt(filterAnoParcial.value) : 2024;
+
+            // Obtém dados combinados e filtra pelo ano
+            const allData = getDesempenhoDataComSubmissoes();
+            const dadosDoAno = allData.filter(d => d.ano === anoSelecionado);
+
+            // Referência: todos os 8 eixos da planilha base
+            const eixosRef = [...new Set(desempenhoSpreadsheetData.map(d => d.eixoKey).filter(Boolean))];
+            eixosRef.sort((a, b) => (parseInt(a.replace(/\D/g, '')) || 0) - (parseInt(b.replace(/\D/g, '')) || 0));
+
+            // Calcula Índice Parcial = soma(valor_indicador * peso) por eixo
             const eixosMap = {};
-            desempenhoSpreadsheetData.forEach(d => {
-                if (!d.eixoKey) return;
-                if (!eixosMap[d.eixoKey]) eixosMap[d.eixoKey] = 0;
-                eixosMap[d.eixoKey] += d.indiceOliveira || 0;
+            eixosRef.forEach(eixo => {
+                const eixoNum = eixo.replace(/\D/g, '').charAt(0);
+                const peso = pesosEixo[eixoNum] || 0;
+                const indicadoresDoEixo = dadosDoAno.filter(d => d.eixoKey === eixo);
+                if (indicadoresDoEixo.length === 0) {
+                    eixosMap[eixo] = null; // Sem dados para este eixo neste ano
+                } else {
+                    eixosMap[eixo] = indicadoresDoEixo.reduce((sum, d) => sum + ((d.valorIndicador || 0) * peso), 0);
+                }
             });
-            const eixosOrdenados = Object.keys(eixosMap).sort((a, b) => {
-                return (parseInt(a.replace(/\D/g, '')) || 0) - (parseInt(b.replace(/\D/g, '')) || 0);
-            });
-            const labels = eixosOrdenados.map(e => {
+
+            const labels = eixosRef.map(e => {
                 const parts = e.split(' - ');
                 return parts.length > 1 ? [parts[0] + ' -', parts.slice(1).join(' - ')] : e;
             });
-            const dataValues = eixosOrdenados.map(e => parseFloat(eixosMap[e].toFixed(2)));
+            const dataValues = eixosRef.map(e => eixosMap[e] !== null ? parseFloat(eixosMap[e].toFixed(2)) : 0);
+
             if (charts.chartDesempenhoOliveira) charts.chartDesempenhoOliveira.destroy();
             charts.chartDesempenhoOliveira = new Chart(canvas.getContext('2d'), {
                 type: 'bar',
-                data: { labels: labels, datasets: [{ label: 'INDICE_Oliveira (soma)', data: dataValues, backgroundColor: '#C68B00', borderRadius: 3 }] },
+                data: { labels: labels, datasets: [{ label: 'Índice Parcial', data: dataValues, backgroundColor: '#C68B00', borderRadius: 3 }] },
                 options: {
                     indexAxis: 'y', responsive: true, maintainAspectRatio: false,
                     plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(ctx) { return ' ' + ctx.parsed.x.toFixed(2); } } } },
@@ -6276,6 +6316,7 @@
             buildDesempCascadingDropdowns();
             buildDesempenhoTable();
             renderChartValorIndicador();
+            renderChartOliveiraEixo();
         }
 
     </script>
