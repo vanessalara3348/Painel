@@ -1348,7 +1348,12 @@
                                             <p class="text-xs font-bold text-sistran-heading">Indicadores de Desempenho</p>
                                             <p class="text-[10px] text-sistran-body">Resultados dos indicadores de desempenho por fase de implementação. Os valores dos indicadores variam entre 0 e 100.</p>
                                         </div>
-                                        <span class="bg-sistran-gold-surface text-sistran-gold px-3 py-1 rounded-pill text-[10px] font-semibold">Ano Base: 2024</span>
+                                        <div class="flex items-center gap-2">
+                                            <label class="text-[10px] font-semibold text-sistran-body">Ano:</label>
+                                            <select id="filter-chart-indicadores-ano" onchange="renderChartValorIndicador()" class="text-[10px] p-1.5 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold font-semibold">
+                                                <option value="2024" selected>2024 (Base)</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div class="h-[480px] w-full">
                                         <canvas id="chartDesempenhoValorIndicador"></canvas>
@@ -6022,17 +6027,47 @@
 
         function renderChartValorIndicador() {
             const canvas = document.getElementById('chartDesempenhoValorIndicador');
-            if (!canvas || desempenhoSpreadsheetData.length === 0) return;
-            const labels = desempenhoSpreadsheetData.map(d => d.codIndicador || '');
-            const dataValues = desempenhoSpreadsheetData.map(d => d.valorIndicador || 0);
+            if (!canvas) return;
+
+            // Obtém ano selecionado no filtro do gráfico
+            const filterAnoChart = document.getElementById('filter-chart-indicadores-ano');
+
+            // Popula filtro de ano dinamicamente com anos disponíveis
+            if (filterAnoChart) {
+                const allData = getDesempenhoDataComSubmissoes();
+                const anosUnicos = [...new Set(allData.map(d => d.ano).filter(Boolean))].sort();
+                const anoAtual = filterAnoChart.value;
+                filterAnoChart.innerHTML = '';
+                anosUnicos.forEach(a => {
+                    const opt = document.createElement('option');
+                    opt.value = a;
+                    opt.textContent = a === 2024 ? a + ' (Base)' : a;
+                    filterAnoChart.appendChild(opt);
+                });
+                filterAnoChart.value = anoAtual && anosUnicos.includes(parseInt(anoAtual)) ? anoAtual : '2024';
+            }
+
+            const anoSelecionado = filterAnoChart ? parseInt(filterAnoChart.value) : 2024;
+
+            // Filtra dados pelo ano selecionado
+            const allData = getDesempenhoDataComSubmissoes();
+            const dadosFiltrados = allData.filter(d => d.ano === anoSelecionado);
+
+            if (dadosFiltrados.length === 0) {
+                if (charts.chartDesempenhoValor) charts.chartDesempenhoValor.destroy();
+                return;
+            }
+
+            const labels = dadosFiltrados.map(d => d.codIndicador || '');
+            const dataValues = dadosFiltrados.map(d => d.valorIndicador || 0);
             const eixoColors = { '1': '#C68B00', '2': '#FECF03', '3': '#10B981', '4': '#2563EB', '5': '#7C3AED', '6': '#D97706', '7': '#EC4899', '8': '#6B7280' };
-            const bgColors = desempenhoSpreadsheetData.map(d => { const n = d.eixoKey ? d.eixoKey.replace(/\D/g, '').charAt(0) : '1'; return eixoColors[n] || '#C68B00'; });
+            const bgColors = dadosFiltrados.map(d => { const n = d.eixoKey ? d.eixoKey.replace(/\D/g, '').charAt(0) : '1'; return eixoColors[n] || '#C68B00'; });
 
             // Calcula posições dos separadores entre eixos e labels de eixo
             const eixoBoundaries = [];
             let lastEixo = '';
             let lastEixoKey = '';
-            desempenhoSpreadsheetData.forEach((d, idx) => {
+            dadosFiltrados.forEach((d, idx) => {
                 const eixoNum = d.eixoKey ? d.eixoKey.replace(/\D/g, '').charAt(0) : '';
                 if (eixoNum !== lastEixo && lastEixo !== '') {
                     eixoBoundaries.push({ index: idx, eixoLabel: lastEixoKey, startIdx: eixoBoundaries.length > 0 ? eixoBoundaries[eixoBoundaries.length - 1].index : 0 });
@@ -6040,9 +6075,8 @@
                 lastEixo = eixoNum;
                 lastEixoKey = d.eixoKey || '';
             });
-            // Último eixo
             if (lastEixo) {
-                eixoBoundaries.push({ index: desempenhoSpreadsheetData.length, eixoLabel: lastEixoKey, startIdx: eixoBoundaries.length > 0 ? eixoBoundaries[eixoBoundaries.length - 1].index : 0 });
+                eixoBoundaries.push({ index: dadosFiltrados.length, eixoLabel: lastEixoKey, startIdx: eixoBoundaries.length > 0 ? eixoBoundaries[eixoBoundaries.length - 1].index : 0 });
             }
 
             // Plugin para linhas verticais separadoras e rótulos de eixo
@@ -6054,7 +6088,6 @@
                     const yAxis = chart.scales.y;
                     ctx.save();
 
-                    // Desenha linhas separadoras verticais
                     eixoBoundaries.forEach((boundary, bIdx) => {
                         if (bIdx < eixoBoundaries.length - 1) {
                             const x = xAxis.getPixelForValue(boundary.index) - (xAxis.getPixelForValue(1) - xAxis.getPixelForValue(0)) / 2;
@@ -6069,7 +6102,6 @@
                         }
                     });
 
-                    // Desenha rótulos de eixo entre os indicadores e o rótulo do eixo X
                     ctx.font = '600 10px "Open Sans"';
                     ctx.fillStyle = '#C68B00';
                     ctx.textAlign = 'center';
@@ -6078,7 +6110,6 @@
                         const startX = xAxis.getPixelForValue(boundary.startIdx);
                         const endX = xAxis.getPixelForValue(boundary.index - 1);
                         const centerX = (startX + endX) / 2;
-                        // Divide em duas linhas: "Eixo N -" e o nome
                         const parts = boundary.eixoLabel.split(' - ');
                         if (parts.length > 1) {
                             ctx.fillText(parts[0] + ' -', centerX, yAxis.bottom + 32);
@@ -6100,7 +6131,7 @@
                 options: {
                     responsive: true, maintainAspectRatio: false,
                     layout: { padding: { bottom: 55 } },
-                    plugins: { legend: { display: false }, tooltip: { callbacks: { title: function(items) { const idx = items[0].dataIndex; return desempenhoSpreadsheetData[idx] ? desempenhoSpreadsheetData[idx].indicadorKey : ''; }, label: function(ctx) { return ' Valor: ' + ctx.parsed.y; } } } },
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { title: function(items) { const idx = items[0].dataIndex; return dadosFiltrados[idx] ? dadosFiltrados[idx].indicadorKey : ''; }, label: function(ctx) { return ' Valor: ' + ctx.parsed.y; } } } },
                     scales: {
                         x: { ticks: { font: { size: 9, family: 'Open Sans' }, maxRotation: 45 }, grid: { display: false }, title: { display: true, text: 'Indicador de Desempenho', font: { size: 11, family: 'Open Sans', weight: '600' }, padding: { top: 45 } } },
                         y: { beginAtZero: true, max: 100, title: { display: true, text: 'Resultado do Indicador de Desempenho', font: { size: 11, family: 'Open Sans', weight: '600' } }, ticks: { font: { size: 10 } }, grid: { color: 'rgba(0,0,0,0.05)' } }
@@ -6237,6 +6268,7 @@
             document.getElementById('desemp-file-upload-name').textContent = '';
             buildDesempCascadingDropdowns();
             buildDesempenhoTable();
+            renderChartValorIndicador();
         }
 
     </script>
