@@ -3460,13 +3460,15 @@
             // Combina dados base (2024) com submissões do formulário
             const allData = [...desempenhoSpreadsheetData];
             desempenhoSubmissoes.forEach(sub => {
+                // Busca "O que mede" e "Fonte" da planilha base pelo indicador
+                const registroBase = desempenhoSpreadsheetData.find(d => d.indicadorKey === sub.indicador);
                 allData.push({
                     eixoKey: sub.eixo || '',
                     objKey: sub.objetivo || '',
                     indicadorKey: sub.indicador || '',
                     codIndicador: sub.indicador ? sub.indicador.split(' - ')[0] : '',
-                    oqueMede: '—',
-                    fonte: 'Submissão via Formulário',
+                    oqueMede: registroBase ? registroBase.oqueMede : '—',
+                    fonte: registroBase ? registroBase.fonte : 'Submissão via Formulário',
                     valorIndicador: parseFloat(sub.valor) || 0,
                     indiceOliveira: 0,
                     ano: parseInt(sub.ano) || 2026
