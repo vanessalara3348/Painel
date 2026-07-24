@@ -1385,7 +1385,6 @@
                                             <div>
                                                 <label class="block text-sistran-body font-semibold mb-1">Ano de Referência</label>
                                                 <select id="filter-desempenho-ano" onchange="filterDesempenhoTable()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
-                                                    <option value="all">Todos os Anos</option>
                                                     <option value="2024" selected>2024 (Base)</option>
                                                 </select>
                                             </div>
@@ -3519,14 +3518,14 @@
             if (filterAno) {
                 const anosUnicos = [...new Set(allData.map(d => d.ano).filter(Boolean))].sort();
                 const anoAtual = filterAno.value;
-                filterAno.innerHTML = '<option value="all">Todos os Anos</option>';
+                filterAno.innerHTML = '';
                 anosUnicos.forEach(a => {
                     const opt = document.createElement('option');
                     opt.value = a;
                     opt.textContent = a === 2024 ? a + ' (Base)' : a;
                     filterAno.appendChild(opt);
                 });
-                filterAno.value = anoAtual || 'all';
+                filterAno.value = anoAtual && anosUnicos.includes(parseInt(anoAtual)) ? anoAtual : '2024';
             }
 
             const valEixo = filterEixo ? filterEixo.value : 'all';
@@ -3537,7 +3536,7 @@
             allData.forEach(item => {
                 if (valEixo !== 'all' && item.eixoKey !== valEixo) return;
                 if (valObj !== 'all' && item.objKey !== valObj) return;
-                if (valAno !== 'all' && String(item.ano) !== valAno) return;
+                if (valAno && String(item.ano) !== valAno) return;
                 if (valSearch) {
                     const searchable = `${item.eixoKey} ${item.objKey} ${item.indicadorKey} ${item.codIndicador}`.toLowerCase();
                     if (!searchable.includes(valSearch)) return;
@@ -3577,7 +3576,7 @@
             const search = document.getElementById('search-desempenho');
             if (filterEixo) filterEixo.value = 'all';
             if (filterObj) filterObj.value = 'all';
-            if (filterAno) filterAno.value = 'all';
+            if (filterAno) filterAno.value = '2024';
             if (search) search.value = '';
             buildDesempenhoTable();
         }
@@ -6049,9 +6048,17 @@
 
             const anoSelecionado = filterAnoChart ? parseInt(filterAnoChart.value) : 2024;
 
-            // Filtra dados pelo ano selecionado
+            // Sempre mostra TODOS os indicadores da base, preenchendo com 0 os que não têm valor no ano selecionado
             const allData = getDesempenhoDataComSubmissoes();
-            const dadosFiltrados = allData.filter(d => d.ano === anoSelecionado);
+            const dadosDoAno = allData.filter(d => d.ano === anoSelecionado);
+
+            // Usa os indicadores base (planilha) como referência para garantir todos apareçam
+            const dadosFiltrados = desempenhoSpreadsheetData.map(baseItem => {
+                const encontrado = dadosDoAno.find(d => d.codIndicador === baseItem.codIndicador || d.indicadorKey === baseItem.indicadorKey);
+                if (encontrado) return encontrado;
+                // Não encontrado para este ano: retorna com valor 0
+                return { ...baseItem, valorIndicador: 0, ano: anoSelecionado };
+            });
 
             if (dadosFiltrados.length === 0) {
                 if (charts.chartDesempenhoValor) charts.chartDesempenhoValor.destroy();
