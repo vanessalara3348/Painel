@@ -6048,11 +6048,13 @@
                 return parts.length > 1 ? [parts[0] + ' -', parts.slice(1).join(' - ')] : e;
             });
             const dataValues = eixosRef.map(e => eixosMap[e] !== null ? parseFloat(eixosMap[e].toFixed(2)) : 0);
+            const eixoColors = { '1': '#C68B00', '2': '#FECF03', '3': '#10B981', '4': '#2563EB', '5': '#7C3AED', '6': '#D97706', '7': '#EC4899', '8': '#6B7280' };
+            const bgColors = eixosRef.map(e => { const n = e.replace(/\D/g, '').charAt(0); return eixoColors[n] || '#C68B00'; });
 
             if (charts.chartDesempenhoOliveira) charts.chartDesempenhoOliveira.destroy();
             charts.chartDesempenhoOliveira = new Chart(canvas.getContext('2d'), {
                 type: 'bar',
-                data: { labels: labels, datasets: [{ label: 'Índice Parcial', data: dataValues, backgroundColor: '#C68B00', borderRadius: 3 }] },
+                data: { labels: labels, datasets: [{ label: 'Índice Parcial', data: dataValues, backgroundColor: bgColors, borderRadius: 3 }] },
                 options: {
                     indexAxis: 'y', responsive: true, maintainAspectRatio: false,
                     plugins: { legend: { display: false }, tooltip: { callbacks: { title: function(items) { return eixosRef[items[0].dataIndex] || ''; }, label: function(ctx) { return ' Índice Parcial: ' + ctx.parsed.x.toFixed(3); } } } },
