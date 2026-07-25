@@ -1347,6 +1347,9 @@
                                     <div class="h-[350px] w-full">
                                         <canvas id="chartDesempenhoOliveiraEixo"></canvas>
                                     </div>
+                                    <div id="parcial-legenda" class="flex justify-center gap-4 mt-3 text-[10px] font-semibold">
+                                        <!-- Legenda dinâmica preenchida via JS -->
+                                    </div>
                                 </div>
 
                                 <!-- Gráfico de Barras Verticais: Valor do indicador -->
@@ -6116,12 +6119,45 @@
             dataValues.push(idgTotal);
 
             const faixasParcial = getFaixasAno(anoSelecionado);
-            const eixoColors = { '1': '#C68B00', '2': '#D4A020', '3': '#E0B440', '4': '#EBBF00', '5': '#FECF03', '6': '#F5D547', '7': '#FFE066', '8': '#FFF1C9' };
+
+            // Faixas IDP por eixo conforme planilha Classificacao-IDP.xlsx
+            const faixasIDPporEixo = {
+                2027: { '1': {inf: 1.810, sup: 3.621}, '2': {inf: 1.034, sup: 2.069}, '3': {inf: 0.302, sup: 0.603}, '4': {inf: 2.414, sup: 4.828}, '5': {inf: 1.293, sup: 2.586}, '6': {inf: 1.810, sup: 3.621}, '7': {inf: 0.431, sup: 0.862}, '8': {inf: 0.905, sup: 1.810} },
+                2029: { '1': {inf: 5.431, sup: 8.147}, '2': {inf: 3.103, sup: 4.655}, '3': {inf: 0.905, sup: 1.358}, '4': {inf: 7.241, sup: 10.862}, '5': {inf: 3.879, sup: 5.819}, '6': {inf: 5.431, sup: 8.147}, '7': {inf: 1.293, sup: 1.940}, '8': {inf: 2.716, sup: 4.073} },
+                2033: { '1': {inf: 9.957, sup: 12.672}, '2': {inf: 5.690, sup: 7.241}, '3': {inf: 1.659, sup: 2.112}, '4': {inf: 13.276, sup: 16.897}, '5': {inf: 7.112, sup: 9.052}, '6': {inf: 9.957, sup: 12.672}, '7': {inf: 2.371, sup: 3.017}, '8': {inf: 4.978, sup: 6.336} },
+                2035: { '1': {inf: 14.483, sup: 17.198}, '2': {inf: 8.276, sup: 9.828}, '3': {inf: 2.414, sup: 2.866}, '4': {inf: 19.310, sup: 22.931}, '5': {inf: 10.345, sup: 12.284}, '6': {inf: 14.483, sup: 17.198}, '7': {inf: 3.448, sup: 4.095}, '8': {inf: 7.241, sup: 8.599} }
+            };
+
+            // Seleciona faixas IDP do período correto
+            function getFaixasIDPAno(ano) {
+                if (ano <= 2027) return faixasIDPporEixo[2027];
+                if (ano <= 2029) return faixasIDPporEixo[2029];
+                if (ano <= 2033) return faixasIDPporEixo[2033];
+                return faixasIDPporEixo[2035];
+            }
+
+            const faixasIDP = getFaixasIDPAno(anoSelecionado);
+
             const bgColors = dataValues.map((v, idx) => {
-                if (idx === dataValues.length - 1) return getCorClassificacao(v, faixasParcial); // IDG usa classificação
+                if (idx === dataValues.length - 1) return getCorClassificacao(v, faixasParcial); // IDG usa faixas globais
                 const eixoNum = eixosRef[idx] ? eixosRef[idx].replace(/\D/g, '').charAt(0) : '1';
-                return eixoColors[eixoNum] || '#C68B00';
+                const faixaEixo = faixasIDP[eixoNum];
+                if (!faixaEixo) return '#C68B00';
+                if (v < faixaEixo.inf) return '#EF4444'; // Crítico
+                if (v < faixaEixo.sup) return '#D97706'; // Atenção
+                return '#10B981'; // No caminho certo
             });
+
+            // Atualiza legenda dinâmica do Parcial
+            const legendaParcialEl = document.getElementById('parcial-legenda');
+            if (legendaParcialEl) {
+                const periodoLabel = anoSelecionado <= 2027 ? '2027' : anoSelecionado <= 2029 ? '2029' : anoSelecionado <= 2033 ? '2033' : '2035';
+                legendaParcialEl.innerHTML = `
+                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-rose-500"></span> Crítico (IDP < Lim. Inferior ${periodoLabel})</div>
+                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-amber-500"></span> Atenção (Lim. Inf. ≤ IDP < Lim. Sup. ${periodoLabel})</div>
+                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-emerald-500"></span> No caminho certo (IDP ≥ Lim. Superior ${periodoLabel})</div>
+                `;
+            }
 
             // Referência completa para tooltip (eixos + IDG)
             const tooltipLabels = [...eixosRef, 'IDG - Índice de Desempenho Global'];
