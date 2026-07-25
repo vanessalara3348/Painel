@@ -617,9 +617,15 @@
                                     <div class="bg-amber-50 border border-amber-200 rounded-md p-5 shadow-subtle hover:shadow-hover hover:-translate-y-0.5 transition duration-card" style="display:grid; grid-template-rows: subgrid; grid-row: span 4;">
                                         <p class="text-sm font-extrabold text-sistran-gold uppercase tracking-wider mb-4 flex items-center gap-1.5"><i data-lucide="activity" class="w-5 h-5"></i>Desempenho</p>
                                         <div class="flex flex-col items-center justify-center min-h-[140px]">
-                                            <h3 class="text-4xl font-extrabold text-sistran-heading">58.1%</h3>
-                                            <span class="text-xs font-semibold text-sistran-ink mt-1 inline-block">Regular</span>
-                                            <p class="text-xs text-sistran-heading text-center mt-2">Média ponderada dos 8 eixos do plano</p>
+                                            <div class="w-[120px] h-[68px] relative">
+                                                <canvas id="cardDesempenhoGaugeChart"></canvas>
+                                                <div class="absolute inset-0 flex flex-col items-center justify-end pb-0">
+                                                    <span id="card-desempenho-valor" class="text-2xl font-extrabold text-sistran-heading">—</span>
+                                                    <span class="text-[9px] text-sistran-muted font-semibold">%</span>
+                                                </div>
+                                            </div>
+                                            <span id="card-desempenho-classificacao" class="text-xs font-semibold mt-2 inline-block px-2 py-0.5 rounded-pill">—</span>
+                                            <p class="text-xs text-sistran-heading text-center mt-2">Índice de Desempenho Global (IDG)</p>
                                         </div>
                                         <h4 class="font-bold text-sistran-heading text-xs mt-4 self-start">O plano está avançando na direção correta?</h4>
                                         <p class="text-[11px] text-sistran-ink leading-relaxed self-start">
@@ -5963,6 +5969,7 @@
 
         function renderDesempenhoCharts() {
             renderChartDesempenhoGlobal();
+            renderCardDesempenhoGauge();
             renderChartOliveiraEixo();
             renderChartValorIndicador();
         }
@@ -6033,6 +6040,93 @@
             if (charts.chartDesempenhoGlobal) charts.chartDesempenhoGlobal.destroy();
 
             charts.chartDesempenhoGlobal = new Chart(canvas.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Índice de Desempenho', 'Restante'],
+                    datasets: [{
+                        data: [valor, restante],
+                        backgroundColor: [corPrincipal, '#F3F4F6'],
+                        borderWidth: 0,
+                        circumference: 180,
+                        rotation: 270
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            filter: function(tooltipItem) { return tooltipItem.dataIndex === 0; },
+                            callbacks: {
+                                label: function(ctx) { return ' IDG: ' + ctx.parsed.toFixed(1).replace('.', ',') + '%'; }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // === GRÁFICO GAUGE DO CARD DESEMPENHO (INTRODUÇÃO) ===
+        function renderCardDesempenhoGauge() {
+            const canvas = document.getElementById('cardDesempenhoGaugeChart');
+            if (!canvas) return;
+
+            const pesosEixo = { '1': 0.03, '2': 0.017, '3': 0.004, '4': 0.034, '5': 0.022, '6': 0.026, '7': 0.009, '8': 0.013 };
+
+            // Usar o ano mais recente disponível nos dados
+            const allData = getDesempenhoDataComSubmissoes();
+            const anosDisponiveis = [...new Set(allData.map(d => d.ano).filter(Boolean))].sort();
+            const anoMaisRecente = anosDisponiveis.length > 0 ? anosDisponiveis[anosDisponiveis.length - 1] : 2024;
+
+            const dadosDoAno = allData.filter(d => d.ano === anoMaisRecente);
+            const eixosRef = [...new Set(desempenhoSpreadsheetData.map(d => d.eixoKey).filter(Boolean))];
+
+            let idgTotal = 0;
+            eixosRef.forEach(eixo => {
+                const eixoNum = eixo.replace(/\D/g, '').charAt(0);
+                const peso = pesosEixo[eixoNum] || 0;
+                const indicadoresDoEixo = dadosDoAno.filter(d => d.eixoKey === eixo);
+                if (indicadoresDoEixo.length > 0) {
+                    idgTotal += indicadoresDoEixo.reduce((sum, d) => sum + ((d.valorIndicador || 0) * peso), 0);
+                }
+            });
+
+            const valor = Math.min(parseFloat(idgTotal.toFixed(1)), 100);
+            const restante = Math.max(100 - valor, 0);
+
+            // Atualiza valor numérico
+            const valorEl = document.getElementById('card-desempenho-valor');
+            if (valorEl) valorEl.textContent = valor.toFixed(1).replace('.', ',');
+
+            // Classificação por faixas do ano
+            const faixas = getFaixasAno(anoMaisRecente);
+            const corPrincipal = getCorClassificacao(valor, faixas);
+
+            let classificacaoTexto = '';
+            let classificacaoCor = '';
+            if (valor < faixas.critico) {
+                classificacaoTexto = 'Crítico';
+                classificacaoCor = 'bg-rose-100 text-rose-700';
+            } else if (valor < faixas.atencao) {
+                classificacaoTexto = 'Atenção';
+                classificacaoCor = 'bg-amber-100 text-amber-700';
+            } else {
+                classificacaoTexto = 'No caminho certo';
+                classificacaoCor = 'bg-emerald-100 text-emerald-700';
+            }
+
+            const classificacaoEl = document.getElementById('card-desempenho-classificacao');
+            if (classificacaoEl) {
+                classificacaoEl.textContent = classificacaoTexto;
+                classificacaoEl.className = 'text-xs font-semibold mt-2 inline-block px-2 py-0.5 rounded-pill ' + classificacaoCor;
+            }
+
+            // Renderiza gráfico gauge (semicírculo)
+            if (charts.cardDesempenhoGauge) charts.cardDesempenhoGauge.destroy();
+
+            charts.cardDesempenhoGauge = new Chart(canvas.getContext('2d'), {
                 type: 'doughnut',
                 data: {
                     labels: ['Índice de Desempenho', 'Restante'],
