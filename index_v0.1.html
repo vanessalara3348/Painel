@@ -1146,8 +1146,8 @@
 
                         <!-- SUB-ABA 2: IMPACTO (CURVAS E RECORTE HISTÓRICO) -->
                         <div id="sub-tab-impacto" class="sub-tab-content space-y-6">
-                            <div class="bg-white border border-sistran-border rounded-md p-6 shadow-subtle">
-                                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                            <div class="bg-white border border-sistran-border rounded-md p-6 shadow-subtle space-y-6">
+                                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                                     <div>
                                         <h2 class="text-2xl font-bold text-sistran-heading flex items-center gap-2.5">
                                             <span class="w-8 h-8 bg-sistran-ink rounded-full flex items-center justify-center flex-shrink-0">
@@ -1159,7 +1159,7 @@
                                     </div>
                                 </div>
 
-                                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 font-semibold">
+                                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 font-semibold">
                                     <div class="p-4 bg-amber-50 border border-amber-200 rounded-md">
                                         <p class="text-[10px] font-bold text-sistran-gold uppercase">Meta Principal 2030</p>
                                         <h4 class="text-2xl font-bold text-sistran-heading">-50%</h4>
@@ -1182,7 +1182,7 @@
                                     </div>
                                 </div>
 
-                                <div class="bg-gray-50 p-4 rounded-md border border-sistran-border mb-6">
+                                <div class="bg-gray-50 p-4 rounded-md border border-sistran-border">
                                     <p class="text-xs font-bold text-sistran-heading mb-3 flex items-center gap-2">
                                         <span class="material-symbols-outlined text-sistran-gold" style="font-size:18px;">filter_list</span>
                                         Filtros
@@ -1226,11 +1226,10 @@
                                         <canvas id="impactLineChart"></canvas>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div>
-                                <h3 class="text-base font-bold text-sistran-heading mb-4">Mortalidade Segmentada (Em relação a 2024)</h3>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <div>
+                                    <h3 class="text-base font-bold text-sistran-heading mb-4">Mortalidade Segmentada (Em relação a 2024)</h3>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                     <div class="bg-white border border-sistran-border rounded-md p-4 flex justify-between items-center shadow-subtle">
                                         <div>
                                             <p class="text-[10px] font-bold text-sistran-muted uppercase">Mortalidade de Motociclistas</p>
@@ -1260,6 +1259,7 @@
                                             </p>
                                         </div>
                                         <span class="p-2 bg-emerald-50 text-emerald-500 rounded text-xs font-bold">Seguro</span>
+                                    </div>
                                     </div>
                                 </div>
                             </div>
@@ -1365,7 +1365,7 @@
 
                                     <div class="bg-gray-50 p-4 border border-sistran-border rounded-md space-y-4">
                                         <p class="text-xs font-bold text-sistran-heading flex items-center gap-2">
-                                            <i data-lucide="filter" class="w-4 h-4 text-sistran-gold"></i>
+                                            <span class="material-symbols-outlined text-sistran-gold" style="font-size:18px;">filter_list</span>
                                             Filtros
                                             <button onclick="limparFiltrosDesempenho()" class="ml-auto bg-white border border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-semibold text-[10px] px-3 py-1 rounded-pill transition">Limpar Filtros</button>
                                         </p>
@@ -1494,7 +1494,7 @@
 
                                 <div class="bg-gray-50 p-4 border border-sistran-border rounded-md space-y-4">
                                     <p class="text-xs font-bold text-sistran-heading flex items-center gap-2">
-                                        <i data-lucide="filter" class="w-4 h-4 text-sistran-gold"></i>
+                                        <span class="material-symbols-outlined text-sistran-gold" style="font-size:18px;">filter_list</span>
                                         Filtros
                                         <button onclick="limparFiltrosImplementacao()" class="ml-auto bg-white border border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-semibold text-[10px] px-3 py-1 rounded-pill transition">Limpar Filtros</button>
                                     </p>
@@ -1602,7 +1602,7 @@
                         <!-- Filtros da Validação - padrão Impacto -->
                         <div class="bg-gray-50 p-4 rounded-md border border-sistran-border mb-6">
                             <p class="text-xs font-bold text-sistran-heading mb-3 flex items-center gap-2">
-                                <i data-lucide="filter" class="w-4 h-4 text-sistran-gold"></i>
+                                <span class="material-symbols-outlined text-sistran-gold" style="font-size:18px;">filter_list</span>
                                 Filtros de Validação
                                 <button onclick="limparFiltrosValidacao()" class="ml-auto bg-white border border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-semibold text-[10px] px-3 py-1 rounded-pill transition">Limpar Filtros</button>
                             </p>
@@ -1675,7 +1675,7 @@
                             <!-- Filtros dos Produtos Validados -->
                             <div class="bg-gray-50 p-4 rounded-md border border-sistran-border mb-4">
                                 <p class="text-xs font-bold text-sistran-heading mb-3 flex items-center gap-2">
-                                    <i data-lucide="filter" class="w-4 h-4 text-sistran-gold"></i>
+                                    <span class="material-symbols-outlined text-sistran-gold" style="font-size:18px;">filter_list</span>
                                     Filtros
                                     <button onclick="limparFiltrosProdutosValidados()" class="ml-auto bg-white border border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-semibold text-[10px] px-3 py-1 rounded-pill transition">Limpar Filtros</button>
                                 </p>
@@ -2065,7 +2065,7 @@
                             <!-- Filtros do Histórico -->
                             <div class="bg-gray-50 p-4 rounded-md border border-sistran-border mb-4">
                                 <p class="text-xs font-bold text-sistran-heading mb-3 flex items-center gap-2">
-                                    <i data-lucide="filter" class="w-4 h-4 text-sistran-gold"></i>
+                                    <span class="material-symbols-outlined text-sistran-gold" style="font-size:18px;">filter_list</span>
                                     Filtros do Histórico
                                     <button onclick="limparFiltrosHistorico()" class="ml-auto bg-white border border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-semibold text-[10px] px-3 py-1 rounded-pill transition">Limpar Filtros</button>
                                 </p>
