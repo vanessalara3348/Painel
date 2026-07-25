@@ -648,7 +648,7 @@
                                                     <div><span class="inline-block w-1.5 h-1.5 rounded-full bg-gray-400 mr-0.5"></span> À Iniciar (<span id="card-donut-ainiciar-pct">0%</span>)</div>
                                                 </div>
                                             </div>
-                                            <p class="text-[9px] text-sistran-muted text-center mt-2">Meta Final (2025–2035)</p>
+                                            <p class="text-xs text-sistran-heading text-center mt-2">Meta Final (2025–2035)</p>
                                         </div>
                                         <h4 class="font-bold text-sistran-heading text-xs mt-4 self-start">As entregas previstas foram executadas conforme o planejado?</h4>
                                         <p class="text-[11px] text-sistran-ink leading-relaxed self-start">
@@ -6108,13 +6108,13 @@
             let classificacaoCor = '';
             if (valor < faixas.critico) {
                 classificacaoTexto = 'Crítico';
-                classificacaoCor = 'bg-rose-100 text-rose-700';
+                classificacaoCor = 'bg-rose-600 text-white';
             } else if (valor < faixas.atencao) {
                 classificacaoTexto = 'Atenção';
-                classificacaoCor = 'bg-amber-100 text-amber-700';
+                classificacaoCor = 'bg-amber-500 text-white';
             } else {
                 classificacaoTexto = 'No caminho certo';
-                classificacaoCor = 'bg-emerald-100 text-emerald-700';
+                classificacaoCor = 'bg-emerald-600 text-white';
             }
 
             const classificacaoEl = document.getElementById('card-desempenho-classificacao');
