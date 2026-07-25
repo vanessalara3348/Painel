@@ -6113,7 +6113,12 @@
             dataValues.push(idgTotal);
 
             const faixasParcial = getFaixasAno(anoSelecionado);
-            const bgColors = dataValues.map(v => getCorClassificacao(v, faixasParcial));
+            const eixoColors = { '1': '#C68B00', '2': '#D4A020', '3': '#E0B440', '4': '#EBBF00', '5': '#FECF03', '6': '#F5D547', '7': '#FFE066', '8': '#FFF1C9' };
+            const bgColors = dataValues.map((v, idx) => {
+                if (idx === dataValues.length - 1) return getCorClassificacao(v, faixasParcial); // IDG usa classificação
+                const eixoNum = eixosRef[idx] ? eixosRef[idx].replace(/\D/g, '').charAt(0) : '1';
+                return eixoColors[eixoNum] || '#C68B00';
+            });
 
             // Referência completa para tooltip (eixos + IDG)
             const tooltipLabels = [...eixosRef, 'IDG - Índice de Desempenho Global'];
@@ -6176,8 +6181,8 @@
 
             const labels = dadosFiltrados.map(d => d.codIndicador || '');
             const dataValues = dadosFiltrados.map(d => d.valorIndicador || 0);
-            const faixasIndicadores = getFaixasAno(anoSelecionado);
-            const bgColors = dataValues.map(v => getCorClassificacao(v, faixasIndicadores));
+            const eixoColorsInd = { '1': '#C68B00', '2': '#D4A020', '3': '#E0B440', '4': '#EBBF00', '5': '#FECF03', '6': '#F5D547', '7': '#FFE066', '8': '#FFF1C9' };
+            const bgColors = dadosFiltrados.map(d => { const n = d.eixoKey ? d.eixoKey.replace(/\D/g, '').charAt(0) : '1'; return eixoColorsInd[n] || '#C68B00'; });
 
             // Calcula posições dos separadores entre eixos e labels de eixo
             const eixoBoundaries = [];
