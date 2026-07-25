@@ -6106,8 +6106,17 @@
                 return parts.length > 1 ? [parts[0] + ' -', parts.slice(1).join(' - ')] : e;
             });
             const dataValues = eixosRef.map(e => eixosMap[e] !== null ? parseFloat(eixosMap[e].toFixed(2)) : 0);
+
+            // Calcula IDG (soma dos parciais) e adiciona como última barra
+            const idgTotal = parseFloat(dataValues.reduce((sum, v) => sum + v, 0).toFixed(2));
+            labels.push(['IDG -', 'Índice Global']);
+            dataValues.push(idgTotal);
+
             const faixasParcial = getFaixasAno(anoSelecionado);
             const bgColors = dataValues.map(v => getCorClassificacao(v, faixasParcial));
+
+            // Referência completa para tooltip (eixos + IDG)
+            const tooltipLabels = [...eixosRef, 'IDG - Índice de Desempenho Global'];
 
             if (charts.chartDesempenhoOliveira) charts.chartDesempenhoOliveira.destroy();
             charts.chartDesempenhoOliveira = new Chart(canvas.getContext('2d'), {
@@ -6115,7 +6124,7 @@
                 data: { labels: labels, datasets: [{ label: 'Índice Parcial', data: dataValues, backgroundColor: bgColors, borderRadius: 3 }] },
                 options: {
                     indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false }, tooltip: { callbacks: { title: function(items) { return eixosRef[items[0].dataIndex] || ''; }, label: function(ctx) { return ' Índice Parcial: ' + ctx.parsed.x.toFixed(3); } } } },
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { title: function(items) { return tooltipLabels[items[0].dataIndex] || ''; }, label: function(ctx) { return ' Índice: ' + ctx.parsed.x.toFixed(3); } } } },
                     scales: {
                         x: { beginAtZero: true, title: { display: true, text: 'Índice de Desempenho Parcial (por Eixo)', font: { size: 11, family: 'Open Sans', weight: '600' } }, ticks: { font: { size: 10 } }, grid: { color: 'rgba(0,0,0,0.05)' } },
                         y: { ticks: { font: { size: 11, family: 'Open Sans' } }, grid: { display: false } }
