@@ -5939,6 +5939,22 @@
         }
 
         // === GRÁFICOS DE DESEMPENHO ===
+
+        // Classificação dinâmica por faixa conforme ano de referência (global)
+        function getFaixasAno(ano) {
+            if (ano <= 2027) return { critico: 10, atencao: 20 };
+            if (ano <= 2029) return { critico: 30, atencao: 45 };
+            if (ano <= 2033) return { critico: 55, atencao: 70 };
+            return { critico: 80, atencao: 95 };
+        }
+
+        // Retorna cor baseada no valor e faixas do ano
+        function getCorClassificacao(valor, faixas) {
+            if (valor < faixas.critico) return '#EF4444'; // Crítico (rosa)
+            if (valor < faixas.atencao) return '#D97706'; // Atenção (amber)
+            return '#10B981'; // No caminho certo (verde)
+        }
+
         function renderDesempenhoCharts() {
             renderChartDesempenhoGlobal();
             renderChartOliveiraEixo();
@@ -5993,19 +6009,10 @@
             if (valorEl) valorEl.textContent = valor.toFixed(1);
 
             // Categorização por faixa conforme o ano de referência
-            function getFaixasAno(ano) {
-                if (ano <= 2027) return { critico: 10, atencao: 20 };
-                if (ano <= 2029) return { critico: 30, atencao: 45 };
-                if (ano <= 2033) return { critico: 55, atencao: 70 };
-                return { critico: 80, atencao: 95 };
-            }
-
             const faixas = getFaixasAno(anoSelecionado);
 
             // Cor baseada na faixa dinâmica
-            let corPrincipal = '#10B981'; // No caminho certo (verde)
-            if (valor < faixas.critico) corPrincipal = '#EF4444'; // Crítico (rosa)
-            else if (valor < faixas.atencao) corPrincipal = '#D97706'; // Atenção (amber)
+            let corPrincipal = getCorClassificacao(valor, faixas);
 
             // Atualiza legenda dinâmica
             const legendaEl = document.getElementById('idg-legenda');
@@ -6099,8 +6106,8 @@
                 return parts.length > 1 ? [parts[0] + ' -', parts.slice(1).join(' - ')] : e;
             });
             const dataValues = eixosRef.map(e => eixosMap[e] !== null ? parseFloat(eixosMap[e].toFixed(2)) : 0);
-            const eixoColors = { '1': '#C68B00', '2': '#D4A020', '3': '#E0B440', '4': '#EBBF00', '5': '#FECF03', '6': '#F5D547', '7': '#FFE066', '8': '#FFF1C9' };
-            const bgColors = eixosRef.map(e => { const n = e.replace(/\D/g, '').charAt(0); return eixoColors[n] || '#C68B00'; });
+            const faixasParcial = getFaixasAno(anoSelecionado);
+            const bgColors = dataValues.map(v => getCorClassificacao(v, faixasParcial));
 
             if (charts.chartDesempenhoOliveira) charts.chartDesempenhoOliveira.destroy();
             charts.chartDesempenhoOliveira = new Chart(canvas.getContext('2d'), {
@@ -6160,8 +6167,8 @@
 
             const labels = dadosFiltrados.map(d => d.codIndicador || '');
             const dataValues = dadosFiltrados.map(d => d.valorIndicador || 0);
-            const eixoColors = { '1': '#C68B00', '2': '#D4A020', '3': '#E0B440', '4': '#EBBF00', '5': '#FECF03', '6': '#F5D547', '7': '#FFE066', '8': '#FFF1C9' };
-            const bgColors = dadosFiltrados.map(d => { const n = d.eixoKey ? d.eixoKey.replace(/\D/g, '').charAt(0) : '1'; return eixoColors[n] || '#C68B00'; });
+            const faixasIndicadores = getFaixasAno(anoSelecionado);
+            const bgColors = dataValues.map(v => getCorClassificacao(v, faixasIndicadores));
 
             // Calcula posições dos separadores entre eixos e labels de eixo
             const eixoBoundaries = [];
