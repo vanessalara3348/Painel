@@ -1147,17 +1147,15 @@
                         <!-- SUB-ABA 2: IMPACTO (CURVAS E RECORTE HISTÓRICO) -->
                         <div id="sub-tab-impacto" class="sub-tab-content space-y-6">
                             <div class="bg-white border border-sistran-border rounded-md p-6 shadow-subtle">
-                                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                                     <div>
-                                        <span class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Metas Globais de Impacto</span>
-                                        <h2 class="text-2xl font-bold text-sistran-heading">Redução de Óbitos no Trânsito Paulista</h2>
-                                        <p class="text-xs text-sistran-body mt-1">Conforme pactuado com a Organização das Nações Unidas (ONU) e o Pnatrans.</p>
-                                    </div>
-                                    
-                                    <div class="flex gap-2">
-                                        <button onclick="resetImpactFilters()" class="bg-white border-2 border-sistran-gold hover:bg-sistran-gold-surface text-sistran-ink font-bold py-1.5 px-4 rounded-pill text-xs transition duration-150">
-                                            Limpar Filtros
-                                        </button>
+                                        <h2 class="text-2xl font-bold text-sistran-heading flex items-center gap-2.5">
+                                            <span class="w-8 h-8 bg-sistran-ink rounded-full flex items-center justify-center flex-shrink-0">
+                                                <span class="material-symbols-outlined text-sistran-yellow" style="font-size:20px;">trending_down</span>
+                                            </span>
+                                            Metas de Impacto
+                                        </h2>
+                                        <p class="text-sm text-sistran-body leading-relaxed mt-2">Monitoramento das metas de impacto do PSV-SP (2025-2035) por ano.</p>
                                     </div>
                                 </div>
 
@@ -1186,8 +1184,9 @@
 
                                 <div class="bg-gray-50 p-4 rounded-md border border-sistran-border mb-6">
                                     <p class="text-xs font-bold text-sistran-heading mb-3 flex items-center gap-2">
-                                        <i data-lucide="filter" class="w-4 h-4 text-sistran-gold"></i>
-                                        Filtros de Séries Históricas e Projeções
+                                        <span class="material-symbols-outlined text-sistran-gold" style="font-size:18px;">filter_list</span>
+                                        Filtros
+                                        <button onclick="resetImpactFilters()" class="ml-auto bg-white border border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-semibold text-[10px] px-3 py-1 rounded-pill transition">Limpar Filtros</button>
                                     </p>
                                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                         <div>
@@ -1362,7 +1361,7 @@
                                 </div>
 
                                 <div class="space-y-3">
-                                    <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Resumo dos indicadores de desempenho por Fase de Implementação do Plano</p>
+                                    <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Resumo dos indicadores de desempenho por ano</p>
 
                                     <div class="bg-gray-50 p-4 border border-sistran-border rounded-md space-y-4">
                                         <p class="text-xs font-bold text-sistran-heading flex items-center gap-2">
