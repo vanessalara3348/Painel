@@ -1321,7 +1321,7 @@
                                             <canvas id="chartDesempenhoGlobal"></canvas>
                                             <div class="absolute inset-0 flex flex-col items-center justify-end pb-2">
                                                 <span id="desempenho-global-valor" class="text-3xl font-extrabold text-sistran-heading">—</span>
-                                                <span class="text-[10px] text-sistran-muted font-semibold">de 100</span>
+                                                <span class="text-[10px] text-sistran-muted font-semibold">%</span>
                                             </div>
                                         </div>
                                     </div>
@@ -1335,7 +1335,7 @@
                                     <div class="flex items-center justify-between mb-3">
                                         <div>
                                             <p class="text-xs font-bold text-sistran-heading">Índice de Desempenho Parcial</p>
-                                            <p class="text-[10px] text-sistran-body">Contribuição de cada eixo para determinação do Índice de Desempenho Global.</p>
+                                            <p class="text-[10px] text-sistran-body">Contribuição de cada eixo para determinação do Índice de Desempenho Global (IDP).</p>
                                         </div>
                                         <div class="flex items-center gap-2">
                                             <label class="text-[10px] font-semibold text-sistran-body">Ano:</label>
@@ -1357,7 +1357,7 @@
                                     <div class="flex items-center justify-between mb-3">
                                         <div>
                                             <p class="text-xs font-bold text-sistran-heading">Indicadores de Desempenho</p>
-                                            <p class="text-[10px] text-sistran-body">Resultados dos indicadores de desempenho por fase de implementação. Os valores dos indicadores variam entre 0 e 100.</p>
+                                            <p class="text-[10px] text-sistran-body">Resultados dos indicadores de desempenho por ano. Os valores dos indicadores variam entre 0 e 100.</p>
                                         </div>
                                         <div class="flex items-center gap-2">
                                             <label class="text-[10px] font-semibold text-sistran-body">Ano:</label>
@@ -6012,7 +6012,7 @@
 
             // Atualiza o valor numérico central
             const valorEl = document.getElementById('desempenho-global-valor');
-            if (valorEl) valorEl.textContent = valor.toFixed(1);
+            if (valorEl) valorEl.textContent = valor.toFixed(1).replace('.', ',');
 
             // Categorização por faixa conforme o ano de referência
             const faixas = getFaixasAno(anoSelecionado);
@@ -6024,9 +6024,9 @@
             const legendaEl = document.getElementById('idg-legenda');
             if (legendaEl) {
                 legendaEl.innerHTML = `
-                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-rose-500"></span> Crítico (IDG < ${faixas.critico})</div>
-                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-amber-500"></span> Atenção (${faixas.critico} ≤ IDG < ${faixas.atencao})</div>
-                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-emerald-500"></span> No caminho certo (IDG ≥ ${faixas.atencao})</div>
+                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-rose-500"></span> Crítico (< ${faixas.critico}%)</div>
+                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-amber-500"></span> Atenção (${faixas.critico}% ≤ IDG < ${faixas.atencao}%)</div>
+                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-emerald-500"></span> No caminho certo (≥ ${faixas.atencao}%)</div>
                 `;
             }
 
@@ -6053,7 +6053,7 @@
                         tooltip: {
                             filter: function(tooltipItem) { return tooltipItem.dataIndex === 0; },
                             callbacks: {
-                                label: function(ctx) { return ' IDG: ' + ctx.parsed.toFixed(1) + ' / 100'; }
+                                label: function(ctx) { return ' IDG: ' + ctx.parsed.toFixed(1).replace('.', ',') + '%'; }
                             }
                         }
                     }
@@ -6151,11 +6151,10 @@
             // Atualiza legenda dinâmica do Parcial
             const legendaParcialEl = document.getElementById('parcial-legenda');
             if (legendaParcialEl) {
-                const periodoLabel = anoSelecionado <= 2027 ? '2027' : anoSelecionado <= 2029 ? '2029' : anoSelecionado <= 2033 ? '2033' : '2035';
                 legendaParcialEl.innerHTML = `
-                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-rose-500"></span> Crítico (IDP < Lim. Inferior ${periodoLabel})</div>
-                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-amber-500"></span> Atenção (Lim. Inf. ≤ IDP < Lim. Sup. ${periodoLabel})</div>
-                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-emerald-500"></span> No caminho certo (IDP ≥ Lim. Superior ${periodoLabel})</div>
+                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-rose-500"></span> Crítico (%)</div>
+                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-amber-500"></span> Atenção (%)</div>
+                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-emerald-500"></span> No caminho certo (%)</div>
                 `;
             }
 
@@ -6168,9 +6167,9 @@
                 data: { labels: labels, datasets: [{ label: 'Índice Parcial', data: dataValues, backgroundColor: bgColors, borderRadius: 3 }] },
                 options: {
                     indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false }, tooltip: { callbacks: { title: function(items) { return tooltipLabels[items[0].dataIndex] || ''; }, label: function(ctx) { return ' Índice: ' + ctx.parsed.x.toFixed(3); } } } },
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { title: function(items) { return tooltipLabels[items[0].dataIndex] || ''; }, label: function(ctx) { return ' Índice: ' + ctx.parsed.x.toFixed(3).replace('.', ',') + '%'; } } } },
                     scales: {
-                        x: { beginAtZero: true, title: { display: true, text: 'Índice de Desempenho Parcial (por Eixo)', font: { size: 11, family: 'Open Sans', weight: '600' } }, ticks: { font: { size: 10 } }, grid: { color: 'rgba(0,0,0,0.05)' } },
+                        x: { beginAtZero: true, title: { display: true, text: 'Índice de Desempenho Parcial por Eixo (%)', font: { size: 11, family: 'Open Sans', weight: '600' } }, ticks: { font: { size: 10 } }, grid: { color: 'rgba(0,0,0,0.05)' } },
                         y: { ticks: { font: { size: 11, family: 'Open Sans' } }, grid: { display: false } }
                     }
                 }
@@ -6227,9 +6226,9 @@
             const legendaIndEl = document.getElementById('indicadores-legenda');
             if (legendaIndEl) {
                 legendaIndEl.innerHTML = `
-                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-rose-500"></span> Crítico (< ${faixasIndicadores.critico})</div>
-                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-amber-500"></span> Atenção (${faixasIndicadores.critico} ≤ valor < ${faixasIndicadores.atencao})</div>
-                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-emerald-500"></span> No caminho certo (≥ ${faixasIndicadores.atencao})</div>
+                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-rose-500"></span> Crítico (%)</div>
+                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-amber-500"></span> Atenção (%)</div>
+                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-emerald-500"></span> No caminho certo (%)</div>
                 `;
             }
 
@@ -6301,10 +6300,10 @@
                 options: {
                     responsive: true, maintainAspectRatio: false,
                     layout: { padding: { top: 35, bottom: 10 } },
-                    plugins: { legend: { display: false }, tooltip: { callbacks: { title: function(items) { const idx = items[0].dataIndex; return dadosFiltrados[idx] ? dadosFiltrados[idx].indicadorKey : ''; }, label: function(ctx) { return ' Valor: ' + ctx.parsed.y; } } } },
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { title: function(items) { const idx = items[0].dataIndex; return dadosFiltrados[idx] ? dadosFiltrados[idx].indicadorKey : ''; }, label: function(ctx) { return ' Valor do Resultado: ' + String(ctx.parsed.y).replace('.', ',') + '%'; } } } },
                     scales: {
                         x: { ticks: { font: { size: 9, family: 'Open Sans' }, maxRotation: 45 }, grid: { display: false }, title: { display: true, text: 'Indicador de Desempenho', font: { size: 11, family: 'Open Sans', weight: '600' }, padding: { top: 10 } } },
-                        y: { beginAtZero: true, max: 100, title: { display: true, text: 'Resultado do Indicador de Desempenho', font: { size: 11, family: 'Open Sans', weight: '600' } }, ticks: { font: { size: 10 } }, grid: { color: 'rgba(0,0,0,0.05)' } }
+                        y: { beginAtZero: true, max: 100, title: { display: true, text: 'Resultado do Indicador de Desempenho (%)', font: { size: 11, family: 'Open Sans', weight: '600' } }, ticks: { font: { size: 10 } }, grid: { color: 'rgba(0,0,0,0.05)' } }
                     }
                 }
             });
