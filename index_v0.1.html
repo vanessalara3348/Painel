@@ -1309,6 +1309,12 @@
                                             <p class="text-xs font-bold text-sistran-heading">Índice de Desempenho Global</p>
                                             <p class="text-[10px] text-sistran-body">O Índice de Desempenho Global (IDG) avalia se os objetivos estratégicos estão progredindo conforme o planejado, consolidando os resultados dos 8 eixos em uma escala de 0 a 100.</p>
                                         </div>
+                                        <div class="flex items-center gap-2 flex-shrink-0">
+                                            <label class="text-[10px] font-semibold text-sistran-body">Ano:</label>
+                                            <select id="filter-chart-global-ano" onchange="renderChartDesempenhoGlobal()" class="text-[10px] p-1.5 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold font-semibold">
+                                                <option value="2024" selected>2024 (Base)</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div class="flex items-center justify-center">
                                         <div class="w-[280px] h-[160px] relative">
@@ -5943,11 +5949,45 @@
 
         function renderChartDesempenhoGlobal() {
             const canvas = document.getElementById('chartDesempenhoGlobal');
-            if (!canvas || desempenhoSpreadsheetData.length === 0) return;
+            if (!canvas) return;
 
-            // Soma total do INDICE_Oliveira (máximo teórico = 100)
-            const totalOliveira = desempenhoSpreadsheetData.reduce((sum, d) => sum + (d.indiceOliveira || 0), 0);
-            const valor = Math.min(parseFloat(totalOliveira.toFixed(1)), 100);
+            // Pesos por eixo (mesmos do Índice Parcial)
+            const pesosEixo = { '1': 0.03, '2': 0.017, '3': 0.004, '4': 0.034, '5': 0.022, '6': 0.026, '7': 0.009, '8': 0.013 };
+
+            // Popula filtro de ano dinamicamente
+            const filterAnoGlobal = document.getElementById('filter-chart-global-ano');
+            if (filterAnoGlobal) {
+                const allData = getDesempenhoDataComSubmissoes();
+                const anosUnicos = [...new Set(allData.map(d => d.ano).filter(Boolean))].sort();
+                const anoAtual = filterAnoGlobal.value;
+                filterAnoGlobal.innerHTML = '';
+                anosUnicos.forEach(a => {
+                    const opt = document.createElement('option');
+                    opt.value = a;
+                    opt.textContent = a === 2024 ? a + ' (Base)' : a;
+                    filterAnoGlobal.appendChild(opt);
+                });
+                filterAnoGlobal.value = anoAtual && anosUnicos.includes(parseInt(anoAtual)) ? anoAtual : '2024';
+            }
+
+            const anoSelecionado = filterAnoGlobal ? parseInt(filterAnoGlobal.value) : 2024;
+
+            // Calcula IDG = soma dos Índices Parciais de todos os eixos para o ano selecionado
+            const allData = getDesempenhoDataComSubmissoes();
+            const dadosDoAno = allData.filter(d => d.ano === anoSelecionado);
+
+            const eixosRef = [...new Set(desempenhoSpreadsheetData.map(d => d.eixoKey).filter(Boolean))];
+            let idgTotal = 0;
+            eixosRef.forEach(eixo => {
+                const eixoNum = eixo.replace(/\D/g, '').charAt(0);
+                const peso = pesosEixo[eixoNum] || 0;
+                const indicadoresDoEixo = dadosDoAno.filter(d => d.eixoKey === eixo);
+                if (indicadoresDoEixo.length > 0) {
+                    idgTotal += indicadoresDoEixo.reduce((sum, d) => sum + ((d.valorIndicador || 0) * peso), 0);
+                }
+            });
+
+            const valor = Math.min(parseFloat(idgTotal.toFixed(1)), 100);
             const restante = Math.max(100 - valor, 0);
 
             // Atualiza o valor numérico central
@@ -5982,7 +6022,7 @@
                         tooltip: {
                             filter: function(tooltipItem) { return tooltipItem.dataIndex === 0; },
                             callbacks: {
-                                label: function(ctx) { return ' Índice: ' + ctx.parsed.toFixed(1) + ' / 100'; }
+                                label: function(ctx) { return ' IDG: ' + ctx.parsed.toFixed(1) + ' / 100'; }
                             }
                         }
                     }
@@ -6312,6 +6352,7 @@
             buildDesempenhoTable();
             renderChartValorIndicador();
             renderChartOliveiraEixo();
+            renderChartDesempenhoGlobal();
         }
 
     </script>
