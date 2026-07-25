@@ -337,11 +337,6 @@ function buildImplementacaoTable() {
         tbody.appendChild(tr);
     }
 
-    // Refresh Lucide icons if available
-    if (typeof lucide !== 'undefined' && lucide.createIcons) {
-        lucide.createIcons();
-    }
-
     // Update summary cards
     updateImplementacaoSummary();
 }

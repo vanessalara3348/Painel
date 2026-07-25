@@ -8,10 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- FontAwesome para Ícones -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Ícones Lucide para componentes modernos -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+
     <!-- SheetJS para processamento de planilhas Excel em tempo real -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     
@@ -259,7 +256,6 @@
         aside.collapsed #submenu-coleta,
         aside.collapsed nav p,
         aside.collapsed nav span:not(.tab-title),
-        aside.collapsed nav .fa-chevron-down,
         aside.collapsed > div:last-child {
             display: none !important;
         }
@@ -397,7 +393,7 @@
                 </div>
                 <!-- Botão recolher/expandir sidebar (visível apenas em desktop) -->
                 <button onclick="toggleSidebarCollapse()" class="hidden md:flex items-center justify-center w-7 h-7 rounded-full hover:bg-sistran-gold-surface transition-colors text-sistran-muted hover:text-sistran-gold" title="Recolher menu">
-                    <i id="sidebar-collapse-icon" class="fa-solid fa-chevron-left text-xs transition-transform duration-300"></i>
+                    <span class="material-symbols-outlined transition-transform duration-300" id="sidebar-collapse-icon" style="font-size:14px;">chevron_left</span>
                 </button>
             </div>
 
@@ -409,28 +405,28 @@
                 <div class="space-y-1">
                     <button onclick="togglePublicSubmenu()" id="nav-publico" class="w-full flex items-center justify-between px-3 py-2.5 rounded-md text-sistran-body hover:bg-zinc-100 transition duration-150 text-left">
                         <div class="flex items-center gap-3">
-                            <i class="fa-solid fa-users text-lg w-5 flex-shrink-0 text-sistran-body"></i>
+                            <span class="material-symbols-outlined flex-shrink-0 text-sistran-body" style="font-size:20px;">groups</span>
                             <span class="tab-title text-xs font-bold text-sistran-heading">Apresentação dos Resultados</span>
                         </div>
-                        <i id="chevron-publico" class="fa-solid fa-chevron-down text-xs transition-transform duration-200 text-sistran-muted"></i>
+                        <span class="material-symbols-outlined transition-transform duration-200 text-sistran-muted" id="chevron-publico" style="font-size:14px;">expand_more</span>
                     </button>
                     
                     <!-- Submenu das Seções do Painel (Sem numeração) -->
                     <div id="submenu-publico" class="hidden pl-6 space-y-1 overflow-hidden transition-all duration-300 border-l-2 border-sistran-border ml-5 mt-1">
                         <button onclick="selectPublicSubitem('introducao')" id="subitem-introducao" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-medium text-sistran-body hover:bg-zinc-100 hover:text-sistran-heading transition-colors text-left">
-                            <i data-lucide="home" class="w-4 h-4 text-sistran-muted flex-shrink-0"></i>
+                            <span class="material-symbols-outlined text-sistran-muted flex-shrink-0" style="font-size:18px;">home</span>
                             <span>Introdução</span>
                         </button>
                         <button onclick="selectPublicSubitem('impacto')" id="subitem-impacto" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-medium text-sistran-body hover:bg-zinc-100 hover:text-sistran-heading transition-colors text-left">
-                            <i data-lucide="trending-down" class="w-4 h-4 text-sistran-muted flex-shrink-0"></i>
+                            <span class="material-symbols-outlined text-sistran-muted flex-shrink-0" style="font-size:18px;">trending_down</span>
                             <span>Impacto</span>
                         </button>
                         <button onclick="selectPublicSubitem('desempenho')" id="subitem-desempenho" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-medium text-sistran-body hover:bg-zinc-100 hover:text-sistran-heading transition-colors text-left">
-                            <i data-lucide="activity" class="w-4 h-4 text-sistran-muted flex-shrink-0"></i>
+                            <span class="material-symbols-outlined text-sistran-muted flex-shrink-0" style="font-size:18px;">monitoring</span>
                             <span>Desempenho</span>
                         </button>
                         <button onclick="selectPublicSubitem('implementacao')" id="subitem-implementacao" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-medium text-sistran-body hover:bg-zinc-100 hover:text-sistran-heading transition-colors text-left">
-                            <i data-lucide="check-square" class="w-4 h-4 text-sistran-muted flex-shrink-0"></i>
+                            <span class="material-symbols-outlined text-sistran-muted flex-shrink-0" style="font-size:18px;">check_box</span>
                             <span>Implementação</span>
                         </button>
                     </div>
@@ -440,20 +436,20 @@
                 <div class="space-y-1">
                     <button onclick="toggleColetaSubmenu()" id="nav-coleta" class="w-full flex items-center justify-between px-3 py-2.5 rounded-md text-sistran-body hover:bg-zinc-100 transition duration-150 text-left">
                         <div class="flex items-center gap-3">
-                            <i class="fa-solid fa-file-pen text-lg w-5 flex-shrink-0 text-sistran-body"></i>
+                            <span class="material-symbols-outlined flex-shrink-0 text-sistran-body" style="font-size:20px;">edit_document</span>
                             <span class="tab-title text-xs font-bold text-sistran-heading">Coleta de Dados</span>
                         </div>
-                        <i id="chevron-coleta" class="fa-solid fa-chevron-down text-xs transition-transform duration-200 text-sistran-muted"></i>
+                        <span class="material-symbols-outlined transition-transform duration-200 text-sistran-muted" id="chevron-coleta" style="font-size:14px;">expand_more</span>
                     </button>
                     
                     <!-- Submenu colapsável para Coleta de Dados -->
                     <div id="submenu-coleta" class="hidden pl-6 space-y-1 overflow-hidden transition-all duration-300 border-l-2 border-sistran-border ml-5 mt-1">
                         <button onclick="selectColetaSubitem('formulario')" id="subitem-formulario" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-medium text-sistran-body hover:bg-zinc-100 hover:text-sistran-heading transition-colors text-left">
-                            <i data-lucide="file-text" class="w-4 h-4 text-sistran-muted flex-shrink-0"></i>
+                            <span class="material-symbols-outlined text-sistran-muted flex-shrink-0" style="font-size:18px;">description</span>
                             <span>Formulário de Submissão</span>
                         </button>
                         <button onclick="selectColetaSubitem('historico')" id="subitem-historico" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-medium text-sistran-body hover:bg-zinc-100 hover:text-sistran-heading transition-colors text-left">
-                            <i data-lucide="history" class="w-4 h-4 text-sistran-muted flex-shrink-0"></i>
+                            <span class="material-symbols-outlined text-sistran-muted flex-shrink-0" style="font-size:18px;">history</span>
                             <span>Histórico de Produtos</span>
                         </button>
                     </div>
@@ -461,7 +457,7 @@
 
                 <!-- 3. Acompanhamento e Consulta dos Resultados -->
                 <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sistran-body hover:bg-zinc-100 transition duration-150 text-left">
-                    <i class="fa-solid fa-chart-line text-lg w-5 flex-shrink-0 text-sistran-body"></i>
+                    <span class="material-symbols-outlined flex-shrink-0 text-sistran-body" style="font-size:20px;">show_chart</span>
                     <span class="tab-title text-xs font-bold text-sistran-heading">Acompanhamento e Consulta dos Resultados</span>
                 </button>
 
@@ -469,27 +465,27 @@
                 <div class="space-y-1">
                     <button onclick="toggleValidacaoSubmenu()" id="nav-validacao" class="w-full flex items-center justify-between px-3 py-2.5 rounded-md text-sistran-body hover:bg-zinc-100 transition duration-150 text-left">
                         <div class="flex items-center gap-3 flex-1">
-                            <i class="fa-solid fa-shield-halved text-lg w-5 flex-shrink-0 text-sistran-body"></i>
+                            <span class="material-symbols-outlined flex-shrink-0 text-sistran-body" style="font-size:20px;">shield</span>
                             <span class="tab-title text-xs font-bold text-sistran-heading">Monitoramento e Validação</span>
                         </div>
                         <div class="flex items-center gap-1.5">
                             <span id="badge-validar" class="bg-sistran-yellow text-sistran-ink font-bold px-1.5 py-0.2 rounded text-[9px]">1</span>
-                            <i id="chevron-validacao" class="fa-solid fa-chevron-down text-xs transition-transform duration-200 text-sistran-muted"></i>
+                            <span class="material-symbols-outlined transition-transform duration-200 text-sistran-muted" id="chevron-validacao" style="font-size:14px;">expand_more</span>
                         </div>
                     </button>
                     
                     <!-- Submenu colapsável para Monitoramento e Validação -->
                     <div id="submenu-validacao" class="hidden pl-6 space-y-1 overflow-hidden transition-all duration-300 border-l-2 border-sistran-border ml-5 mt-1">
                         <button onclick="selectValidacaoSubitem('validacao')" id="subitem-validacao" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-medium text-sistran-body hover:bg-zinc-100 hover:text-sistran-heading transition-colors text-left">
-                            <i data-lucide="shield-check" class="w-4 h-4 text-sistran-muted flex-shrink-0"></i>
+                            <span class="material-symbols-outlined text-sistran-muted flex-shrink-0" style="font-size:18px;">verified_user</span>
                             <span>Validação</span>
                         </button>
                         <button onclick="selectValidacaoSubitem('produtos-validados')" id="subitem-produtos-validados" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-medium text-sistran-body hover:bg-zinc-100 hover:text-sistran-heading transition-colors text-left">
-                            <i data-lucide="history" class="w-4 h-4 text-sistran-muted flex-shrink-0"></i>
+                            <span class="material-symbols-outlined text-sistran-muted flex-shrink-0" style="font-size:18px;">history</span>
                             <span>Produtos Validados</span>
                         </button>
                         <button onclick="selectValidacaoSubitem('form-desempenho')" id="subitem-form-desempenho" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-medium text-sistran-body hover:bg-zinc-100 hover:text-sistran-heading transition-colors text-left">
-                            <i data-lucide="bar-chart-2" class="w-4 h-4 text-sistran-muted flex-shrink-0"></i>
+                            <span class="material-symbols-outlined text-sistran-muted flex-shrink-0" style="font-size:18px;">bar_chart</span>
                             <span>Formulário Submissão Dados de Desempenho</span>
                         </button>
                     </div>
@@ -500,7 +496,7 @@
 
                 <!-- Suporte Técnico -->
                 <button onclick="openSupportModal()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sistran-body hover:bg-zinc-100 transition duration-150 text-left">
-                    <i class="fa-solid fa-headset text-lg w-5 text-sistran-body flex-shrink-0"></i>
+                    <span class="material-symbols-outlined text-sistran-body flex-shrink-0" style="font-size:20px;">support_agent</span>
                     <span class="text-xs font-bold leading-tight text-sistran-heading">Suporte Técnico</span>
                 </button>
             </nav>
@@ -518,7 +514,7 @@
             <header class="bg-sistran-surface border-b border-sistran-border h-16 flex items-center justify-between px-3 md:px-6 flex-shrink-0 z-10">
                 <div class="flex items-center gap-2 md:gap-4 min-w-0 flex-1">
                     <button class="md:hidden text-sistran-ink hover:text-sistran-gold flex-shrink-0" id="mobile-menu-btn">
-                        <i class="fa-solid fa-bars text-xl"></i>
+                        <span class="material-symbols-outlined" style="font-size:24px;">menu</span>
                     </button>
                     <div class="min-w-0">
                         <h2 class="text-[10px] md:text-sm font-bold text-sistran-gold leading-tight truncate">PLANO DE SEGURANÇA VIÁRIA DO ESTADO DE SÃO PAULO - PSV-SP (2025-2035)</h2>
@@ -548,10 +544,10 @@
                             </div>
                             <div class="py-2">
                                 <button class="w-full flex items-center gap-3 px-5 py-2.5 text-xs text-sistran-body hover:bg-sistran-surface-muted transition text-left">
-                                    <i class="fa-solid fa-user text-sistran-gold w-4"></i> Dados Pessoais
+                                    <span class="material-symbols-outlined text-sistran-gold" style="font-size:20px;">person</span> Dados Pessoais
                                 </button>
                                 <button onclick="handleProfileLogout()" id="profile-logout-btn" class="w-full flex items-center gap-3 px-5 py-2.5 text-xs text-rose-500 hover:bg-rose-50 transition text-left">
-                                    <i class="fa-solid fa-right-from-bracket w-4"></i> Sair
+                                    <span class="material-symbols-outlined" style="font-size:20px;">logout</span> Sair
                                 </button>
                             </div>
                         </div>
@@ -569,7 +565,7 @@
                 <!-- MODAL DE NOTIFICAÇÃO DO TOAST -->
                 <div id="custom-notification" class="hidden fixed bottom-5 right-5 bg-sistran-ink text-white px-6 py-4 rounded-md shadow-card flex items-center gap-3 border border-sistran-border max-w-sm z-50 transform translate-y-0 transition duration-300">
                     <span id="notif-icon-container" class="p-2 rounded-sm bg-sistran-yellow text-sistran-ink">
-                        <i id="notif-icon" class="fa-solid fa-circle-check"></i>
+                        <span class="material-symbols-outlined" id="notif-icon" style="font-size:20px;">check_circle</span>
                     </span>
                     <div>
                         <h4 id="notif-title" class="font-bold text-sm text-white">Sucesso!</h4>
@@ -592,7 +588,7 @@
                                 <!-- Título da Seção -->
                                 <h2 class="text-2xl font-bold text-sistran-heading flex items-center gap-2.5">
                                     <span class="w-8 h-8 bg-sistran-ink rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i data-lucide="home" class="w-5 h-5 text-sistran-yellow"></i>
+                                        <span class="material-symbols-outlined text-sistran-yellow" style="font-size:22px;">home</span>
                                     </span>
                                     Sistema Integrado de Monitoramento (SIMO)
                                 </h2>
@@ -601,7 +597,7 @@
                                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" style="grid-template-rows: auto 1fr auto auto;">
                                     <!-- Card IMPACTO -->
                                     <div class="bg-amber-50 border border-amber-200 rounded-md p-5 shadow-subtle hover:shadow-hover hover:-translate-y-0.5 transition duration-card" style="display:grid; grid-template-rows: subgrid; grid-row: span 4;">
-                                        <p class="text-sm font-extrabold text-sistran-gold uppercase tracking-wider mb-4 flex items-center gap-1.5"><i data-lucide="trending-down" class="w-5 h-5"></i>Impacto</p>
+                                        <p class="text-sm font-extrabold text-sistran-gold uppercase tracking-wider mb-4 flex items-center gap-1.5"><span class="material-symbols-outlined" style="font-size:22px;">trending_down</span>Impacto</p>
                                         <div class="flex flex-col items-center justify-center min-h-[140px]">
                                             <h3 class="text-4xl font-extrabold text-sistran-heading" id="card-impacto-valor">-5.1%</h3>
                                             <p class="text-xs text-sistran-heading text-center mt-2">
@@ -615,7 +611,7 @@
                                     </div>
                                     <!-- Card DESEMPENHO -->
                                     <div class="bg-amber-50 border border-amber-200 rounded-md p-5 shadow-subtle hover:shadow-hover hover:-translate-y-0.5 transition duration-card" style="display:grid; grid-template-rows: subgrid; grid-row: span 4;">
-                                        <p class="text-sm font-extrabold text-sistran-gold uppercase tracking-wider mb-4 flex items-center gap-1.5"><i data-lucide="activity" class="w-5 h-5"></i>Desempenho</p>
+                                        <p class="text-sm font-extrabold text-sistran-gold uppercase tracking-wider mb-4 flex items-center gap-1.5"><span class="material-symbols-outlined" style="font-size:22px;">monitoring</span>Desempenho</p>
                                         <div class="flex flex-col items-center justify-center min-h-[140px]">
                                             <h3 class="text-4xl font-extrabold text-sistran-heading">58.1%</h3>
                                             <span class="text-xs font-semibold text-sistran-ink mt-1 inline-block">Regular</span>
@@ -629,7 +625,7 @@
                                     
                                     <!-- Card IMPLEMENTAÇÃO -->
                                     <div class="bg-amber-50 border border-amber-200 rounded-md p-5 shadow-subtle hover:shadow-hover hover:-translate-y-0.5 transition duration-card" style="display:grid; grid-template-rows: subgrid; grid-row: span 4;">
-                                        <p class="text-sm font-extrabold text-sistran-gold uppercase tracking-wider mb-4 flex items-center gap-1.5"><i data-lucide="check-square" class="w-5 h-5"></i>Implementação</p>
+                                        <p class="text-sm font-extrabold text-sistran-gold uppercase tracking-wider mb-4 flex items-center gap-1.5"><span class="material-symbols-outlined" style="font-size:22px;">check_box</span>Implementação</p>
                                         <div class="flex flex-col items-center justify-center min-h-[140px]">
                                             <div class="flex items-center justify-center gap-3">
                                                 <div class="w-20 h-20 flex-shrink-0">
@@ -655,7 +651,7 @@
                                 <!-- Caixa Notas e Fontes - compacta, caixa retangular no hover -->
                                 <div class="flex justify-end">
                                     <div class="bg-sistran-surface-muted border border-sistran-border rounded-md px-3 py-1.5 cursor-default relative group inline-flex items-center gap-1.5">
-                                        <i data-lucide="info" class="w-3.5 h-3.5 text-sistran-gold"></i>
+                                        <span class="material-symbols-outlined text-sistran-gold" style="font-size:16px;">info</span>
                                         <span class="text-xs font-bold text-sistran-heading">Notas e Fontes</span>
                                         <!-- Caixa retangular no hover -->
                                         <div class="absolute top-full right-0 mt-2 w-72 bg-sistran-surface-muted border border-sistran-border text-[11px] text-sistran-body leading-relaxed rounded-md p-3 shadow-card opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
@@ -693,7 +689,7 @@
                                     <div class="border border-sistran-border rounded-md overflow-hidden">
                                         <button onclick="toggleAccordion('acc-intro-estrutura')" class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
                                             <h3 class="text-section text-sistran-heading flex items-center gap-2"><span class="material-symbols-outlined text-sistran-gold" style="font-size:24px;">account_tree</span> Estrutura do Plano de Segurança Viária do Estado de São Paulo (PSV-SP)</h3>
-                                            <i data-lucide="chevron-down" class="w-5 h-5 text-sistran-muted transition-transform flex-shrink-0" id="icon-acc-intro-estrutura"></i>
+                                            <span class="material-symbols-outlined text-sistran-muted transition-transform flex-shrink-0" id="icon-acc-intro-estrutura" style="font-size:22px;">expand_more</span>
                                         </button>
                                         <div id="acc-intro-estrutura" class="hidden p-4 bg-white border-t border-sistran-border space-y-3">
                                         <p class="text-body text-sistran-body leading-relaxed">
@@ -725,7 +721,7 @@
                                     <div class="border border-sistran-border rounded-md overflow-hidden">
                                         <button onclick="toggleAccordion('acc-intro-panorama')" class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
                                             <h3 class="text-section text-sistran-heading flex items-center gap-2"><span class="material-symbols-outlined text-sistran-gold" style="font-size:24px;">trending_down</span> Panorama da situação da segurança viária no Estado</h3>
-                                            <i data-lucide="chevron-down" class="w-5 h-5 text-sistran-muted transition-transform flex-shrink-0" id="icon-acc-intro-panorama"></i>
+                                            <span class="material-symbols-outlined text-sistran-muted transition-transform flex-shrink-0" id="icon-acc-intro-panorama" style="font-size:22px;">expand_more</span>
                                         </button>
                                         <div id="acc-intro-panorama" class="hidden p-4 bg-white border-t border-sistran-border space-y-3">
                                         <p class="text-body text-sistran-body leading-relaxed">
@@ -764,7 +760,7 @@
                                 <div class="border border-sistran-border rounded-md overflow-hidden">
                                     <button onclick="toggleAccordion('acc-intro-metas')" class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
                                         <h3 class="text-section text-sistran-heading flex items-center gap-2"><span class="material-symbols-outlined text-sistran-gold" style="font-size:24px;">flag</span> Estrutura das metas</h3>
-                                        <i data-lucide="chevron-down" class="w-5 h-5 text-sistran-muted transition-transform flex-shrink-0" id="icon-acc-intro-metas"></i>
+                                        <span class="material-symbols-outlined text-sistran-muted transition-transform flex-shrink-0" id="icon-acc-intro-metas" style="font-size:22px;">expand_more</span>
                                     </button>
                                     <div id="acc-intro-metas" class="hidden p-4 bg-white border-t border-sistran-border space-y-3">
                                     <p class="text-body text-sistran-body leading-relaxed">
@@ -805,7 +801,7 @@
                                 <div class="border border-sistran-border rounded-md overflow-hidden">
                                     <button onclick="toggleAccordion('acc-intro-indicadores')" class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
                                         <h3 class="text-section text-sistran-heading flex items-center gap-2"><span class="material-symbols-outlined text-sistran-gold" style="font-size:24px;">monitoring</span> Indicadores para monitoramento</h3>
-                                        <i data-lucide="chevron-down" class="w-5 h-5 text-sistran-muted transition-transform flex-shrink-0" id="icon-acc-intro-indicadores"></i>
+                                        <span class="material-symbols-outlined text-sistran-muted transition-transform flex-shrink-0" id="icon-acc-intro-indicadores" style="font-size:22px;">expand_more</span>
                                     </button>
                                     <div id="acc-intro-indicadores" class="hidden p-4 bg-white border-t border-sistran-border space-y-3">
                                     <p class="text-body text-sistran-body leading-relaxed">
@@ -826,7 +822,7 @@
                                 <div class="border border-sistran-border rounded-md overflow-hidden">
                                     <button onclick="toggleAccordion('acc-intro-fases')" class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
                                         <h3 class="text-section text-sistran-heading flex items-center gap-2"><span class="material-symbols-outlined text-sistran-gold" style="font-size:24px;">schedule</span> Fases de implementação</h3>
-                                        <i data-lucide="chevron-down" class="w-5 h-5 text-sistran-muted transition-transform flex-shrink-0" id="icon-acc-intro-fases"></i>
+                                        <span class="material-symbols-outlined text-sistran-muted transition-transform flex-shrink-0" id="icon-acc-intro-fases" style="font-size:22px;">expand_more</span>
                                     </button>
                                     <div id="acc-intro-fases" class="hidden p-4 bg-white border-t border-sistran-border space-y-3">
                                         <p class="text-body text-sistran-body leading-relaxed">
@@ -866,7 +862,7 @@
                                 <div class="border border-sistran-border rounded-md overflow-hidden">
                                     <button onclick="toggleAccordion('acc-intro-ciclo')" class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
                                         <h3 class="text-section text-sistran-heading flex items-center gap-2"><span class="material-symbols-outlined text-sistran-gold" style="font-size:24px;">sync</span> Ciclo de Monitoramento</h3>
-                                        <i data-lucide="chevron-down" class="w-5 h-5 text-sistran-muted transition-transform flex-shrink-0" id="icon-acc-intro-ciclo"></i>
+                                        <span class="material-symbols-outlined text-sistran-muted transition-transform flex-shrink-0" id="icon-acc-intro-ciclo" style="font-size:22px;">expand_more</span>
                                     </button>
                                     <div id="acc-intro-ciclo" class="hidden p-4 bg-white border-t border-sistran-border space-y-4">
                                         <p class="text-body text-sistran-body leading-relaxed">
@@ -954,7 +950,7 @@
                                         </button>
                                         <button onclick="toggleSecao('secao-github')" class="flex flex-col items-center gap-2 p-4 bg-sistran-surface-muted border border-sistran-border rounded-md hover:border-sistran-gold hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all text-center group">
                                             <div class="ds-icon-badge group-hover:scale-105 transition-transform">
-                                                <i class="fa-brands fa-github text-sistran-gold" style="font-size: 28px;"></i>
+                                                <span class="material-symbols-outlined text-sistran-gold" style="font-size:28px;">code</span>
                                             </div>
                                             <span class="text-xs font-semibold text-sistran-heading">Github</span>
                                         </button>
@@ -999,7 +995,7 @@
                                             <div class="border border-sistran-border rounded-md overflow-hidden">
                                                 <button onclick="toggleAccordion('gloss-1')" class="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
                                                     <strong class="text-xs text-sistran-heading">Infosiga</strong>
-                                                    <i data-lucide="chevron-down" class="w-4 h-4 text-sistran-muted transition-transform flex-shrink-0" id="icon-gloss-1"></i>
+                                                    <span class="material-symbols-outlined text-sistran-muted transition-transform flex-shrink-0" id="icon-gloss-1" style="font-size:18px;">expand_more</span>
                                                 </button>
                                                 <div id="gloss-1" class="hidden p-3 bg-white border-t border-sistran-border">
                                                     <p class="text-[11px] text-sistran-body leading-relaxed">Sistema de informações sobre sinistros de trânsito do Estado de São Paulo.</p>
@@ -1009,7 +1005,7 @@
                                             <div class="border border-sistran-border rounded-md overflow-hidden">
                                                 <button onclick="toggleAccordion('gloss-2')" class="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
                                                     <strong class="text-xs text-sistran-heading">PNATRANS</strong>
-                                                    <i data-lucide="chevron-down" class="w-4 h-4 text-sistran-muted transition-transform flex-shrink-0" id="icon-gloss-2"></i>
+                                                    <span class="material-symbols-outlined text-sistran-muted transition-transform flex-shrink-0" id="icon-gloss-2" style="font-size:18px;">expand_more</span>
                                                 </button>
                                                 <div id="gloss-2" class="hidden p-3 bg-white border-t border-sistran-border">
                                                     <p class="text-[11px] text-sistran-body leading-relaxed">Plano Nacional de Redução de Mortes e Lesões no Trânsito.</p>
@@ -1019,7 +1015,7 @@
                                             <div class="border border-sistran-border rounded-md overflow-hidden">
                                                 <button onclick="toggleAccordion('gloss-3')" class="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
                                                     <strong class="text-xs text-sistran-heading">PSV-SP</strong>
-                                                    <i data-lucide="chevron-down" class="w-4 h-4 text-sistran-muted transition-transform flex-shrink-0" id="icon-gloss-3"></i>
+                                                    <span class="material-symbols-outlined text-sistran-muted transition-transform flex-shrink-0" id="icon-gloss-3" style="font-size:18px;">expand_more</span>
                                                 </button>
                                                 <div id="gloss-3" class="hidden p-3 bg-white border-t border-sistran-border">
                                                     <p class="text-[11px] text-sistran-body leading-relaxed">Plano de Segurança Viária do Estado de São Paulo (2025-2035).</p>
@@ -1029,7 +1025,7 @@
                                             <div class="border border-sistran-border rounded-md overflow-hidden">
                                                 <button onclick="toggleAccordion('gloss-4')" class="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
                                                     <strong class="text-xs text-sistran-heading">SISTRAN-SP</strong>
-                                                    <i data-lucide="chevron-down" class="w-4 h-4 text-sistran-muted transition-transform flex-shrink-0" id="icon-gloss-4"></i>
+                                                    <span class="material-symbols-outlined text-sistran-muted transition-transform flex-shrink-0" id="icon-gloss-4" style="font-size:18px;">expand_more</span>
                                                 </button>
                                                 <div id="gloss-4" class="hidden p-3 bg-white border-t border-sistran-border">
                                                     <p class="text-[11px] text-sistran-body leading-relaxed">Sistema Estadual de Trânsito de São Paulo.</p>
@@ -1039,7 +1035,7 @@
                                             <div class="border border-sistran-border rounded-md overflow-hidden">
                                                 <button onclick="toggleAccordion('gloss-5')" class="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
                                                     <strong class="text-xs text-sistran-heading">Visão Zero</strong>
-                                                    <i data-lucide="chevron-down" class="w-4 h-4 text-sistran-muted transition-transform flex-shrink-0" id="icon-gloss-5"></i>
+                                                    <span class="material-symbols-outlined text-sistran-muted transition-transform flex-shrink-0" id="icon-gloss-5" style="font-size:18px;">expand_more</span>
                                                 </button>
                                                 <div id="gloss-5" class="hidden p-3 bg-white border-t border-sistran-border">
                                                     <p class="text-[11px] text-sistran-body leading-relaxed">Abordagem que considera inaceitável qualquer morte ou lesão grave no trânsito.</p>
@@ -1055,7 +1051,7 @@
                                             <div class="border border-sistran-border rounded-md overflow-hidden">
                                                 <button onclick="toggleAccordion('faq-1')" class="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
                                                     <strong class="text-xs text-sistran-heading">O que é o PSV-SP?</strong>
-                                                    <i data-lucide="chevron-down" class="w-4 h-4 text-sistran-muted transition-transform flex-shrink-0" id="icon-faq-1"></i>
+                                                    <span class="material-symbols-outlined text-sistran-muted transition-transform flex-shrink-0" id="icon-faq-1" style="font-size:18px;">expand_more</span>
                                                 </button>
                                                 <div id="faq-1" class="hidden p-3 bg-white border-t border-sistran-border">
                                                     <p class="text-[11px] text-sistran-body leading-relaxed">O Plano de Segurança Viária do Estado de São Paulo é o instrumento que orienta a política estadual de trânsito para o período de 2025 a 2035, com meta de reduzir em 50% as mortes até 2030.</p>
@@ -1065,7 +1061,7 @@
                                             <div class="border border-sistran-border rounded-md overflow-hidden">
                                                 <button onclick="toggleAccordion('faq-2')" class="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
                                                     <strong class="text-xs text-sistran-heading">Qual a meta principal?</strong>
-                                                    <i data-lucide="chevron-down" class="w-4 h-4 text-sistran-muted transition-transform flex-shrink-0" id="icon-faq-2"></i>
+                                                    <span class="material-symbols-outlined text-sistran-muted transition-transform flex-shrink-0" id="icon-faq-2" style="font-size:18px;">expand_more</span>
                                                 </button>
                                                 <div id="faq-2" class="hidden p-3 bg-white border-t border-sistran-border">
                                                     <p class="text-[11px] text-sistran-body leading-relaxed">Reduzir em 50% o número de óbitos no trânsito paulista até 2030, conforme alinhamento com a ONU e o PNATRANS.</p>
@@ -1075,7 +1071,7 @@
                                             <div class="border border-sistran-border rounded-md overflow-hidden">
                                                 <button onclick="toggleAccordion('faq-3')" class="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
                                                     <strong class="text-xs text-sistran-heading">Como os dados são coletados?</strong>
-                                                    <i data-lucide="chevron-down" class="w-4 h-4 text-sistran-muted transition-transform flex-shrink-0" id="icon-faq-3"></i>
+                                                    <span class="material-symbols-outlined text-sistran-muted transition-transform flex-shrink-0" id="icon-faq-3" style="font-size:18px;">expand_more</span>
                                                 </button>
                                                 <div id="faq-3" class="hidden p-3 bg-white border-t border-sistran-border">
                                                     <p class="text-[11px] text-sistran-body leading-relaxed">Os dados de óbitos são consolidados pelo sistema Infosiga, a partir de registros de boletins de ocorrência e declarações de óbito.</p>
@@ -1085,7 +1081,7 @@
                                             <div class="border border-sistran-border rounded-md overflow-hidden">
                                                 <button onclick="toggleAccordion('faq-4')" class="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
                                                     <strong class="text-xs text-sistran-heading">Como acompanhar o progresso?</strong>
-                                                    <i data-lucide="chevron-down" class="w-4 h-4 text-sistran-muted transition-transform flex-shrink-0" id="icon-faq-4"></i>
+                                                    <span class="material-symbols-outlined text-sistran-muted transition-transform flex-shrink-0" id="icon-faq-4" style="font-size:18px;">expand_more</span>
                                                 </button>
                                                 <div id="faq-4" class="hidden p-3 bg-white border-t border-sistran-border">
                                                     <p class="text-[11px] text-sistran-body leading-relaxed">O progresso pode ser acompanhado por meio deste painel (SIMO), que apresenta indicadores de impacto, desempenho e implementação.</p>
@@ -1103,7 +1099,7 @@
                                         <!-- Card: Plano de Ação PSV-SP (Ciclo 2025–2027) -->
                                         <a href="#" onclick="mockDownload('Plano-de-Acao-Ciclo-1-2025-2027.pdf'); return false;" class="bg-white border border-sistran-border rounded-lg p-4 hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all group flex flex-col items-center text-center">
                                             <div class="w-10 h-10 bg-sistran-gold/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-sistran-gold/20 transition-colors mb-3">
-                                                <i data-lucide="file-check" class="w-5 h-5 text-sistran-gold"></i>
+                                                <span class="material-symbols-outlined text-sistran-gold" style="font-size:22px;">task</span>
                                             </div>
                                             <h4 class="text-[11px] font-bold text-sistran-heading mb-1 leading-tight">Plano de Ação PSV-SP (Ciclo 2025–2027)</h4>
                                             <p class="text-[10px] text-sistran-body leading-snug">Cronograma anual detalhado das ações prioritárias a serem desenvolvidas e pactuadas entre os órgãos integradores do SISTRAN-SP para mitigação de riscos de sinistros.</p>
@@ -1112,7 +1108,7 @@
                                         <!-- Card: Plano Detalhado de Ações de Impacto Anual 2026 -->
                                         <a href="#" onclick="mockDownload('Plano-Anual-Acoes-2026.pdf'); return false;" class="bg-white border border-sistran-border rounded-lg p-4 hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all group flex flex-col items-center text-center">
                                             <div class="w-10 h-10 bg-sistran-gold/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-sistran-gold/20 transition-colors mb-3">
-                                                <i data-lucide="clipboard-list" class="w-5 h-5 text-sistran-gold"></i>
+                                                <span class="material-symbols-outlined text-sistran-gold" style="font-size:22px;">assignment</span>
                                             </div>
                                             <h4 class="text-[11px] font-bold text-sistran-heading mb-1 leading-tight">Plano Detalhado de Ações de Impacto Anual 2026</h4>
                                             <p class="text-[10px] text-sistran-body leading-snug">Plano detalhado das ações de impacto anual com metas e indicadores pactuados para o exercício de 2026.</p>
@@ -1121,7 +1117,7 @@
                                         <!-- Card: Relatório Anual de Desempenho e Impacto 2025 -->
                                         <a href="#" onclick="mockDownload('Relatorio-Anual-Desempenho-2025.pdf'); return false;" class="bg-white border border-sistran-border rounded-lg p-4 hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all group flex flex-col items-center text-center">
                                             <div class="w-10 h-10 bg-sistran-gold/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-sistran-gold/20 transition-colors mb-3">
-                                                <i data-lucide="bar-chart-2" class="w-5 h-5 text-sistran-gold"></i>
+                                                <span class="material-symbols-outlined text-sistran-gold" style="font-size:22px;">bar_chart</span>
                                             </div>
                                             <h4 class="text-[11px] font-bold text-sistran-heading mb-1 leading-tight">Relatório Anual de Desempenho e Impacto 2025</h4>
                                             <p class="text-[10px] text-sistran-body leading-snug">Estudos científicos e técnicos de avaliação periódica de impacto sobre as mortes em vias municipais urbanas e rodovias no estado de São Paulo.</p>
@@ -1130,7 +1126,7 @@
                                         <!-- Card: Relatório Semestral de Indicadores Jul–Dez 2025 -->
                                         <a href="#" onclick="mockDownload('Relatorio-Semestral-2025-2.pdf'); return false;" class="bg-white border border-sistran-border rounded-lg p-4 hover:shadow-hover hover:-translate-y-0.5 transition duration-card-all group flex flex-col items-center text-center">
                                             <div class="w-10 h-10 bg-sistran-gold/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-sistran-gold/20 transition-colors mb-3">
-                                                <i data-lucide="calendar" class="w-5 h-5 text-sistran-gold"></i>
+                                                <span class="material-symbols-outlined text-sistran-gold" style="font-size:22px;">calendar_month</span>
                                             </div>
                                             <h4 class="text-[11px] font-bold text-sistran-heading mb-1 leading-tight">Relatório Semestral de Indicadores Jul–Dez 2025</h4>
                                             <p class="text-[10px] text-sistran-body leading-snug">Relatório semestral com indicadores consolidados de segurança viária do segundo semestre de 2025.</p>
@@ -1144,11 +1140,11 @@
                                 <div id="secao-github" class="hidden">
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                                         <a href="#" class="bg-white border border-sistran-border rounded-lg p-4 hover:shadow-hover transition group flex items-start gap-4">
-                                            <div class="w-10 h-10 bg-sistran-gold/10 rounded-full flex items-center justify-center flex-shrink-0"><i class="fa-brands fa-github text-sistran-gold" style="font-size:20px;"></i></div>
+                                            <div class="w-10 h-10 bg-sistran-gold/10 rounded-full flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-sistran-gold" style="font-size:20px;">code</span></div>
                                             <div><h4 class="text-[11px] font-bold text-sistran-heading mb-1">Repositório SIMO</h4><p class="text-[10px] text-sistran-body">Código-fonte do painel de monitoramento do PSV-SP.</p><p class="text-[9px] text-sistran-muted mt-1">github.com/sistran-sp/simo</p></div>
                                         </a>
                                         <a href="#" class="bg-white border border-sistran-border rounded-lg p-4 hover:shadow-hover transition group flex items-start gap-4">
-                                            <div class="w-10 h-10 bg-sistran-gold/10 rounded-full flex items-center justify-center flex-shrink-0"><i class="fa-brands fa-github text-sistran-gold" style="font-size:20px;"></i></div>
+                                            <div class="w-10 h-10 bg-sistran-gold/10 rounded-full flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-sistran-gold" style="font-size:20px;">code</span></div>
                                             <div><h4 class="text-[11px] font-bold text-sistran-heading mb-1">Scripts de Análise</h4><p class="text-[10px] text-sistran-body">Notebooks e scripts R/Python para processamento dos dados do Infosiga.</p><p class="text-[9px] text-sistran-muted mt-1">github.com/sistran-sp/analises</p></div>
                                         </a>
                                     </div>
@@ -1199,7 +1195,7 @@
 
                                 <div class="bg-gray-50 p-4 rounded-md border border-sistran-border mb-6">
                                     <p class="text-xs font-bold text-sistran-heading mb-3 flex items-center gap-2">
-                                        <i data-lucide="filter" class="w-4 h-4 text-sistran-gold"></i>
+                                        <span class="material-symbols-outlined text-sistran-gold" style="font-size:18px;">filter_list</span>
                                         Filtros de Séries Históricas e Projeções
                                     </p>
                                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -1250,7 +1246,7 @@
                                             <p class="text-[10px] font-bold text-sistran-muted uppercase">Mortalidade de Motociclistas</p>
                                             <h4 class="text-lg font-bold text-sistran-heading">2.340 óbitos</h4>
                                             <p class="text-xs text-rose-500 mt-1 flex items-center gap-0.5 font-semibold">
-                                                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> +1.2% versus 2024
+                                                <span class="material-symbols-outlined" style="font-size:16px;">trending_up</span> +1.2% versus 2024
                                             </p>
                                         </div>
                                         <span class="p-2 bg-rose-50 text-rose-500 rounded text-xs font-bold">Crítico</span>
@@ -1260,7 +1256,7 @@
                                             <p class="text-[10px] font-bold text-sistran-muted uppercase">Mortalidade de Pedestres</p>
                                             <h4 class="text-lg font-bold text-sistran-heading">1.104 óbitos</h4>
                                             <p class="text-xs text-rose-500 mt-1 flex items-center gap-0.5 font-semibold">
-                                                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> +1.2% versus 2024
+                                                <span class="material-symbols-outlined" style="font-size:16px;">trending_up</span> +1.2% versus 2024
                                             </p>
                                         </div>
                                         <span class="p-2 bg-rose-50 text-rose-500 rounded text-xs font-bold">Crítico</span>
@@ -1270,7 +1266,7 @@
                                             <p class="text-[10px] font-bold text-sistran-muted uppercase">Mortalidade de Ciclistas</p>
                                             <h4 class="text-lg font-bold text-sistran-heading">320 óbitos</h4>
                                             <p class="text-xs text-emerald-500 mt-1 flex items-center gap-0.5 font-semibold">
-                                                <i data-lucide="trending-down" class="w-3.5 h-3.5"></i> -2.2% versus 2024
+                                                <span class="material-symbols-outlined" style="font-size:16px;">trending_down</span> -2.2% versus 2024
                                             </p>
                                         </div>
                                         <span class="p-2 bg-emerald-50 text-emerald-500 rounded text-xs font-bold">Seguro</span>
@@ -1286,7 +1282,7 @@
                                     <div>
                                         <h2 class="text-2xl font-bold text-sistran-heading flex items-center gap-2.5">
                                             <span class="w-8 h-8 bg-sistran-ink rounded-full flex items-center justify-center flex-shrink-0">
-                                                <i data-lucide="activity" class="w-5 h-5 text-sistran-yellow"></i>
+                                                <span class="material-symbols-outlined text-sistran-yellow" style="font-size:22px;">monitoring</span>
                                             </span>
                                             Metas de Desempenho
                                         </h2>
@@ -1294,10 +1290,10 @@
                                     </div>
                                     <div class="flex gap-2 flex-shrink-0">
                                         <button onclick="exportDesempenhoXLSX()" class="bg-white border-2 border-sistran-gold hover:bg-sistran-gold-surface text-sistran-ink font-bold py-2 px-4 rounded-pill text-xs flex items-center gap-1.5 transition">
-                                            <i data-lucide="download" class="w-4 h-4"></i> Exportar (.xlsx)
+                                            <span class="material-symbols-outlined" style="font-size:18px;">download</span> Exportar (.xlsx)
                                         </button>
                                         <button onclick="exportDesempenhoCSV()" class="bg-white border-2 border-sistran-gold hover:bg-sistran-gold-surface text-sistran-ink font-bold py-2 px-4 rounded-pill text-xs flex items-center gap-1.5 transition">
-                                            <i data-lucide="download" class="w-4 h-4"></i> Exportar (.csv)
+                                            <span class="material-symbols-outlined" style="font-size:18px;">download</span> Exportar (.csv)
                                         </button>
                                     </div>
                                 </div>
@@ -1379,7 +1375,7 @@
 
                                     <div class="bg-gray-50 p-4 border border-sistran-border rounded-md space-y-4">
                                         <p class="text-xs font-bold text-sistran-heading flex items-center gap-2">
-                                            <i data-lucide="filter" class="w-4 h-4 text-sistran-gold"></i>
+                                            <span class="material-symbols-outlined text-sistran-gold" style="font-size:18px;">filter_list</span>
                                             Filtros
                                             <button onclick="limparFiltrosDesempenho()" class="ml-auto bg-white border border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-semibold text-[10px] px-3 py-1 rounded-pill transition">Limpar Filtros</button>
                                         </p>
@@ -1435,7 +1431,7 @@
                                     <div>
                                         <h2 class="text-2xl font-bold text-sistran-heading flex items-center gap-2.5">
                                             <span class="w-8 h-8 bg-sistran-ink rounded-full flex items-center justify-center flex-shrink-0">
-                                                <i data-lucide="check-square" class="w-5 h-5 text-sistran-yellow"></i>
+                                                <span class="material-symbols-outlined text-sistran-yellow" style="font-size:22px;">check_box</span>
                                             </span>
                                             Metas de Implementação
                                         </h2>
@@ -1443,10 +1439,10 @@
                                     </div>
                                     <div class="flex gap-2 flex-shrink-0">
                                         <button onclick="exportImplementacaoXLSX()" class="bg-white border-2 border-sistran-gold hover:bg-sistran-gold-surface text-sistran-ink font-bold py-2 px-4 rounded-pill text-xs flex items-center gap-1.5 transition">
-                                            <i data-lucide="download" class="w-4 h-4"></i> Exportar (.xlsx)
+                                            <span class="material-symbols-outlined" style="font-size:18px;">download</span> Exportar (.xlsx)
                                         </button>
                                         <button onclick="exportImplementacaoCSV()" class="bg-white border-2 border-sistran-gold hover:bg-sistran-gold-surface text-sistran-ink font-bold py-2 px-4 rounded-pill text-xs flex items-center gap-1.5 transition">
-                                            <i data-lucide="download" class="w-4 h-4"></i> Exportar (.csv)
+                                            <span class="material-symbols-outlined" style="font-size:18px;">download</span> Exportar (.csv)
                                         </button>
                                     </div>
                                 </div>
@@ -1508,7 +1504,7 @@
 
                                 <div class="bg-gray-50 p-4 border border-sistran-border rounded-md space-y-4">
                                     <p class="text-xs font-bold text-sistran-heading flex items-center gap-2">
-                                        <i data-lucide="filter" class="w-4 h-4 text-sistran-gold"></i>
+                                        <span class="material-symbols-outlined text-sistran-gold" style="font-size:18px;">filter_list</span>
                                         Filtros
                                         <button onclick="limparFiltrosImplementacao()" class="ml-auto bg-white border border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-semibold text-[10px] px-3 py-1 rounded-pill transition">Limpar Filtros</button>
                                     </p>
@@ -1573,7 +1569,7 @@
                     <div id="validacao-auth-container" class="bg-white border border-sistran-border rounded-md p-8 max-w-md mx-auto shadow-card space-y-6">
                         <div class="text-center">
                             <div class="w-12 h-12 bg-sistran-gold-surface text-sistran-gold rounded-full flex items-center justify-center mx-auto mb-3">
-                                <i class="fa-solid fa-lock text-xl"></i>
+                                <span class="material-symbols-outlined" style="font-size:24px;">lock</span>
                             </div>
                             <h3 class="font-bold text-sistran-heading text-base">Acesso Restrito - Monitoramento e Validação</h3>
                             <p class="text-xs text-sistran-body mt-1">Identifique-se para acessar o ambiente de monitoramento e validação de entregas do PSV-SP.</p>
@@ -1590,7 +1586,7 @@
                                 <input type="password" value="••••••••" readonly class="w-full bg-gray-100 border border-sistran-border rounded-sm p-2.5 text-zinc-500 cursor-not-allowed">
                             </div>
                             <button onclick="handleRestrictedLogin('validacao')" class="w-full bg-sistran-yellow hover:bg-sistran-yellow-hover text-sistran-ink font-bold py-3 rounded-pill transition duration-150 flex items-center justify-center gap-2 text-xs">
-                                <i class="fa-solid fa-right-to-bracket"></i> Autenticar
+                                <span class="material-symbols-outlined" style="font-size:20px;">login</span> Autenticar
                             </button>
                         </div>
                     </div>
@@ -1605,7 +1601,7 @@
                             <div>
                                 <h2 class="text-2xl font-bold text-sistran-heading flex items-center gap-2.5">
                                     <span class="w-8 h-8 bg-sistran-ink rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i class="fa-solid fa-shield-halved text-sistran-yellow text-sm"></i>
+                                        <span class="material-symbols-outlined text-sistran-yellow" style="font-size:16px;">shield</span>
                                     </span>
                                     Validação de Produtos
                                 </h2>
@@ -1616,7 +1612,7 @@
                         <!-- Filtros da Validação - padrão Impacto -->
                         <div class="bg-gray-50 p-4 rounded-md border border-sistran-border mb-6">
                             <p class="text-xs font-bold text-sistran-heading mb-3 flex items-center gap-2">
-                                <i data-lucide="filter" class="w-4 h-4 text-sistran-gold"></i>
+                                <span class="material-symbols-outlined text-sistran-gold" style="font-size:18px;">filter_list</span>
                                 Filtros de Validação
                                 <button onclick="limparFiltrosValidacao()" class="ml-auto bg-white border border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-semibold text-[10px] px-3 py-1 rounded-pill transition">Limpar Filtros</button>
                             </p>
@@ -1675,21 +1671,21 @@
                                 <div>
                                     <h2 class="text-2xl font-bold text-sistran-heading flex items-center gap-2.5">
                                         <span class="w-8 h-8 bg-sistran-ink rounded-full flex items-center justify-center flex-shrink-0">
-                                            <i data-lucide="history" class="w-5 h-5 text-sistran-yellow"></i>
+                                            <span class="material-symbols-outlined text-sistran-yellow" style="font-size:22px;">history</span>
                                         </span>
                                         Produtos Validados
                                     </h2>
                                     <p class="text-xs text-sistran-body mt-2">Histórico de todos os produtos que foram aprovados ou reprovados.</p>
                                 </div>
                                 <button onclick="exportProdutosValidadosXLSX()" class="bg-white border-2 border-sistran-gold hover:bg-sistran-gold-surface text-sistran-ink font-bold py-2 px-4 rounded-pill text-xs flex items-center gap-1.5 transition flex-shrink-0">
-                                    <i data-lucide="download" class="w-4 h-4"></i> Exportar (.xlsx)
+                                    <span class="material-symbols-outlined" style="font-size:18px;">download</span> Exportar (.xlsx)
                                 </button>
                             </div>
 
                             <!-- Filtros dos Produtos Validados -->
                             <div class="bg-gray-50 p-4 rounded-md border border-sistran-border mb-4">
                                 <p class="text-xs font-bold text-sistran-heading mb-3 flex items-center gap-2">
-                                    <i data-lucide="filter" class="w-4 h-4 text-sistran-gold"></i>
+                                    <span class="material-symbols-outlined text-sistran-gold" style="font-size:18px;">filter_list</span>
                                     Filtros
                                     <button onclick="limparFiltrosProdutosValidados()" class="ml-auto bg-white border border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-semibold text-[10px] px-3 py-1 rounded-pill transition">Limpar Filtros</button>
                                 </p>
@@ -1753,7 +1749,7 @@
                             <div class="border-b border-sistran-border pb-4">
                                 <h2 class="text-2xl font-bold text-sistran-heading flex items-center gap-2.5">
                                     <span class="w-8 h-8 bg-sistran-ink rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i data-lucide="bar-chart-2" class="w-5 h-5 text-sistran-yellow"></i>
+                                        <span class="material-symbols-outlined text-sistran-yellow" style="font-size:22px;">bar_chart</span>
                                     </span>
                                     Formulário de Submissão de Resultados referentes aos Indicadores de Desempenho
                                 </h2>
@@ -1781,7 +1777,7 @@
                                 <!-- Botão Limpar Dados -->
                                 <div class="flex justify-end">
                                     <button type="button" onclick="limparFormularioDesempenho()" class="bg-white border border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-semibold text-[10px] px-4 py-1.5 rounded-pill transition flex items-center gap-1.5">
-                                        <i class="fa-solid fa-eraser"></i> Limpar Dados
+                                        <span class="material-symbols-outlined" style="font-size:20px;">delete_sweep</span> Limpar Dados
                                     </button>
                                 </div>
 
@@ -1841,7 +1837,7 @@
                                     <label class="block text-[10px] text-sistran-body mb-1">Upload de Arquivos Comprobatórios (PDF, JPEG, PNG, TIFF)</label>
                                     <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-sistran-border border-dashed rounded-md bg-sistran-surface-muted hover:bg-zinc-50 transition relative">
                                         <div class="space-y-1 text-center">
-                                            <i class="fa-solid fa-cloud-arrow-up text-3xl text-sistran-gold mb-2 block"></i>
+                                            <span class="material-symbols-outlined text-sistran-gold mb-2 block" style="font-size:32px;">cloud_upload</span>
                                             <div class="flex text-xs text-sistran-body justify-center">
                                                 <label for="form-desemp-file" class="relative cursor-pointer bg-white rounded-md font-semibold text-sistran-gold hover:text-sistran-heading focus-within:outline-none">
                                                     <span>Carregar arquivo comprovatório</span>
@@ -1866,7 +1862,7 @@
                                 </div>
 
                                 <button type="submit" class="w-full bg-sistran-yellow hover:bg-sistran-yellow-hover text-sistran-ink font-bold py-3 rounded-pill text-xs transition duration-150 flex items-center justify-center gap-2 shadow-sm">
-                                    <i class="fa-solid fa-paper-plane"></i> Submeter para Avaliação
+                                    <span class="material-symbols-outlined" style="font-size:20px;">send</span> Submeter para Avaliação
                                 </button>
                             </form>
                         </div>
@@ -1882,7 +1878,7 @@
                     <div id="coleta-auth-container" class="bg-white border border-sistran-border rounded-md p-8 max-w-md mx-auto shadow-card space-y-6">
                         <div class="text-center">
                             <div class="w-12 h-12 bg-sistran-gold-surface text-sistran-gold rounded-full flex items-center justify-center mx-auto mb-3">
-                                <i class="fa-solid fa-lock text-xl"></i>
+                                <span class="material-symbols-outlined" style="font-size:24px;">lock</span>
                             </div>
                             <h3 class="font-bold text-sistran-heading text-base">Acesso Restrito - Pontos Focais</h3>
                             <p class="text-xs text-sistran-body mt-1">Identifique-se de forma genérica para submeter relatórios de conformidade e produtos do PSV-SP.</p>
@@ -1900,7 +1896,7 @@
                                 <input type="password" value="••••••••" readonly class="w-full bg-gray-100 border border-sistran-border rounded-sm p-2.5 text-zinc-500 cursor-not-allowed">
                             </div>
                             <button onclick="handleColetaLogin()" class="w-full bg-sistran-yellow hover:bg-sistran-yellow-hover text-sistran-ink font-bold py-3 rounded-pill transition duration-150 flex items-center justify-center gap-2 text-xs">
-                                <i class="fa-solid fa-right-to-bracket"></i> Autenticar Ponto Focal
+                                <span class="material-symbols-outlined" style="font-size:20px;">login</span> Autenticar Ponto Focal
                             </button>
                         </div>
                     </div>
@@ -1916,7 +1912,7 @@
                                 <div class="border-b border-sistran-border pb-4">
                                     <h2 class="text-2xl font-bold text-sistran-heading flex items-center gap-2.5">
                                         <span class="w-8 h-8 bg-sistran-ink rounded-full flex items-center justify-center flex-shrink-0">
-                                            <i data-lucide="file-text" class="w-5 h-5 text-sistran-yellow"></i>
+                                            <span class="material-symbols-outlined text-sistran-yellow" style="font-size:22px;">description</span>
                                         </span>
                                         Formulário de Submissão de Produtos
                                     </h2>
@@ -1942,7 +1938,7 @@
                                         <p>Em caso de dúvidas, consulte a <strong>Cartilha para Envio de Produtos</strong> ou entre em contato com o <strong>Suporte Técnico</strong>, disponível no menu lateral.</p>
                                     </div>
                                     <a href="#" onclick="mockDownload('Cartilha-Envio-Produtos-PSV-SP.pdf'); return false;" class="inline-flex items-center gap-2 mt-3 bg-sistran-yellow hover:bg-sistran-yellow-hover text-sistran-ink font-bold py-2 px-4 rounded-pill text-xs transition duration-150">
-                                        <i data-lucide="book-open" class="w-4 h-4"></i> Cartilha para Envio de Produtos
+                                        <span class="material-symbols-outlined" style="font-size:18px;">menu_book</span> Cartilha para Envio de Produtos
                                     </a>
                                 </div>
 
@@ -1950,7 +1946,7 @@
                                     <!-- Botão Limpar Dados -->
                                     <div class="flex justify-end">
                                         <button type="button" onclick="limparFormularioColeta()" class="bg-white border border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-semibold text-[10px] px-4 py-1.5 rounded-pill transition flex items-center gap-1.5">
-                                            <i class="fa-solid fa-eraser"></i> Limpar Dados
+                                            <span class="material-symbols-outlined" style="font-size:20px;">delete_sweep</span> Limpar Dados
                                         </button>
                                     </div>
 
@@ -2027,7 +2023,7 @@
                                         <label class="block text-[10px] text-sistran-body mb-1">Upload de Arquivos Comprobatórios (PDF, JPEG, PNG, TIFF)</label>
                                         <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-sistran-border border-dashed rounded-md bg-sistran-surface-muted hover:bg-zinc-50 transition relative">
                                             <div class="space-y-1 text-center">
-                                                <i class="fa-solid fa-cloud-arrow-up text-3xl text-sistran-gold mb-2 block"></i>
+                                                <span class="material-symbols-outlined text-sistran-gold mb-2 block" style="font-size:32px;">cloud_upload</span>
                                                 <div class="flex text-xs text-sistran-body justify-center">
                                                     <label for="form-coleta-file" class="relative cursor-pointer bg-white rounded-md font-semibold text-sistran-gold hover:text-sistran-heading focus-within:outline-none">
                                                         <span>Carregar arquivo comprovatório</span>
@@ -2053,7 +2049,7 @@
                                     </div>
 
                                     <button type="submit" class="w-full bg-sistran-yellow hover:bg-sistran-yellow-hover text-sistran-ink font-bold py-3 rounded-pill text-xs transition duration-150 flex items-center justify-center gap-2 shadow-sm">
-                                        <i class="fa-solid fa-paper-plane"></i> Submeter para Avaliação
+                                        <span class="material-symbols-outlined" style="font-size:20px;">send</span> Submeter para Avaliação
                                     </button>
                                 </form>
                             </div>
@@ -2065,21 +2061,21 @@
                                 <div>
                                     <h2 class="text-2xl font-bold text-sistran-heading flex items-center gap-2.5">
                                         <span class="w-8 h-8 bg-sistran-ink rounded-full flex items-center justify-center flex-shrink-0">
-                                            <i data-lucide="history" class="w-5 h-5 text-sistran-yellow"></i>
+                                            <span class="material-symbols-outlined text-sistran-yellow" style="font-size:22px;">history</span>
                                         </span>
                                         Histórico de Produtos Enviados
                                     </h2>
                                     <p class="text-xs text-sistran-body mt-2">Acompanhe o status dos produtos enviados.</p>
                                 </div>
                                 <button onclick="exportHistoricoXLSX()" class="bg-white border-2 border-sistran-gold hover:bg-sistran-gold-surface text-sistran-ink font-bold py-2 px-4 rounded-pill text-xs flex items-center gap-1.5 transition flex-shrink-0">
-                                    <i data-lucide="download" class="w-4 h-4"></i> Exportar Histórico (.xlsx)
+                                    <span class="material-symbols-outlined" style="font-size:18px;">download</span> Exportar Histórico (.xlsx)
                                 </button>
                             </div>
 
                             <!-- Filtros do Histórico -->
                             <div class="bg-gray-50 p-4 rounded-md border border-sistran-border mb-4">
                                 <p class="text-xs font-bold text-sistran-heading mb-3 flex items-center gap-2">
-                                    <i data-lucide="filter" class="w-4 h-4 text-sistran-gold"></i>
+                                    <span class="material-symbols-outlined text-sistran-gold" style="font-size:18px;">filter_list</span>
                                     Filtros do Histórico
                                     <button onclick="limparFiltrosHistorico()" class="ml-auto bg-white border border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-semibold text-[10px] px-3 py-1 rounded-pill transition">Limpar Filtros</button>
                                 </p>
@@ -2146,7 +2142,7 @@
                     <div id="dashboard-auth-container" class="bg-white border border-sistran-border rounded-md p-8 max-w-md mx-auto shadow-card space-y-6">
                         <div class="text-center">
                             <div class="w-12 h-12 bg-sistran-gold-surface text-sistran-gold rounded-full flex items-center justify-center mx-auto mb-3">
-                                <i class="fa-solid fa-lock text-xl"></i>
+                                <span class="material-symbols-outlined" style="font-size:24px;">lock</span>
                             </div>
                             <h3 class="font-bold text-sistran-heading text-base">Acesso Restrito - Acompanhamento e Consulta</h3>
                             <p class="text-xs text-sistran-body mt-1">Identifique-se para acessar o ambiente de acompanhamento e consulta dos resultados do PSV-SP.</p>
@@ -2167,7 +2163,7 @@
                                 <input type="password" value="••••••••" readonly class="w-full bg-gray-100 border border-sistran-border rounded-sm p-2.5 text-zinc-500 cursor-not-allowed">
                             </div>
                             <button onclick="handleRestrictedLogin('dashboard')" class="w-full bg-sistran-yellow hover:bg-sistran-yellow-hover text-sistran-ink font-bold py-3 rounded-pill transition duration-150 flex items-center justify-center gap-2 text-xs">
-                                <i class="fa-solid fa-right-to-bracket"></i> Autenticar
+                                <span class="material-symbols-outlined" style="font-size:20px;">login</span> Autenticar
                             </button>
                         </div>
                     </div>
@@ -2179,11 +2175,11 @@
                         <!-- KPI 2: Sinistros Acumulados -->
                         <div class="bg-white p-6 rounded-md shadow-card border border-sistran-border relative overflow-hidden">
                             <div class="absolute right-0 bottom-0 opacity-5 translate-x-2 translate-y-2">
-                                <i class="fa-solid fa-triangle-exclamation text-[110px]"></i>
+                                <span class="material-symbols-outlined" style="font-size:110px;">warning</span>
                             </div>
                             <div class="flex justify-between items-start">
                                 <span class="bg-red-50 text-sistran-error text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-pill border border-red-100">Óbitos Anuais (SP)</span>
-                                <span class="text-sistran-error font-bold text-xs"><i class="fa-solid fa-circle-down mr-1"></i>-4.2%</span>
+                                <span class="text-sistran-error font-bold text-xs"><span class="material-symbols-outlined mr-1" style="font-size:20px;">arrow_circle_down</span>-4.2%</span>
                             </div>
                             <div class="mt-4">
                                 <h3 class="text-3xl font-extrabold text-sistran-heading" id="obitos-atuais">5.180</h3>
@@ -2194,11 +2190,11 @@
                         <!-- KPI 3: Status de Entregas -->
                         <div class="bg-white p-6 rounded-md shadow-card border border-sistran-border relative overflow-hidden">
                             <div class="absolute right-0 bottom-0 opacity-5 translate-x-2 translate-y-2">
-                                <i class="fa-solid fa-list-check text-[110px]"></i>
+                                <span class="material-symbols-outlined" style="font-size:110px;">checklist</span>
                             </div>
                             <div class="flex justify-between items-start">
                                 <span class="bg-sistran-gold-surface text-sistran-gold text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-pill border border-sistran-yellow">Progresso de Ações</span>
-                                <span class="text-sistran-gold font-bold text-xs"><i class="fa-solid fa-circle-check mr-1"></i>Vias Seguras</span>
+                                <span class="text-sistran-gold font-bold text-xs"><span class="material-symbols-outlined mr-1" style="font-size:20px;">check_circle</span>Vias Seguras</span>
                             </div>
                             <div class="mt-4">
                                 <h3 class="text-3xl font-extrabold text-sistran-heading" id="percent-concluido">58.5%</h3>
@@ -2212,7 +2208,7 @@
                         <!-- KPI 4: Municípios Integrados -->
                         <div class="bg-white p-6 rounded-md shadow-card border border-sistran-border relative overflow-hidden">
                             <div class="absolute right-0 bottom-0 opacity-5 translate-x-2 translate-y-2">
-                                <i class="fa-solid fa-map-location-dot text-[110px]"></i>
+                                <span class="material-symbols-outlined" style="font-size:110px;">location_on</span>
                             </div>
                             <div class="flex justify-between items-start">
                                 <span class="bg-sistran-surface-muted text-sistran-body text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-pill border border-sistran-border">Pacto de Cooperação</span>
@@ -2284,11 +2280,11 @@
         <div class="bg-white max-w-lg w-full rounded-md shadow-xl overflow-hidden border border-sistran-border">
             <div class="bg-sistran-gold-surface p-4 flex justify-between items-center border-b border-sistran-border">
                 <h4 class="text-xs font-bold text-sistran-heading flex items-center gap-2">
-                    <i data-lucide="info" class="w-4 h-4 text-sistran-gold"></i>
+                    <span class="material-symbols-outlined text-sistran-gold" style="font-size:18px;">info</span>
                     Ficha do Produto de Implementação
                 </h4>
                 <button onclick="closeModal()" class="text-sistran-heading hover:text-sistran-gold">
-                    <i data-lucide="x" class="w-5 h-5"></i>
+                    <span class="material-symbols-outlined" style="font-size:22px;">close</span>
                 </button>
             </div>
             <div class="p-6 space-y-4 text-xs">
@@ -2322,11 +2318,11 @@
         <div class="bg-white max-w-md w-full rounded-md shadow-xl overflow-hidden border border-sistran-border">
             <div class="bg-sistran-gold-surface p-4 flex justify-between items-center border-b border-sistran-border">
                 <h4 class="text-sm font-bold text-sistran-heading flex items-center gap-2">
-                    <i data-lucide="help-circle" class="w-4 h-4 text-sistran-gold"></i>
+                    <span class="material-symbols-outlined text-sistran-gold" style="font-size:18px;">help</span>
                     Suporte Técnico Integrado
                 </h4>
                 <button onclick="closeSupportModal()" class="text-sistran-heading hover:text-sistran-gold">
-                    <i data-lucide="x" class="w-5 h-5"></i>
+                    <span class="material-symbols-outlined" style="font-size:22px;">close</span>
                 </button>
             </div>
             <form onsubmit="handleSupportSubmit(event)" class="p-6 space-y-4 text-xs">
@@ -2351,7 +2347,7 @@
 
     <!-- Toast Feedback -->
     <div id="toast" class="hidden fixed bottom-6 right-6 bg-sistran-ink text-white text-xs px-4 py-3 rounded shadow-lg z-50 flex items-center gap-2">
-        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+        <span class="material-symbols-outlined text-emerald-400" style="font-size:18px;">check_circle</span>
         <span id="toast-message">Exportado com sucesso!</span>
     </div>
 
@@ -2585,7 +2581,6 @@
         }
 
         window.onload = function() {
-            lucide.createIcons();
             loadSpreadsheetData();
             loadMonitoramentoData();
             loadDesempenhoSpreadsheetData();
@@ -2667,9 +2662,6 @@
             }
 
             container.innerHTML = html;
-            if (window.lucide) {
-                lucide.createIcons();
-            }
         }
 
         function toggleLoginIndicatorClick() {
@@ -3861,7 +3853,6 @@
                 trDetail.innerHTML = '<td colspan="8" class="p-4 bg-white border-t border-sistran-border">' + detalhesHtml + '</td>';
                 tbody.appendChild(trDetail);
             });
-            lucide.createIcons();
             updateImplementacaoSummary();
             renderChartImplementacaoEixos();
         }
@@ -4173,8 +4164,10 @@
             input.disabled = !!disabled;
             input.setAttribute('autocomplete', 'off');
 
-            const arrow = document.createElement('i');
-            arrow.className = 'fa-solid fa-chevron-down search-select-arrow';
+            const arrow = document.createElement('span');
+            arrow.className = 'material-symbols-outlined search-select-arrow';
+            arrow.style.fontSize = '14px';
+            arrow.textContent = 'expand_more';
 
             const dropdown = document.createElement('div');
             dropdown.className = 'search-select-dropdown';
@@ -4757,12 +4750,12 @@
             const dominioConfiavel = dominiosConfiáveis.some(d => hostname === d || hostname.endsWith('.' + d));
 
             if (dominioConfiavel) {
-                feedback.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i>Link válido — domínio reconhecido (' + hostname + ').';
+                feedback.innerHTML = '<span class="material-symbols-outlined mr-1" style="font-size:20px;">check_circle</span>Link válido — domínio reconhecido (' + hostname + ').';
                 feedback.className = 'text-xs mt-1 font-semibold text-emerald-600';
                 feedback.classList.remove('hidden');
                 linkValidacaoStatus = 'valido';
             } else {
-                feedback.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-1"></i>Atenção: domínio não reconhecido (' + hostname + '). Certifique-se de que o link é de uma plataforma oficial de armazenamento.';
+                feedback.innerHTML = '<span class="material-symbols-outlined mr-1" style="font-size:20px;">warning</span>Atenção: domínio não reconhecido (' + hostname + '). Certifique-se de que o link é de uma plataforma oficial de armazenamento.';
                 feedback.className = 'text-xs mt-1 font-semibold text-amber-600';
                 feedback.classList.remove('hidden');
                 linkValidacaoStatus = 'alerta';
@@ -4776,17 +4769,17 @@
                         // no-cors retorna resposta opaca (status 0) — não podemos verificar conteúdo
                         // Mas se houve resposta sem erro, é provável que o servidor existe
                         if (dominioConfiavel && linkValidacaoStatus === 'valido') {
-                            feedback.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i>Link válido — domínio reconhecido e servidor acessível (' + hostname + ').';
+                            feedback.innerHTML = '<span class="material-symbols-outlined mr-1" style="font-size:20px;">check_circle</span>Link válido — domínio reconhecido e servidor acessível (' + hostname + ').';
                         }
                     })
                     .catch(function(err) {
                         // Se o fetch falha completamente, pode indicar link quebrado
                         if (linkValidacaoStatus === 'valido') {
-                            feedback.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-1"></i>Domínio reconhecido (' + hostname + '), porém não foi possível verificar acessibilidade. Confirme se o link está correto.';
+                            feedback.innerHTML = '<span class="material-symbols-outlined mr-1" style="font-size:20px;">warning</span>Domínio reconhecido (' + hostname + '), porém não foi possível verificar acessibilidade. Confirme se o link está correto.';
                             feedback.className = 'text-xs mt-1 font-semibold text-amber-600';
                             linkValidacaoStatus = 'alerta';
                         } else if (linkValidacaoStatus === 'alerta') {
-                            feedback.innerHTML = '<i class="fa-solid fa-circle-xmark mr-1"></i>Domínio não reconhecido e link possivelmente inacessível (' + hostname + '). Verifique o endereço.';
+                            feedback.innerHTML = '<span class="material-symbols-outlined mr-1" style="font-size:20px;">cancel</span>Domínio não reconhecido e link possivelmente inacessível (' + hostname + '). Verifique o endereço.';
                             feedback.className = 'text-xs mt-1 font-semibold text-sistran-error';
                             linkValidacaoStatus = 'invalido';
                         }
@@ -5025,22 +5018,22 @@
                     if (acao.status === "Aprovado") titleMsg = "Produto aprovado — não é possível editar";
                     if (acao.status === "Em Análise") titleMsg = "Produto em análise — não é possível editar";
                     editarBtn = `<button disabled class="bg-gray-200 text-gray-400 font-bold text-[10px] px-3 py-1.5 rounded-pill cursor-not-allowed opacity-60" title="${titleMsg}">
-                        <i class="fa-solid fa-pen-to-square mr-1"></i>Editar Submissão
+                        <span class="material-symbols-outlined mr-1" style="font-size:20px;">edit</span>Editar Submissão
                     </button>`;
                 } else {
                     editarBtn = `<button onclick="editarSubmissao(${idx})" class="bg-sistran-yellow hover:bg-sistran-yellow-hover text-sistran-ink font-bold text-[10px] px-3 py-1.5 rounded-pill transition duration-150" title="Editar e resubmeter este produto">
-                        <i class="fa-solid fa-pen-to-square mr-1"></i>Editar Submissão
+                        <span class="material-symbols-outlined mr-1" style="font-size:20px;">edit</span>Editar Submissão
                     </button>`;
                 }
 
                 // Anexos display
                 const anexosDisplay = acao.anexos 
-                    ? `<span class="text-sistran-heading font-medium"><i class="fa-solid fa-paperclip mr-1 text-sistran-gold"></i>${acao.anexos}</span>` 
+                    ? `<span class="text-sistran-heading font-medium"><span class="material-symbols-outlined mr-1 text-sistran-gold" style="font-size:20px;">attach_file</span>${acao.anexos}</span>` 
                     : `<span class="text-sistran-muted">—</span>`;
 
                 // Link display
                 const linkDisplay = acao.evidencia 
-                    ? `<a href="${acao.evidencia}" target="_blank" class="text-sistran-gold hover:underline font-semibold truncate block max-w-[150px]" title="${acao.evidencia}"><i class="fa-solid fa-link mr-1"></i>Acessar</a>` 
+                    ? `<a href="${acao.evidencia}" target="_blank" class="text-sistran-gold hover:underline font-semibold truncate block max-w-[150px]" title="${acao.evidencia}"><span class="material-symbols-outlined mr-1" style="font-size:20px;">link</span>Acessar</a>` 
                     : `<span class="text-sistran-muted">—</span>`;
 
                 // Exibe os mesmos valores preenchidos no formulário (sem extração de código)
@@ -5303,7 +5296,7 @@
             if (filtradas.length === 0) {
                 container.innerHTML = `
                     <div class="text-center py-12 text-sistran-muted">
-                        <i class="fa-solid fa-folder-open text-4xl mb-3 block"></i>
+                        <span class="material-symbols-outlined mb-3 block" style="font-size:40px;">folder_open</span>
                         <p class="text-sm">Nenhuma entrega pendente de validação com os filtros selecionados.</p>
                     </div>
                 `;
@@ -5326,7 +5319,7 @@
                     cardColor = "bg-amber-50/20 border-amber-200";
                     headerBtn = `
                         <button onclick="toggleValidacaoAccordion('vacc-${acao.id}')" class="bg-amber-100 text-amber-700 border border-amber-300 font-bold text-xs px-4 py-2 rounded-pill transition duration-150">
-                            <i data-lucide="chevron-down" class="w-3 h-3 inline"></i> Ver Detalhes
+                            <span class="material-symbols-outlined inline" style="font-size:16px;">expand_more</span> Ver Detalhes
                         </button>
                     `;
                 }
@@ -5343,25 +5336,25 @@
                                 <div class="p-3 bg-gray-50 rounded-md"><span class="text-sistran-muted font-medium block mb-0.5">Ano de Referência:</span><strong class="text-sistran-heading">${acao.horizonte || '—'}</strong></div>
                             </div>
                             <div class="flex flex-wrap gap-3 mt-1">
-                                ${acao.anexos ? '<span class="inline-flex items-center gap-1.5 bg-sistran-surface-muted border border-sistran-border px-3 py-1.5 rounded text-xs font-semibold text-sistran-heading transition hover:bg-zinc-100"><i class="fa-solid fa-paperclip text-sistran-gold"></i> Arquivo: ' + acao.anexos + '</span>' : ''}
-                                ${acao.evidencia ? '<a href="' + acao.evidencia + '" target="_blank" class="inline-flex items-center gap-1.5 text-sistran-gold hover:underline font-semibold transition text-xs"><i class="fa-solid fa-link"></i> Acessar Link Compartilhado</a>' : ''}
+                                ${acao.anexos ? '<span class="inline-flex items-center gap-1.5 bg-sistran-surface-muted border border-sistran-border px-3 py-1.5 rounded text-xs font-semibold text-sistran-heading transition hover:bg-zinc-100"><span class="material-symbols-outlined text-sistran-gold" style="font-size:20px;">attach_file</span> Arquivo: ' + acao.anexos + '</span>' : ''}
+                                ${acao.evidencia ? '<a href="' + acao.evidencia + '" target="_blank" class="inline-flex items-center gap-1.5 text-sistran-gold hover:underline font-semibold transition text-xs"><span class="material-symbols-outlined" style="font-size:20px;">link</span> Acessar Link Compartilhado</a>' : ''}
                                 ${!acao.anexos && !acao.evidencia ? '<span class="text-sistran-muted text-xs">Nenhuma evidência anexada.</span>' : ''}
                             </div>
                         </div>
                         <div class="flex gap-3 pt-3 border-t border-sistran-border">
                             <button onclick="confirmarValidacao(${acao.id}, 'Aprovado')" class="bg-[#10B981] text-white hover:bg-emerald-600 font-bold text-xs px-5 py-2.5 rounded-pill transition duration-150 flex items-center gap-1.5 shadow-sm">
-                                <i class="fa-solid fa-check"></i> Aprovar
+                                <span class="material-symbols-outlined" style="font-size:20px;">check</span> Aprovar
                             </button>
                             <button onclick="abrirReprovacao(${acao.id})" class="bg-rose-500 text-white hover:bg-rose-600 font-bold text-xs px-5 py-2.5 rounded-pill transition duration-150 flex items-center gap-1.5">
-                                <i class="fa-solid fa-xmark"></i> Reprovar
+                                <span class="material-symbols-outlined" style="font-size:20px;">close</span> Reprovar
                             </button>
                         </div>
                         <!-- Campo de motivo da reprovação (accordion interno - inicialmente oculto) -->
                         <div id="reprovacao-motivo-${acao.id}" class="hidden border-t border-sistran-border pt-4 space-y-3">
-                            <p class="text-xs font-bold text-sistran-heading flex items-center gap-2"><i class="fa-solid fa-comment-dots text-rose-500"></i> Motivo da Reprovação</p>
+                            <p class="text-xs font-bold text-sistran-heading flex items-center gap-2"><span class="material-symbols-outlined text-rose-500" style="font-size:20px;">chat_bubble</span> Motivo da Reprovação</p>
                             <textarea id="motivo-texto-${acao.id}" rows="3" placeholder="Descreva o motivo da reprovação..." class="w-full bg-sistran-surface-muted border border-sistran-border rounded-sm text-xs p-2.5 text-sistran-body focus:outline-none focus:ring-1 focus:ring-sistran-gold"></textarea>
                             <button onclick="confirmarValidacao(${acao.id}, 'Reprovado')" class="bg-rose-500 text-white hover:bg-rose-600 font-bold text-xs px-4 py-2 rounded-pill transition duration-150 flex items-center gap-1.5">
-                                <i class="fa-solid fa-paper-plane"></i> Confirmar Reprovação
+                                <span class="material-symbols-outlined" style="font-size:20px;">send</span> Confirmar Reprovação
                             </button>
                         </div>
                     </div>
@@ -5374,7 +5367,7 @@
                             <div class="space-y-2 flex-1 text-xs">
                                 <div class="flex items-center gap-2 flex-wrap">
                                     <span class="bg-sistran-ink text-white text-[10px] font-bold uppercase px-2.5 py-1 rounded-sm">${acao.orgao}</span>
-                                    <span class="text-sistran-muted font-medium"><i class="fa-regular fa-clock mr-1"></i>Enviado em ${acao.data}</span>
+                                    <span class="text-sistran-muted font-medium"><span class="material-symbols-outlined mr-1" style="font-size:20px;">schedule</span>Enviado em ${acao.data}</span>
                                     <span class="border text-[10px] font-bold uppercase px-2 py-0.5 rounded-sm bg-sistran-gold-surface text-sistran-gold border-sistran-yellow">${acao.eixo}</span>
                                     <span class="text-zinc-400">ID: <strong>#${acao.id}</strong></span>
                                 </div>
@@ -5393,7 +5386,6 @@
                 `;
                 container.innerHTML += card;
             });
-            if (window.lucide) lucide.createIcons();
         }
 
         function changeProductStatus(id, novoStatus, motivoReprovacao) {
@@ -5734,13 +5726,16 @@
 
             if (color === "emerald") {
                 notifIconContainer.className = "p-2 rounded-sm bg-emerald-500 text-zinc-950";
-                notifIcon.className = "fa-solid fa-circle-check";
+                notifIcon.className = "material-symbols-outlined";
+                notifIcon.textContent = "check_circle";
             } else if (color === "rose") {
                 notifIconContainer.className = "p-2 rounded-sm bg-sistran-error text-white";
-                notifIcon.className = "fa-solid fa-circle-xmark";
+                notifIcon.className = "material-symbols-outlined";
+                notifIcon.textContent = "cancel";
             } else {
                 notifIconContainer.className = "p-2 rounded-sm bg-sistran-gold text-white";
-                notifIcon.className = "fa-solid fa-paper-plane";
+                notifIcon.className = "material-symbols-outlined";
+                notifIcon.textContent = "send";
             }
 
             notifTitle.textContent = title;
