@@ -6181,8 +6181,8 @@
 
             const labels = dadosFiltrados.map(d => d.codIndicador || '');
             const dataValues = dadosFiltrados.map(d => d.valorIndicador || 0);
-            const eixoColorsInd = { '1': '#C68B00', '2': '#D4A020', '3': '#E0B440', '4': '#EBBF00', '5': '#FECF03', '6': '#F5D547', '7': '#FFE066', '8': '#FFF1C9' };
-            const bgColors = dadosFiltrados.map(d => { const n = d.eixoKey ? d.eixoKey.replace(/\D/g, '').charAt(0) : '1'; return eixoColorsInd[n] || '#C68B00'; });
+            const faixasIndicadores = getFaixasAno(anoSelecionado);
+            const bgColors = dataValues.map(v => getCorClassificacao(v, faixasIndicadores));
 
             // Calcula posições dos separadores entre eixos e labels de eixo
             const eixoBoundaries = [];
