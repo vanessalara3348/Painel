@@ -6089,13 +6089,13 @@
             let classificacaoCor = '';
             if (valor < faixas.critico) {
                 classificacaoTexto = 'Crítico';
-                classificacaoCor = 'bg-rose-600 text-white';
+                classificacaoCor = 'bg-rose-100 text-rose-700';
             } else if (valor < faixas.atencao) {
                 classificacaoTexto = 'Atenção';
-                classificacaoCor = 'bg-amber-500 text-white';
+                classificacaoCor = 'bg-amber-100 text-amber-700';
             } else {
                 classificacaoTexto = 'No caminho certo';
-                classificacaoCor = 'bg-emerald-600 text-white';
+                classificacaoCor = 'bg-emerald-100 text-emerald-700';
             }
 
             const classificacaoEl = document.getElementById('card-desempenho-classificacao');
@@ -6113,7 +6113,7 @@
                     labels: ['Índice de Desempenho', 'Restante'],
                     datasets: [{
                         data: [valor, restante],
-                        backgroundColor: [corPrincipal, '#F3F4F6'],
+                        backgroundColor: [corPrincipal, '#E5E7EB'],
                         borderWidth: 0,
                         circumference: 180,
                         rotation: 270
