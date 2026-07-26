@@ -1108,57 +1108,26 @@
                                 <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Meta principal</p>
                                 <p class="text-sm text-sistran-body leading-relaxed">O PSV-SP tem como meta principal reduzir em 50% as mortes no trânsito até 2030, tendo como referência os 4.842 óbitos registrados em 2020.</p>
 
-                                <!-- OPÇÃO A: Termômetro de Progresso -->
-                                <div class="bg-white border border-sistran-border rounded-md p-6 space-y-5">
-                                    <!-- Barra de progresso principal -->
-                                    <div class="space-y-2">
-                                        <div class="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider">
-                                            <span class="text-sistran-heading">Referência 2020</span>
-                                            <span class="text-sistran-gold">Meta 2030</span>
-                                        </div>
-                                        <div class="relative">
-                                            <!-- Barra de fundo (total) -->
-                                            <div class="w-full h-8 bg-gray-100 rounded-pill overflow-hidden relative border border-sistran-border">
-                                                <!-- Barra de progresso -->
-                                                <div id="meta-progress-bar" class="h-full rounded-pill transition-all duration-700 ease-out flex items-center" style="width: 0%; background: linear-gradient(90deg, #FECF03 0%, #C68B00 100%);"></div>
-                                            </div>
-                                            <!-- Labels nos extremos -->
-                                            <div class="flex items-center justify-between mt-1">
-                                                <span class="text-xs font-bold text-sistran-heading">4.842</span>
-                                                <span class="text-xs font-bold text-sistran-gold">2.421</span>
-                                            </div>
-                                            <!-- Marcador do valor atual -->
-                                            <div id="meta-current-marker" class="absolute top-0 h-8 flex flex-col items-center" style="left: 0%; transform: translateX(-50%);">
-                                                <div class="w-0.5 h-8 bg-sistran-ink"></div>
-                                                <div class="bg-sistran-ink text-white text-[10px] font-bold px-2 py-0.5 rounded-pill mt-1 whitespace-nowrap">
-                                                    <span id="meta-current-label">5.810</span> atual
-                                                </div>
-                                            </div>
-                                        </div>
+                                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 font-semibold">
+                                    <div class="p-4 bg-amber-50 border border-amber-200 rounded-md">
+                                        <p class="text-[10px] font-bold text-sistran-gold uppercase">Meta Principal 2030</p>
+                                        <h4 class="text-2xl font-bold text-sistran-heading">-50%</h4>
+                                        <p class="text-xs text-sistran-body mt-1">Redução de mortes contra linha base de 2024</p>
                                     </div>
-
-                                    <!-- Mini KPIs -->
-                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                        <div class="p-3 bg-sistran-gold-surface border border-sistran-yellow rounded-md text-center">
-                                            <p class="text-[10px] font-bold text-sistran-gold uppercase">Progresso</p>
-                                            <h4 id="meta-progress-pct" class="text-xl font-extrabold text-sistran-heading">—</h4>
-                                            <p class="text-[10px] text-sistran-body">da meta atingido</p>
-                                        </div>
-                                        <div class="p-3 bg-gray-50 border border-gray-200 rounded-md text-center">
-                                            <p class="text-[10px] font-bold text-sistran-muted uppercase">Atual (2025)</p>
-                                            <h4 class="text-xl font-bold text-sistran-heading">5.810</h4>
-                                            <p class="text-[10px] text-sistran-body">óbitos consolidados</p>
-                                        </div>
-                                        <div class="p-3 bg-gray-50 border border-gray-200 rounded-md text-center">
-                                            <p class="text-[10px] font-bold text-sistran-muted uppercase">Meta 2030</p>
-                                            <h4 class="text-xl font-bold text-sistran-gold">2.421</h4>
-                                            <p class="text-[10px] text-sistran-body">óbitos ou menos</p>
-                                        </div>
-                                        <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-md text-center">
-                                            <p class="text-[10px] font-bold text-emerald-600 uppercase">Restante</p>
-                                            <h4 id="meta-remaining" class="text-xl font-bold text-emerald-600">—</h4>
-                                            <p class="text-[10px] text-sistran-body">anos para a meta</p>
-                                        </div>
+                                    <div class="p-4 bg-gray-50 border border-gray-200 rounded-md">
+                                        <p class="text-[10px] font-bold text-sistran-muted uppercase">Linha Base (2024)</p>
+                                        <h4 class="text-2xl font-semibold text-sistran-heading">6.122</h4>
+                                        <p class="text-xs text-sistran-body mt-1">Óbitos totais consolidados no Infosiga</p>
+                                    </div>
+                                    <div class="p-4 bg-gray-50 border border-gray-200 rounded-md">
+                                        <p class="text-[10px] font-bold text-sistran-muted uppercase">Ano Recente (2025)</p>
+                                        <h4 class="text-2xl font-semibold text-sistran-heading">5.810</h4>
+                                        <p class="text-xs text-sistran-body mt-1">Consolidação preliminar anualizada</p>
+                                    </div>
+                                    <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-md">
+                                        <p class="text-[10px] font-bold text-emerald-600 uppercase">Diferença Atual</p>
+                                        <h4 class="text-2xl font-bold text-emerald-600">-5.1%</h4>
+                                        <p class="text-xs text-sistran-body mt-1">Tendência descendente observada</p>
                                     </div>
                                 </div>
 
@@ -2529,54 +2498,6 @@
             buildCascadingDropdowns();
         }
 
-        // === META PRINCIPAL: Termômetro de Progresso (Opção A) ===
-        function renderMetaPrincipalProgress() {
-            const referencia = 4842; // óbitos em 2020
-            const meta = Math.round(referencia * 0.5); // 2421
-            const atual = 5810; // valor mais recente (2025)
-            const anoMeta = 2030;
-            const anoAtual = 2025;
-
-            // Calcula progresso: quanto do caminho referência→meta já percorremos
-            // Se atual > referência, progresso é negativo (estamos pior que a referência)
-            const totalReducaoNecessaria = referencia - meta; // 2421
-            const reducaoAlcancada = referencia - atual; // pode ser negativo
-            const progressoPct = Math.max(0, Math.min(100, (reducaoAlcancada / totalReducaoNecessaria) * 100));
-
-            // Posição do marcador atual na barra (0% = referência, 100% = meta)
-            // Se atual > referência, marcador fica à esquerda (antes do início)
-            const markerPct = Math.max(0, Math.min(100, ((referencia - atual) / (referencia - meta)) * 100));
-
-            // Atualiza barra de progresso
-            const bar = document.getElementById('meta-progress-bar');
-            if (bar) {
-                setTimeout(() => { bar.style.width = progressoPct.toFixed(1) + '%'; }, 300);
-            }
-
-            // Atualiza marcador
-            const marker = document.getElementById('meta-current-marker');
-            if (marker) {
-                setTimeout(() => { marker.style.left = markerPct.toFixed(1) + '%'; }, 300);
-            }
-
-            // Atualiza label
-            const label = document.getElementById('meta-current-label');
-            if (label) label.textContent = atual.toLocaleString('pt-BR');
-
-            // Atualiza KPIs
-            const pctEl = document.getElementById('meta-progress-pct');
-            if (pctEl) {
-                if (reducaoAlcancada < 0) {
-                    pctEl.textContent = '0%';
-                } else {
-                    pctEl.textContent = progressoPct.toFixed(1).replace('.', ',') + '%';
-                }
-            }
-
-            const remainingEl = document.getElementById('meta-remaining');
-            if (remainingEl) remainingEl.textContent = (anoMeta - anoAtual);
-        }
-
         window.onload = function() {
             lucide.createIcons();
             loadSpreadsheetData();
@@ -2584,7 +2505,6 @@
             loadDesempenhoSpreadsheetData();
             
             initCharts();
-            renderMetaPrincipalProgress();
 
             renderValidationCards();
             updateUIStats();
