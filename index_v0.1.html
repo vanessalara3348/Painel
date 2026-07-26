@@ -1171,7 +1171,7 @@
 
                                                 <!-- Barra de fundo -->
                                                 <div class="w-full h-4 bg-gray-100 rounded-pill overflow-hidden border border-sistran-border relative">
-                                                    <div id="meta-temporal-bar" class="h-full rounded-pill transition-all duration-700 ease-out" style="width: 0%; background: linear-gradient(90deg, #FECF03 0%, #C68B00 100%);"></div>
+                                                    <div id="meta-temporal-bar" class="h-full rounded-pill transition-all duration-700 ease-out" style="width: 0%; background: linear-gradient(90deg, #EF4444 0%, #DC2626 100%);"></div>
                                                     <!-- Marcador vertical do ano atual -->
                                                     <div class="absolute top-0 h-full w-0.5 bg-sistran-ink" style="left: 50%;"></div>
                                                 </div>
@@ -2592,6 +2592,14 @@
             const bar = document.getElementById('meta-temporal-bar');
             if (!bar) return;
             // Progresso temporal: 2025 é o 5º ano de 10 (2020→2030), ou seja 50%
+            // Cor baseada na variação: vermelho se mortes > referência, verde se mortes < referência
+            const referencia = 4842;
+            const atual = 6125;
+            if (atual > referencia) {
+                bar.style.background = 'linear-gradient(90deg, #EF4444 0%, #DC2626 100%)';
+            } else {
+                bar.style.background = 'linear-gradient(90deg, #10B981 0%, #059669 100%)';
+            }
             setTimeout(function() { bar.style.width = '50%'; }, 300);
         }
 
