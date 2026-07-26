@@ -1108,115 +1108,103 @@
                                 <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Meta principal</p>
                                 <p class="text-sm text-sistran-body leading-relaxed">O PSV-SP tem como meta principal reduzir em 50% as mortes no trânsito até 2030, tendo como referência os 4.842 óbitos registrados em 2020.</p>
 
-                                <!-- 3 KPI Cards -->
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-semibold">
-                                    <!-- Card Referência -->
-                                    <div class="p-4 bg-gray-50 border border-gray-200 rounded-md text-center">
-                                        <p class="text-[10px] font-bold text-sistran-muted uppercase">Referência (2020)</p>
-                                        <h4 class="text-2xl font-extrabold text-sistran-heading">4.842</h4>
-                                        <p class="text-xs text-sistran-body mt-1">Mortes no trânsito em 2020</p>
-                                    </div>
-                                    <!-- Card Atual -->
-                                    <div class="p-4 bg-amber-50 border border-amber-200 rounded-md text-center">
-                                        <p class="text-[10px] font-bold text-amber-600 uppercase">Atual (2025)</p>
-                                        <h4 class="text-2xl font-extrabold text-sistran-heading">6.125</h4>
-                                        <p class="text-xs text-sistran-body mt-1">Mortes no trânsito em 2025</p>
-                                        <p class="text-xs font-bold text-rose-500 mt-2 flex items-center justify-center gap-1">
-                                            <span class="material-symbols-outlined" style="font-size:16px;">arrow_upward</span>
-                                            +26,5% vs referência
-                                        </p>
-                                    </div>
-                                    <!-- Card Meta -->
-                                    <div class="p-4 bg-sistran-gold-surface border border-sistran-yellow rounded-md text-center">
-                                        <p class="text-[10px] font-bold text-sistran-gold uppercase">Meta Principal (2030)</p>
-                                        <h4 class="text-2xl font-extrabold text-sistran-gold">&le; 2.421</h4>
-                                        <p class="text-xs text-sistran-body mt-1">Mortes no trânsito</p>
-                                        <p class="text-xs font-bold text-emerald-600 mt-2 flex items-center justify-center gap-1">
-                                            <span class="material-symbols-outlined" style="font-size:16px;">arrow_downward</span>
-                                            -50% vs referência
-                                        </p>
-                                    </div>
-                                </div>
+                                <!-- Cards + Barra Temporal numa caixa única -->
+                                <div class="bg-white border border-sistran-border rounded-md p-5 space-y-5">
 
-                                <!-- Barra de Progresso Temporal -->
-                                <div class="bg-white border border-sistran-border rounded-md p-5 space-y-3">
-                                    <p class="text-xs font-bold text-sistran-heading">Trajetória da Meta Principal (2020–2030)</p>
-                                    <div class="relative pt-6 pb-2">
+                                    <!-- 3 KPI Cards -->
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-semibold">
+                                        <!-- Card Referência -->
+                                        <div class="p-4 bg-gray-50 border border-gray-200 rounded-md text-center">
+                                            <p class="text-[10px] font-bold text-sistran-muted uppercase">Referência (2020)</p>
+                                            <h4 class="text-2xl font-extrabold text-sistran-heading">4.842</h4>
+                                            <p class="text-xs text-sistran-body mt-3">Mortes no trânsito</p>
+                                        </div>
+                                        <!-- Card Atual -->
+                                        <div class="p-4 bg-amber-50 border border-amber-200 rounded-md text-center">
+                                            <p class="text-[10px] font-bold text-amber-600 uppercase">Atual (2025)</p>
+                                            <h4 class="text-2xl font-extrabold text-sistran-heading">6.125</h4>
+                                            <p class="text-xs font-bold text-rose-500 mt-1 flex items-center justify-center gap-0.5">
+                                                <span class="material-symbols-outlined" style="font-size:14px;">arrow_upward</span>
+                                                +26,5%
+                                            </p>
+                                            <p class="text-xs text-sistran-body mt-1">Mortes no trânsito</p>
+                                        </div>
+                                        <!-- Card Meta -->
+                                        <div class="p-4 bg-sistran-gold-surface border border-sistran-yellow rounded-md text-center">
+                                            <p class="text-[10px] font-bold text-sistran-gold uppercase">Meta Principal (2030)</p>
+                                            <h4 class="text-2xl font-extrabold text-sistran-gold">menos que 2.421</h4>
+                                            <p class="text-xs font-bold text-emerald-600 mt-1 flex items-center justify-center gap-0.5">
+                                                <span class="material-symbols-outlined" style="font-size:14px;">arrow_downward</span>
+                                                -50%
+                                            </p>
+                                            <p class="text-xs text-sistran-body mt-1">Mortes no trânsito</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Barra de Progresso Temporal -->
+                                    <div class="relative pt-2 pb-2">
+                                        <!-- Anos ACIMA da barra -->
+                                        <div class="relative w-full" style="height: 22px;">
+                                            <div class="absolute text-[9px] text-sistran-muted font-medium" style="left: 0%; transform: translateX(-50%);">2020</div>
+                                            <div class="absolute text-[9px] text-sistran-muted font-medium" style="left: 10%; transform: translateX(-50%);">2021</div>
+                                            <div class="absolute text-[9px] text-sistran-muted font-medium" style="left: 20%; transform: translateX(-50%);">2022</div>
+                                            <div class="absolute text-[9px] text-sistran-muted font-medium" style="left: 30%; transform: translateX(-50%);">2023</div>
+                                            <div class="absolute text-[9px] text-sistran-muted font-medium" style="left: 40%; transform: translateX(-50%);">2024</div>
+                                            <div class="absolute text-[9px] text-sistran-ink font-bold" style="left: 50%; transform: translateX(-50%);">2025</div>
+                                            <div class="absolute text-[9px] text-sistran-muted font-medium" style="left: 60%; transform: translateX(-50%);">2026</div>
+                                            <div class="absolute text-[9px] text-sistran-muted font-medium" style="left: 70%; transform: translateX(-50%);">2027</div>
+                                            <div class="absolute text-[9px] text-sistran-muted font-medium" style="left: 80%; transform: translateX(-50%);">2028</div>
+                                            <div class="absolute text-[9px] text-sistran-muted font-medium" style="left: 90%; transform: translateX(-50%);">2029</div>
+                                            <div class="absolute text-[9px] text-sistran-gold font-bold" style="left: 100%; transform: translateX(-50%);">2030</div>
+                                        </div>
+
                                         <!-- Barra de fundo -->
                                         <div class="w-full h-4 bg-gray-100 rounded-pill overflow-hidden border border-sistran-border relative">
                                             <div id="meta-temporal-bar" class="h-full rounded-pill transition-all duration-700 ease-out" style="width: 0%; background: linear-gradient(90deg, #FECF03 0%, #C68B00 100%);"></div>
+                                            <!-- Marcador vertical do ano atual -->
+                                            <div class="absolute top-0 h-full w-0.5 bg-sistran-ink" style="left: 50%;"></div>
                                         </div>
 
-                                        <!-- Marcadores dos anos -->
-                                        <div class="relative w-full" style="height: 60px;">
-                                            <!-- 2020 -->
-                                            <div class="absolute flex flex-col items-center" style="left: 0%; transform: translateX(-50%);">
-                                                <div class="w-px h-3 bg-gray-400 mt-1"></div>
-                                                <span class="text-[9px] text-sistran-muted font-medium mt-0.5">2020</span>
-                                                <span class="text-[9px] text-sistran-body font-semibold">4.842</span>
+                                        <!-- Valores ABAIXO da barra -->
+                                        <div class="relative w-full" style="height: 38px;">
+                                            <!-- 2020: referência -->
+                                            <div class="absolute flex flex-col items-center opacity-70" style="left: 0%; transform: translateX(-50%);">
+                                                <span class="text-[9px] text-sistran-body font-medium mt-1">4.842</span>
+                                                <span class="text-[9px] text-sistran-muted font-medium">—</span>
                                             </div>
                                             <!-- 2021 -->
-                                            <div class="absolute flex flex-col items-center" style="left: 10%; transform: translateX(-50%);">
-                                                <div class="w-px h-3 bg-gray-300 mt-1"></div>
-                                                <span class="text-[9px] text-sistran-muted font-medium mt-0.5">2021</span>
-                                                <span class="text-[9px] text-sistran-body font-medium">5.062</span>
+                                            <div class="absolute flex flex-col items-center opacity-70" style="left: 10%; transform: translateX(-50%);">
+                                                <span class="text-[9px] text-sistran-body font-medium mt-1">5.062</span>
+                                                <span class="text-[9px] text-rose-400 font-medium flex items-center gap-px"><span class="material-symbols-outlined" style="font-size:10px;">arrow_upward</span>+4,5%</span>
                                             </div>
                                             <!-- 2022 -->
-                                            <div class="absolute flex flex-col items-center" style="left: 20%; transform: translateX(-50%);">
-                                                <div class="w-px h-3 bg-gray-300 mt-1"></div>
-                                                <span class="text-[9px] text-sistran-muted font-medium mt-0.5">2022</span>
-                                                <span class="text-[9px] text-sistran-body font-medium">5.827</span>
+                                            <div class="absolute flex flex-col items-center opacity-70" style="left: 20%; transform: translateX(-50%);">
+                                                <span class="text-[9px] text-sistran-body font-medium mt-1">5.827</span>
+                                                <span class="text-[9px] text-rose-400 font-medium flex items-center gap-px"><span class="material-symbols-outlined" style="font-size:10px;">arrow_upward</span>+20,3%</span>
                                             </div>
                                             <!-- 2023 -->
-                                            <div class="absolute flex flex-col items-center" style="left: 30%; transform: translateX(-50%);">
-                                                <div class="w-px h-3 bg-gray-300 mt-1"></div>
-                                                <span class="text-[9px] text-sistran-muted font-medium mt-0.5">2023</span>
-                                                <span class="text-[9px] text-sistran-body font-medium">6.011</span>
+                                            <div class="absolute flex flex-col items-center opacity-70" style="left: 30%; transform: translateX(-50%);">
+                                                <span class="text-[9px] text-sistran-body font-medium mt-1">6.011</span>
+                                                <span class="text-[9px] text-rose-400 font-medium flex items-center gap-px"><span class="material-symbols-outlined" style="font-size:10px;">arrow_upward</span>+24,1%</span>
                                             </div>
                                             <!-- 2024 -->
-                                            <div class="absolute flex flex-col items-center" style="left: 40%; transform: translateX(-50%);">
-                                                <div class="w-px h-3 bg-gray-300 mt-1"></div>
-                                                <span class="text-[9px] text-sistran-muted font-medium mt-0.5">2024</span>
-                                                <span class="text-[9px] text-sistran-body font-medium">6.122</span>
+                                            <div class="absolute flex flex-col items-center opacity-70" style="left: 40%; transform: translateX(-50%);">
+                                                <span class="text-[9px] text-sistran-body font-medium mt-1">6.122</span>
+                                                <span class="text-[9px] text-rose-400 font-medium flex items-center gap-px"><span class="material-symbols-outlined" style="font-size:10px;">arrow_upward</span>+26,4%</span>
                                             </div>
-                                            <!-- 2025 (ATUAL - EM DESTAQUE) -->
+                                            <!-- 2025 (ATUAL - EM DESTAQUE, sem transparência) -->
                                             <div class="absolute flex flex-col items-center" style="left: 50%; transform: translateX(-50%);">
-                                                <div class="w-0.5 h-4 bg-sistran-ink mt-0.5"></div>
-                                                <div class="bg-sistran-ink text-white text-[9px] font-bold px-2 py-0.5 rounded-pill mt-0.5 whitespace-nowrap flex items-center gap-0.5">
-                                                    6.125
-                                                    <span class="material-symbols-outlined text-rose-300" style="font-size:12px;">arrow_upward</span>
-                                                    <span class="text-rose-300">+26,5%</span>
-                                                </div>
-                                                <span class="text-[9px] text-sistran-ink font-bold mt-0.5">2025</span>
-                                            </div>
-                                            <!-- 2026 -->
-                                            <div class="absolute flex flex-col items-center" style="left: 60%; transform: translateX(-50%);">
-                                                <div class="w-px h-3 bg-gray-200 mt-1"></div>
-                                                <span class="text-[9px] text-sistran-muted font-medium mt-0.5">2026</span>
-                                            </div>
-                                            <!-- 2027 -->
-                                            <div class="absolute flex flex-col items-center" style="left: 70%; transform: translateX(-50%);">
-                                                <div class="w-px h-3 bg-gray-200 mt-1"></div>
-                                                <span class="text-[9px] text-sistran-muted font-medium mt-0.5">2027</span>
-                                            </div>
-                                            <!-- 2028 -->
-                                            <div class="absolute flex flex-col items-center" style="left: 80%; transform: translateX(-50%);">
-                                                <div class="w-px h-3 bg-gray-200 mt-1"></div>
-                                                <span class="text-[9px] text-sistran-muted font-medium mt-0.5">2028</span>
-                                            </div>
-                                            <!-- 2029 -->
-                                            <div class="absolute flex flex-col items-center" style="left: 90%; transform: translateX(-50%);">
-                                                <div class="w-px h-3 bg-gray-200 mt-1"></div>
-                                                <span class="text-[9px] text-sistran-muted font-medium mt-0.5">2029</span>
+                                                <span class="text-[10px] text-sistran-ink font-bold mt-1">6.125</span>
+                                                <span class="text-[10px] text-rose-500 font-bold flex items-center gap-px"><span class="material-symbols-outlined" style="font-size:11px;">arrow_upward</span>+26,5%</span>
                                             </div>
                                             <!-- 2030 (META) -->
                                             <div class="absolute flex flex-col items-center" style="left: 100%; transform: translateX(-50%);">
-                                                <div class="w-px h-3 bg-sistran-gold mt-1"></div>
-                                                <span class="text-[9px] text-sistran-gold font-bold mt-0.5">2030</span>
-                                                <span class="text-[9px] text-sistran-gold font-bold">&le;2.421</span>
+                                                <span class="text-[9px] text-sistran-gold font-bold mt-1">&le;2.421</span>
+                                                <span class="text-[9px] text-emerald-500 font-bold flex items-center gap-px"><span class="material-symbols-outlined" style="font-size:10px;">arrow_downward</span>-50%</span>
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
 
                                 <div class="bg-gray-50 p-4 rounded-md border border-sistran-border">
