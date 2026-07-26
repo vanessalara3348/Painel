@@ -1108,26 +1108,44 @@
                                 <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Meta principal</p>
                                 <p class="text-sm text-sistran-body leading-relaxed">O PSV-SP tem como meta principal reduzir em 50% as mortes no trânsito até 2030, tendo como referência os 4.842 óbitos registrados em 2020.</p>
 
-                                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 font-semibold">
-                                    <div class="p-4 bg-amber-50 border border-amber-200 rounded-md">
-                                        <p class="text-[10px] font-bold text-sistran-gold uppercase">Meta Principal 2030</p>
-                                        <h4 class="text-2xl font-bold text-sistran-heading">-50%</h4>
-                                        <p class="text-xs text-sistran-body mt-1">Redução de mortes contra linha base de 2024</p>
-                                    </div>
-                                    <div class="p-4 bg-gray-50 border border-gray-200 rounded-md">
-                                        <p class="text-[10px] font-bold text-sistran-muted uppercase">Linha Base (2024)</p>
-                                        <h4 class="text-2xl font-semibold text-sistran-heading">6.122</h4>
-                                        <p class="text-xs text-sistran-body mt-1">Óbitos totais consolidados no Infosiga</p>
-                                    </div>
-                                    <div class="p-4 bg-gray-50 border border-gray-200 rounded-md">
-                                        <p class="text-[10px] font-bold text-sistran-muted uppercase">Ano Recente (2025)</p>
-                                        <h4 class="text-2xl font-semibold text-sistran-heading">5.810</h4>
-                                        <p class="text-xs text-sistran-body mt-1">Consolidação preliminar anualizada</p>
-                                    </div>
-                                    <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-md">
-                                        <p class="text-[10px] font-bold text-emerald-600 uppercase">Diferença Atual</p>
-                                        <h4 class="text-2xl font-bold text-emerald-600">-5.1%</h4>
-                                        <p class="text-xs text-sistran-body mt-1">Tendência descendente observada</p>
+                                <!-- OPÇÃO B: Gauge Semicírculo + Mini KPIs -->
+                                <div class="bg-white border border-sistran-border rounded-md p-6 space-y-5">
+                                    <div class="flex flex-col md:flex-row items-center gap-6">
+                                        <!-- Gauge principal -->
+                                        <div class="flex flex-col items-center flex-shrink-0">
+                                            <div class="w-[200px] h-[115px] relative">
+                                                <canvas id="metaPrincipalGaugeChart"></canvas>
+                                                <div class="absolute inset-0 flex flex-col items-center justify-end pb-1">
+                                                    <span id="meta-gauge-valor" class="text-3xl font-extrabold text-sistran-heading">—</span>
+                                                    <span class="text-[10px] text-sistran-muted font-semibold">% da meta</span>
+                                                </div>
+                                            </div>
+                                            <span id="meta-gauge-classificacao" class="text-xs font-semibold mt-2 inline-block px-3 py-1 rounded-pill bg-amber-100 text-amber-700">—</span>
+                                        </div>
+
+                                        <!-- Mini KPIs ao lado do gauge -->
+                                        <div class="grid grid-cols-2 gap-3 flex-1 w-full">
+                                            <div class="p-3 bg-gray-50 border border-gray-200 rounded-md text-center">
+                                                <p class="text-[10px] font-bold text-sistran-muted uppercase">Referência (2020)</p>
+                                                <h4 class="text-xl font-bold text-sistran-heading">4.842</h4>
+                                                <p class="text-[10px] text-sistran-body">óbitos registrados</p>
+                                            </div>
+                                            <div class="p-3 bg-gray-50 border border-gray-200 rounded-md text-center">
+                                                <p class="text-[10px] font-bold text-sistran-muted uppercase">Atual (2025)</p>
+                                                <h4 class="text-xl font-bold text-sistran-heading">5.810</h4>
+                                                <p class="text-[10px] text-sistran-body">óbitos consolidados</p>
+                                            </div>
+                                            <div class="p-3 bg-sistran-gold-surface border border-sistran-yellow rounded-md text-center">
+                                                <p class="text-[10px] font-bold text-sistran-gold uppercase">Meta 2030</p>
+                                                <h4 class="text-xl font-bold text-sistran-gold">2.421</h4>
+                                                <p class="text-[10px] text-sistran-body">óbitos ou menos</p>
+                                            </div>
+                                            <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-md text-center">
+                                                <p class="text-[10px] font-bold text-emerald-600 uppercase">Faltam reduzir</p>
+                                                <h4 id="meta-gauge-faltam" class="text-xl font-bold text-emerald-600">—</h4>
+                                                <p class="text-[10px] text-sistran-body">óbitos para a meta</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -2498,6 +2516,82 @@
             buildCascadingDropdowns();
         }
 
+        // === META PRINCIPAL: Gauge Semicírculo (Opção B) ===
+        function renderMetaPrincipalGauge() {
+            const canvas = document.getElementById('metaPrincipalGaugeChart');
+            if (!canvas) return;
+
+            const referencia = 4842;
+            const meta = Math.round(referencia * 0.5); // 2421
+            const atual = 5810;
+
+            // Progresso: quanto da redução necessária já foi alcançada
+            const totalReducao = referencia - meta; // 2421
+            const reducaoAlcancada = referencia - atual; // negativo se atual > referência
+            const progressoPct = Math.max(0, Math.min(100, (reducaoAlcancada / totalReducao) * 100));
+            const restante = Math.max(100 - progressoPct, 0);
+
+            // Cor baseada no progresso
+            let corGauge, classificacao, classificacaoCor;
+            if (progressoPct <= 0) {
+                corGauge = '#EF4444'; classificacao = 'Acima da referência'; classificacaoCor = 'bg-rose-100 text-rose-700';
+            } else if (progressoPct < 25) {
+                corGauge = '#D97706'; classificacao = 'Progresso insuficiente'; classificacaoCor = 'bg-amber-100 text-amber-700';
+            } else if (progressoPct < 50) {
+                corGauge = '#FECF03'; classificacao = 'Em progresso'; classificacaoCor = 'bg-yellow-100 text-yellow-700';
+            } else if (progressoPct < 75) {
+                corGauge = '#10B981'; classificacao = 'Bom progresso'; classificacaoCor = 'bg-emerald-100 text-emerald-700';
+            } else {
+                corGauge = '#059669'; classificacao = 'Meta próxima'; classificacaoCor = 'bg-emerald-200 text-emerald-800';
+            }
+
+            // Atualiza valor
+            const valorEl = document.getElementById('meta-gauge-valor');
+            if (valorEl) valorEl.textContent = progressoPct > 0 ? progressoPct.toFixed(1).replace('.', ',') : '0';
+
+            // Atualiza classificação
+            const classEl = document.getElementById('meta-gauge-classificacao');
+            if (classEl) {
+                classEl.textContent = classificacao;
+                classEl.className = 'text-xs font-semibold mt-2 inline-block px-3 py-1 rounded-pill ' + classificacaoCor;
+            }
+
+            // Atualiza "faltam reduzir"
+            const faltamEl = document.getElementById('meta-gauge-faltam');
+            if (faltamEl) faltamEl.textContent = (atual - meta).toLocaleString('pt-BR');
+
+            // Renderiza chart
+            if (charts.metaPrincipalGauge) charts.metaPrincipalGauge.destroy();
+
+            charts.metaPrincipalGauge = new Chart(canvas.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Progresso', 'Restante'],
+                    datasets: [{
+                        data: [progressoPct, restante],
+                        backgroundColor: [corGauge, '#E5E7EB'],
+                        borderWidth: 0,
+                        circumference: 180,
+                        rotation: 270
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '72%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            filter: function(tooltipItem) { return tooltipItem.dataIndex === 0; },
+                            callbacks: {
+                                label: function(ctx) { return ' Progresso: ' + ctx.parsed.toFixed(1).replace('.', ',') + '%'; }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
         window.onload = function() {
             lucide.createIcons();
             loadSpreadsheetData();
@@ -2505,6 +2599,7 @@
             loadDesempenhoSpreadsheetData();
             
             initCharts();
+            renderMetaPrincipalGauge();
 
             renderValidationCards();
             updateUIStats();
