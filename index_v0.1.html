@@ -1146,61 +1146,67 @@
                                     </div>
 
                                     <!-- Barra de Progresso Temporal -->
-                                    <div class="relative pt-2 pb-2">
-                                        <p class="text-xs font-bold text-sistran-heading mb-3">Progresso da Meta Principal por Ano</p>
-                                        <div class="flex items-stretch">
-                                            <!-- Texto explicativo à esquerda -->
-                                            <div class="flex flex-col items-end justify-between pr-3 flex-shrink-0" style="width: 90px;">
-                                                <span class="text-[9px] text-sistran-muted font-semibold leading-none" style="height: 14px; display: flex; align-items: center;">Ano</span>
-                                                <span style="height: 16px;">&nbsp;</span>
-                                                <span class="text-[9px] text-sistran-muted font-semibold leading-none" style="height: 14px; display: flex; align-items: center;">Nº de Mortes</span>
-                                                <span class="text-[9px] text-sistran-muted font-semibold leading-none" style="height: 14px; display: flex; align-items: center;">Variação (2020)</span>
+                                    <div class="pt-2 pb-2">
+                                        <p class="text-xs font-bold text-sistran-heading mb-4">Progresso da Meta Principal por Ano</p>
+                                        
+                                        <!-- Grid: coluna esquerda (labels) + coluna direita (dados) -->
+                                        <div class="grid" style="grid-template-columns: 100px 1fr; row-gap: 4px;">
+                                            
+                                            <!-- Linha 1: Ano -->
+                                            <div class="flex items-center justify-end pr-3">
+                                                <span class="text-[9px] text-sistran-heading font-semibold">Ano</span>
                                             </div>
-                                            <!-- Área da barra -->
-                                            <div class="flex-1 min-w-0">
-                                                <!-- Anos ACIMA da barra -->
-                                                <div class="relative w-full" style="height: 14px;">
-                                                    <div class="absolute text-[9px] text-sistran-muted font-medium leading-none" style="left: 0%; transform: translateX(-50%);">2020</div>
-                                                    <div class="absolute text-[9px] text-sistran-muted font-medium leading-none" style="left: 10%; transform: translateX(-50%);">2021</div>
-                                                    <div class="absolute text-[9px] text-sistran-muted font-medium leading-none" style="left: 20%; transform: translateX(-50%);">2022</div>
-                                                    <div class="absolute text-[9px] text-sistran-muted font-medium leading-none" style="left: 30%; transform: translateX(-50%);">2023</div>
-                                                    <div class="absolute text-[9px] text-sistran-muted font-medium leading-none" style="left: 40%; transform: translateX(-50%);">2024</div>
-                                                    <div class="absolute text-[9px] text-sistran-ink font-bold leading-none" style="left: 50%; transform: translateX(-50%);">2025</div>
-                                                    <div class="absolute text-[9px] text-sistran-muted font-medium leading-none" style="left: 60%; transform: translateX(-50%);">2026</div>
-                                                    <div class="absolute text-[9px] text-sistran-muted font-medium leading-none" style="left: 70%; transform: translateX(-50%);">2027</div>
-                                                    <div class="absolute text-[9px] text-sistran-muted font-medium leading-none" style="left: 80%; transform: translateX(-50%);">2028</div>
-                                                    <div class="absolute text-[9px] text-sistran-muted font-medium leading-none" style="left: 90%; transform: translateX(-50%);">2029</div>
-                                                    <div class="absolute text-[9px] text-sistran-gold font-bold leading-none" style="left: 100%; transform: translateX(-50%);">2030</div>
-                                                </div>
+                                            <div class="relative pr-4" style="height: 16px;">
+                                                <span class="absolute text-[9px] text-sistran-muted font-medium" style="left: 0%; transform: translateX(-50%);">2020</span>
+                                                <span class="absolute text-[9px] text-sistran-muted font-medium" style="left: 10%; transform: translateX(-50%);">2021</span>
+                                                <span class="absolute text-[9px] text-sistran-muted font-medium" style="left: 20%; transform: translateX(-50%);">2022</span>
+                                                <span class="absolute text-[9px] text-sistran-muted font-medium" style="left: 30%; transform: translateX(-50%);">2023</span>
+                                                <span class="absolute text-[9px] text-sistran-muted font-medium" style="left: 40%; transform: translateX(-50%);">2024</span>
+                                                <span class="absolute text-[9px] text-sistran-ink font-bold" style="left: 50%; transform: translateX(-50%);">2025</span>
+                                                <span class="absolute text-[9px] text-sistran-muted font-medium" style="left: 60%; transform: translateX(-50%);">2026</span>
+                                                <span class="absolute text-[9px] text-sistran-muted font-medium" style="left: 70%; transform: translateX(-50%);">2027</span>
+                                                <span class="absolute text-[9px] text-sistran-muted font-medium" style="left: 80%; transform: translateX(-50%);">2028</span>
+                                                <span class="absolute text-[9px] text-sistran-muted font-medium" style="left: 90%; transform: translateX(-50%);">2029</span>
+                                                <span class="absolute text-[9px] text-sistran-gold font-bold" style="left: 100%; transform: translateX(-50%);">2030</span>
+                                            </div>
 
-                                                <!-- Barra de fundo -->
-                                                <div class="w-full h-4 bg-gray-100 rounded-pill overflow-hidden border border-sistran-border relative">
+                                            <!-- Linha 2: Barra -->
+                                            <div></div>
+                                            <div class="relative pr-4">
+                                                <div class="w-full h-3 bg-gray-100 rounded-pill overflow-hidden border border-sistran-border relative">
                                                     <div id="meta-temporal-bar" class="h-full rounded-pill transition-all duration-700 ease-out" style="width: 0%; background: linear-gradient(90deg, #EF4444 0%, #DC2626 100%);"></div>
                                                     <div class="absolute top-0 h-full w-0.5 bg-sistran-ink" style="left: 50%;"></div>
                                                 </div>
-
-                                                <!-- Nº de Mortes -->
-                                                <div class="relative w-full" style="height: 14px; margin-top: 2px;">
-                                                    <span class="absolute text-[9px] text-sistran-body font-medium leading-none opacity-70" style="left: 0%; transform: translateX(-50%);">4.842</span>
-                                                    <span class="absolute text-[9px] text-sistran-body font-medium leading-none opacity-70" style="left: 10%; transform: translateX(-50%);">5.062</span>
-                                                    <span class="absolute text-[9px] text-sistran-body font-medium leading-none opacity-70" style="left: 20%; transform: translateX(-50%);">5.827</span>
-                                                    <span class="absolute text-[9px] text-sistran-body font-medium leading-none opacity-70" style="left: 30%; transform: translateX(-50%);">6.011</span>
-                                                    <span class="absolute text-[9px] text-sistran-body font-medium leading-none opacity-70" style="left: 40%; transform: translateX(-50%);">6.122</span>
-                                                    <span class="absolute text-[10px] text-sistran-ink font-bold leading-none" style="left: 50%; transform: translateX(-50%);">6.125</span>
-                                                    <span class="absolute text-[9px] text-sistran-gold font-bold leading-none" style="left: 100%; transform: translateX(-50%);">&le;2.421</span>
-                                                </div>
-
-                                                <!-- Variação em relação a 2020 -->
-                                                <div class="relative w-full" style="height: 14px; margin-top: 1px;">
-                                                    <span class="absolute text-[9px] text-sistran-muted font-medium leading-none opacity-70" style="left: 0%; transform: translateX(-50%);">—</span>
-                                                    <span class="absolute text-[9px] text-rose-400 font-medium leading-none opacity-70 flex items-center gap-px" style="left: 10%; transform: translateX(-50%);"><span class="material-symbols-outlined" style="font-size:9px;">arrow_upward</span>+4,5%</span>
-                                                    <span class="absolute text-[9px] text-rose-400 font-medium leading-none opacity-70 flex items-center gap-px" style="left: 20%; transform: translateX(-50%);"><span class="material-symbols-outlined" style="font-size:9px;">arrow_upward</span>+20,3%</span>
-                                                    <span class="absolute text-[9px] text-rose-400 font-medium leading-none opacity-70 flex items-center gap-px" style="left: 30%; transform: translateX(-50%);"><span class="material-symbols-outlined" style="font-size:9px;">arrow_upward</span>+24,1%</span>
-                                                    <span class="absolute text-[9px] text-rose-400 font-medium leading-none opacity-70 flex items-center gap-px" style="left: 40%; transform: translateX(-50%);"><span class="material-symbols-outlined" style="font-size:9px;">arrow_upward</span>+26,4%</span>
-                                                    <span class="absolute text-[10px] text-rose-500 font-bold leading-none flex items-center gap-px" style="left: 50%; transform: translateX(-50%);"><span class="material-symbols-outlined" style="font-size:10px;">arrow_upward</span>+26,5%</span>
-                                                    <span class="absolute text-[9px] text-emerald-500 font-bold leading-none flex items-center gap-px" style="left: 100%; transform: translateX(-50%);"><span class="material-symbols-outlined" style="font-size:9px;">arrow_downward</span>-50%</span>
-                                                </div>
                                             </div>
+
+                                            <!-- Linha 3: Nº de Mortes -->
+                                            <div class="flex items-center justify-end pr-3">
+                                                <span class="text-[9px] text-sistran-heading font-semibold">Nº de Mortes</span>
+                                            </div>
+                                            <div class="relative pr-4" style="height: 16px;">
+                                                <span class="absolute text-[9px] text-sistran-body font-medium opacity-70" style="left: 0%; transform: translateX(-50%);">4.842</span>
+                                                <span class="absolute text-[9px] text-sistran-body font-medium opacity-70" style="left: 10%; transform: translateX(-50%);">5.062</span>
+                                                <span class="absolute text-[9px] text-sistran-body font-medium opacity-70" style="left: 20%; transform: translateX(-50%);">5.827</span>
+                                                <span class="absolute text-[9px] text-sistran-body font-medium opacity-70" style="left: 30%; transform: translateX(-50%);">6.011</span>
+                                                <span class="absolute text-[9px] text-sistran-body font-medium opacity-70" style="left: 40%; transform: translateX(-50%);">6.122</span>
+                                                <span class="absolute text-[10px] text-sistran-ink font-bold" style="left: 50%; transform: translateX(-50%);">6.125</span>
+                                                <span class="absolute text-[9px] text-sistran-gold font-bold" style="left: 100%; transform: translateX(-50%);">&le;2.421</span>
+                                            </div>
+
+                                            <!-- Linha 4: Variação em relação a 2020 -->
+                                            <div class="flex items-center justify-end pr-3">
+                                                <span class="text-[9px] text-sistran-heading font-semibold text-right leading-tight">Variação em<br>relação a 2020</span>
+                                            </div>
+                                            <div class="relative pr-4" style="height: 16px;">
+                                                <span class="absolute text-[9px] text-sistran-muted font-medium opacity-70" style="left: 0%; transform: translateX(-50%);">—</span>
+                                                <span class="absolute text-[9px] text-rose-400 font-medium opacity-70 flex items-center gap-px" style="left: 10%; transform: translateX(-50%);"><span class="material-symbols-outlined" style="font-size:9px;">arrow_upward</span>+4,5%</span>
+                                                <span class="absolute text-[9px] text-rose-400 font-medium opacity-70 flex items-center gap-px" style="left: 20%; transform: translateX(-50%);"><span class="material-symbols-outlined" style="font-size:9px;">arrow_upward</span>+20,3%</span>
+                                                <span class="absolute text-[9px] text-rose-400 font-medium opacity-70 flex items-center gap-px" style="left: 30%; transform: translateX(-50%);"><span class="material-symbols-outlined" style="font-size:9px;">arrow_upward</span>+24,1%</span>
+                                                <span class="absolute text-[9px] text-rose-400 font-medium opacity-70 flex items-center gap-px" style="left: 40%; transform: translateX(-50%);"><span class="material-symbols-outlined" style="font-size:9px;">arrow_upward</span>+26,4%</span>
+                                                <span class="absolute text-[10px] text-rose-500 font-bold flex items-center gap-px" style="left: 50%; transform: translateX(-50%);"><span class="material-symbols-outlined" style="font-size:10px;">arrow_upward</span>+26,5%</span>
+                                                <span class="absolute text-[9px] text-emerald-500 font-bold flex items-center gap-px" style="left: 100%; transform: translateX(-50%);"><span class="material-symbols-outlined" style="font-size:9px;">arrow_downward</span>-50%</span>
+                                            </div>
+
                                         </div>
                                     </div>
 
