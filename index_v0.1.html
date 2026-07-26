@@ -1108,6 +1108,68 @@
                                 <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Meta principal</p>
                                 <p class="text-sm text-sistran-body leading-relaxed">O PSV-SP tem como meta principal reduzir em 50% as mortes no trânsito até 2030, tendo como referência os 4.842 óbitos registrados em 2020.</p>
 
+                                <!-- OPÇÃO C: Card de Comparação Visual com Círculos Proporcionais -->
+                                <div class="bg-white border border-sistran-border rounded-md p-6 space-y-5">
+                                    <div class="flex flex-col items-center">
+                                        <!-- Círculos proporcionais -->
+                                        <div class="flex items-end justify-center gap-6 md:gap-10 mb-4">
+                                            <!-- Círculo Referência (2020) -->
+                                            <div class="flex flex-col items-center">
+                                                <div class="w-[110px] h-[110px] rounded-full bg-gray-100 border-2 border-gray-300 flex flex-col items-center justify-center">
+                                                    <span class="text-xl font-extrabold text-sistran-heading">4.842</span>
+                                                    <span class="text-[9px] text-sistran-muted font-semibold">óbitos</span>
+                                                </div>
+                                                <span class="text-[10px] font-bold text-sistran-muted uppercase tracking-wider mt-2">Referência 2020</span>
+                                            </div>
+
+                                            <!-- Seta de tendência -->
+                                            <div class="flex flex-col items-center pb-8">
+                                                <span class="material-symbols-outlined text-sistran-gold" style="font-size:28px;">trending_down</span>
+                                            </div>
+
+                                            <!-- Círculo Atual (2025) -->
+                                            <div class="flex flex-col items-center">
+                                                <div id="circulo-atual" class="w-[130px] h-[130px] rounded-full border-3 flex flex-col items-center justify-center" style="border: 3px solid #D97706; background: #FFFBEB;">
+                                                    <span class="text-2xl font-extrabold text-sistran-heading">5.810</span>
+                                                    <span class="text-[9px] text-amber-600 font-semibold">óbitos</span>
+                                                    <span class="text-[9px] text-amber-600 font-bold mt-0.5">+20,0% vs ref.</span>
+                                                </div>
+                                                <span class="text-[10px] font-bold text-amber-600 uppercase tracking-wider mt-2">Atual 2025</span>
+                                            </div>
+
+                                            <!-- Seta de tendência -->
+                                            <div class="flex flex-col items-center pb-8">
+                                                <span class="material-symbols-outlined text-emerald-500" style="font-size:28px;">arrow_forward</span>
+                                            </div>
+
+                                            <!-- Círculo Meta (2030) -->
+                                            <div class="flex flex-col items-center">
+                                                <div class="w-[90px] h-[90px] rounded-full border-2 border-dashed flex flex-col items-center justify-center" style="border-color: #C68B00; background: #FFF1C9;">
+                                                    <span class="text-lg font-extrabold text-sistran-gold">2.421</span>
+                                                    <span class="text-[9px] text-sistran-gold font-semibold">óbitos</span>
+                                                    <span class="text-[8px] text-sistran-gold font-bold">-50%</span>
+                                                </div>
+                                                <span class="text-[10px] font-bold text-sistran-gold uppercase tracking-wider mt-2">Meta 2030</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Indicadores de resumo -->
+                                        <div class="grid grid-cols-3 gap-4 w-full max-w-lg mt-4">
+                                            <div class="p-3 bg-rose-50 border border-rose-200 rounded-md text-center">
+                                                <p class="text-[10px] font-bold text-rose-600 uppercase">Distância da meta</p>
+                                                <h4 class="text-lg font-extrabold text-rose-600">3.389</h4>
+                                                <p class="text-[10px] text-sistran-body">óbitos a reduzir</p>
+                                            </div>
+                                            <div class="p-3 bg-amber-50 border border-amber-200 rounded-md text-center">
+                                                <p class="text-[10px] font-bold text-amber-600 uppercase">Variação vs ref.</p>
+                                                <h4 class="text-lg font-extrabold text-amber-600">+20,0%</h4>
+                                                <p class="text-[10px] text-sistran-body">acima de 2020</p>
+                                            </div>
+                                            <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-md text-center">
+                                                <p class="text-[10px] font-bold text-emerald-600 uppercase">Prazo restante</p>
+                                                <h4 class="text-lg font-extrabold text-emerald-600">5 anos</h4>
+                                                <p class="text-[10px] text-sistran-body">até 2030</p>
+                                            </div>
                                 <!-- OPÇÃO A: Termômetro de Progresso -->
                                 <div class="bg-white border border-sistran-border rounded-md p-6 space-y-5">
                                     <!-- Barra de progresso principal -->
