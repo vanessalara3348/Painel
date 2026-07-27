@@ -1159,28 +1159,10 @@
                                             </div>
 
                                             <!-- Nº de Mortes -->
-                                            <div class="relative mt-1" style="height: 16px;">
-                                                <span class="absolute text-[9px] text-sistran-body font-medium opacity-70" style="left: 0%;">4.842</span>
-                                                <span class="absolute text-[9px] text-sistran-body font-medium opacity-70" style="left: 10%; transform: translateX(-50%);">5.062</span>
-                                                <span class="absolute text-[9px] text-sistran-body font-medium opacity-70" style="left: 20%; transform: translateX(-50%);">5.827</span>
-                                                <span class="absolute text-[9px] text-sistran-body font-medium opacity-70" style="left: 30%; transform: translateX(-50%);">6.011</span>
-                                                <span class="absolute text-[9px] text-sistran-body font-medium opacity-70" style="left: 40%; transform: translateX(-50%);">6.122</span>
-                                                <span class="absolute text-[10px] text-sistran-ink font-bold" style="left: 50%; transform: translateX(-50%);">6.125</span>
-                                                <span class="absolute text-[9px] text-sistran-gold font-bold" style="right: 0%;">&le;2.421</span>
-                                            </div>
+                                            <div id="barra-mortes" class="relative mt-1" style="height: 16px;"></div>
 
                                             <!-- Variação em relação a 2020 -->
-                                            <div class="relative mt-1" style="height: 16px;">
-                                                <span class="absolute text-[9px] text-sistran-muted font-medium opacity-70" style="left: 0%;">—</span>
-                                                <span class="absolute text-[9px] text-rose-400 font-medium opacity-70 flex items-center gap-px" style="left: 10%; transform: translateX(-50%);"><span class="material-symbols-outlined" style="font-size:9px;">arrow_upward</span>+4,5%</span>
-                                                <span class="absolute text-[9px] text-rose-400 font-medium opacity-70 flex items-center gap-px" style="left: 20%; transform: translateX(-50%);"><span class="material-symbols-outlined" style="font-size:9px;">arrow_upward</span>+20,3%</span>
-                                                <span class="absolute text-[9px] text-rose-400 font-medium opacity-70 flex items-center gap-px" style="left: 30%; transform: translateX(-50%);"><span class="material-symbols-outlined" style="font-size:9px;">arrow_upward</span>+24,1%</span>
-                                                <span class="absolute text-[9px] text-rose-400 font-medium opacity-70 flex items-center gap-px" style="left: 40%; transform: translateX(-50%);"><span class="material-symbols-outlined" style="font-size:9px;">arrow_upward</span>+26,4%</span>
-                                                <span class="absolute text-[10px] text-rose-500 font-bold flex items-center gap-px" style="left: 50%; transform: translateX(-50%);"><span class="material-symbols-outlined" style="font-size:10px;">arrow_upward</span>+26,5%</span>
-                                                <span class="absolute text-[9px] text-emerald-500 font-bold flex items-center gap-px" style="right: 0%;"><span class="material-symbols-outlined" style="font-size:9px;">arrow_downward</span>-50%</span>
-                                            </div>
-                                        </div>
-                                    </div>
+                                            <div id="barra-variacao" class="relative mt-1" style="height: 16px;"></div>
 
                                 </div>
 
@@ -2739,7 +2721,6 @@
         }
 
         window.onload = function() {
-            lucide.createIcons();
             loadSpreadsheetData();
             loadMonitoramentoData();
             loadDesempenhoSpreadsheetData();
@@ -2822,9 +2803,6 @@
             }
 
             container.innerHTML = html;
-            if (window.lucide) {
-                lucide.createIcons();
-            }
         }
 
         function toggleLoginIndicatorClick() {
@@ -4016,7 +3994,6 @@
                 trDetail.innerHTML = '<td colspan="8" class="p-4 bg-white border-t border-sistran-border">' + detalhesHtml + '</td>';
                 tbody.appendChild(trDetail);
             });
-            lucide.createIcons();
             updateImplementacaoSummary();
             renderChartImplementacaoEixos();
         }
@@ -5548,7 +5525,6 @@
                 `;
                 container.innerHTML += card;
             });
-            if (window.lucide) lucide.createIcons();
         }
 
         function changeProductStatus(id, novoStatus, motivoReprovacao) {
