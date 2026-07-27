@@ -2598,7 +2598,8 @@
                 console.log('[SIMO] CSV carregado, status:', xhr.status, 'length:', xhr.responseText.length);
                 if (xhr.status === 200 || xhr.status === 0) {
                     const linhas = xhr.responseText.trim().split('\n');
-                    const header = linhas[0].split(',').map(function(h) { return h.trim(); });
+                    var sep = linhas[0].indexOf(';') >= 0 ? ';' : ',';
+                    const header = linhas[0].split(sep).map(function(h) { return h.trim(); });
                     const iAno = header.indexOf('ano_sinistro');
                     const iIndicador = header.indexOf('indicador');
                     const iObitos = header.indexOf('obitos');
@@ -2606,7 +2607,7 @@
                     // Soma óbitos por ano, filtro: indicador = 'Codigo IBGE', anos 2020-2030
                     const totaisPorAno = {};
                     for (let i = 1; i < linhas.length; i++) {
-                        const cols = linhas[i].split(',').map(function(c) { return c.trim(); });
+                        const cols = linhas[i].split(sep).map(function(c) { return c.trim(); });
                         if (cols[iIndicador] === 'Codigo IBGE') {
                             const ano = parseInt(cols[iAno]);
                             if (ano >= 2020 && ano <= 2030) {
@@ -2794,7 +2795,8 @@
             xhr2.onload = function() {
                 if (xhr2.status === 200 || xhr2.status === 0) {
                     const linhas = xhr2.responseText.trim().split('\n');
-                    const header = linhas[0].split(',').map(function(h) { return h.trim(); });
+                    var sep = linhas[0].indexOf(';') >= 0 ? ';' : ',';
+                    const header = linhas[0].split(sep).map(function(h) { return h.trim(); });
                     const iAno = header.indexOf('ano_sinistro');
                     const iIndicador = header.indexOf('indicador');
                     const iObitos = header.indexOf('obitos');
@@ -2802,7 +2804,7 @@
                     // Soma óbitos por ano, filtro: indicador = 'Codigo IBGE'
                     const totaisPorAno = {};
                     for (let i = 1; i < linhas.length; i++) {
-                        const cols = linhas[i].split(',').map(function(c) { return c.trim(); });
+                        const cols = linhas[i].split(sep).map(function(c) { return c.trim(); });
                         if (cols[iIndicador] === 'Codigo IBGE') {
                             const ano = parseInt(cols[iAno]);
                             if (ano >= 2015 && ano <= 2030) {
@@ -2937,10 +2939,11 @@
             xhr3.onload = function() {
                 if (xhr3.status === 200 || xhr3.status === 0) {
                     var linhas = xhr3.responseText.trim().split('\n');
-                    var header = linhas[0].split(',').map(function(h) { return h.trim(); });
+                    var sep = linhas[0].indexOf(';') >= 0 ? ';' : ',';
+                    var header = linhas[0].split(sep).map(function(h) { return h.trim(); });
                     var rows = [];
                     for (var i = 1; i < linhas.length; i++) {
-                        var cols = linhas[i].split(',').map(function(c) { return c.trim(); });
+                        var cols = linhas[i].split(sep).map(function(c) { return c.trim(); });
                         rows.push({
                             ano: parseInt(cols[header.indexOf('ano_sinistro')]),
                             indicador: cols[header.indexOf('indicador')],
