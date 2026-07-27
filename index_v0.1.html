@@ -1207,6 +1207,17 @@
                                     </div>
                                 </div>
 
+                                <!-- Gráfico: Mortalidade Total -->
+                                <div class="bg-white border border-sistran-border rounded-md p-5">
+                                    <div class="mb-3">
+                                        <p class="text-xs font-bold text-sistran-heading">Mortalidade Total</p>
+                                        <p class="text-[10px] text-sistran-body">Taxa de mortes no trânsito por 100 mil habitantes</p>
+                                    </div>
+                                    <div class="h-80 w-full">
+                                        <canvas id="chartMortalidadeTotal"></canvas>
+                                    </div>
+                                </div>
+
                                 <div class="bg-gray-50 p-4 rounded-md border border-sistran-border">
                                     <p class="text-xs font-bold text-sistran-heading mb-3 flex items-center gap-2">
                                         <span class="material-symbols-outlined text-sistran-gold" style="font-size:18px;">filter_list</span>
@@ -2722,6 +2733,159 @@
             xhr.send();
         }
 
+        // === GRÁFICO: Mortalidade Total (Taxa por 100 mil hab) ===
+        function renderChartMortalidadeTotal() {
+            const canvas = document.getElementById('chartMortalidadeTotal');
+            if (!canvas) return;
+
+            // População estimada por ano (IBGE - Estimativas para o TCU)
+            const populacao = {
+                2015: 44396484, 2016: 44749699, 2017: 45094866,
+                2018: 45538936, 2019: 45919049, 2020: 46289333,
+                2021: 46649132, 2022: 46024937, 2023: 46395946,
+                2024: 46767364, 2025: 47139780, 2026: 47500000,
+                2027: 47860000, 2028: 48220000, 2029: 48580000,
+                2030: 48940000
+            };
+
+            const xhr2 = new XMLHttpRequest();
+            xhr2.open('GET', 'Base_Infosiga_Resumo_obitos_2015_2026.csv', true);
+            xhr2.onload = function() {
+                if (xhr2.status === 200 || xhr2.status === 0) {
+                    const linhas = xhr2.responseText.trim().split('\n');
+                    const header = linhas[0].split(',').map(function(h) { return h.trim(); });
+                    const iAno = header.indexOf('ano_sinistro');
+                    const iIndicador = header.indexOf('indicador');
+                    const iObitos = header.indexOf('obitos');
+
+                    // Soma óbitos por ano, filtro: indicador = 'Codigo IBGE'
+                    const totaisPorAno = {};
+                    for (let i = 1; i < linhas.length; i++) {
+                        const cols = linhas[i].split(',').map(function(c) { return c.trim(); });
+                        if (cols[iIndicador] === 'Codigo IBGE') {
+                            const ano = parseInt(cols[iAno]);
+                            if (ano >= 2015 && ano <= 2030) {
+                                totaisPorAno[ano] = (totaisPorAno[ano] || 0) + parseInt(cols[iObitos] || 0);
+                            }
+                        }
+                    }
+
+                    // Calcula taxa por 100 mil habitantes
+                    const anos = [];
+                    const taxas = [];
+                    const ref2020 = totaisPorAno[2020] && populacao[2020] ? (totaisPorAno[2020] / populacao[2020]) * 100000 : 0;
+                    const metaTaxa2030 = ref2020 / 2;
+
+                    for (let a = 2015; a <= 2030; a++) {
+                        anos.push(a.toString());
+                        if (a === 2030) {
+                            taxas.push(parseFloat(metaTaxa2030.toFixed(1)));
+                        } else if (totaisPorAno[a] && populacao[a]) {
+                            // Verificar dados parciais (último ano pode ser incompleto)
+                            if (a === Math.max(...Object.keys(totaisPorAno).map(Number))) {
+                                const penultimo = totaisPorAno[a - 1];
+                                if (totaisPorAno[a] < penultimo * 0.6) {
+                                    taxas.push(null); // Dados parciais, não exibir
+                                    continue;
+                                }
+                            }
+                            const taxa = (totaisPorAno[a] / populacao[a]) * 100000;
+                            taxas.push(parseFloat(taxa.toFixed(1)));
+                        } else {
+                            taxas.push(null);
+                        }
+                    }
+
+                    // Renderiza gráfico
+                    if (charts.chartMortalidadeTotal) charts.chartMortalidadeTotal.destroy();
+
+                    charts.chartMortalidadeTotal = new Chart(canvas.getContext('2d'), {
+                        type: 'line',
+                        data: {
+                            labels: anos,
+                            datasets: [
+                                {
+                                    label: 'Taxa de mortalidade (por 100 mil hab.)',
+                                    data: taxas,
+                                    borderColor: '#C68B00',
+                                    backgroundColor: 'rgba(198, 139, 0, 0.08)',
+                                    borderWidth: 2.5,
+                                    fill: true,
+                                    tension: 0.2,
+                                    pointBackgroundColor: function(ctx) {
+                                        const idx = ctx.dataIndex;
+                                        if (idx === taxas.length - 1) return '#10B981'; // Meta 2030
+                                        return '#C68B00';
+                                    },
+                                    pointBorderColor: function(ctx) {
+                                        const idx = ctx.dataIndex;
+                                        if (idx === taxas.length - 1) return '#059669';
+                                        return '#C68B00';
+                                    },
+                                    pointRadius: function(ctx) {
+                                        const idx = ctx.dataIndex;
+                                        if (idx === taxas.length - 1) return 6;
+                                        return 3;
+                                    },
+                                    spanGaps: false
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: true,
+                                    position: 'bottom',
+                                    labels: {
+                                        font: { family: 'Open Sans', size: 11 },
+                                        color: '#57595A'
+                                    }
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(ctx) {
+                                            if (ctx.dataIndex === taxas.length - 1) {
+                                                return ' Meta 2030: ' + ctx.parsed.y.toFixed(1) + ' por 100 mil hab.';
+                                            }
+                                            return ' Taxa: ' + ctx.parsed.y.toFixed(1) + ' por 100 mil hab.';
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    grid: { color: '#F3F4F6' },
+                                    ticks: {
+                                        font: { family: 'Open Sans', size: 10 },
+                                        color: '#57595A'
+                                    }
+                                },
+                                y: {
+                                    min: 0,
+                                    max: 16,
+                                    grid: { color: '#E5E7EB' },
+                                    ticks: {
+                                        font: { family: 'Open Sans', size: 10 },
+                                        color: '#57595A',
+                                        callback: function(value) { return value.toFixed(0); }
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Óbitos por 100 mil hab.',
+                                        font: { family: 'Open Sans', size: 10 },
+                                        color: '#57595A'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            };
+            xhr2.send();
+        }
+
         window.onload = function() {
             loadSpreadsheetData();
             loadMonitoramentoData();
@@ -2729,6 +2893,7 @@
             
             initCharts();
             renderMetaPrincipalBarra();
+            renderChartMortalidadeTotal();
 
             renderValidationCards();
             updateUIStats();
