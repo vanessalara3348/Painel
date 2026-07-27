@@ -2546,7 +2546,7 @@
             xhr.onload = function() {
                 if (xhr.status === 200 || xhr.status === 0) {
                     const linhas = xhr.responseText.trim().split('\n');
-                    const header = linhas[0].split(',');
+                    const header = linhas[0].split(',').map(function(h) { return h.trim(); });
                     const iAno = header.indexOf('ano_sinistro');
                     const iIndicador = header.indexOf('indicador');
                     const iObitos = header.indexOf('obitos');
@@ -2554,7 +2554,7 @@
                     // Soma óbitos por ano, filtro: indicador = 'Codigo IBGE', anos 2020-2030
                     const totaisPorAno = {};
                     for (let i = 1; i < linhas.length; i++) {
-                        const cols = linhas[i].split(',');
+                        const cols = linhas[i].split(',').map(function(c) { return c.trim(); });
                         if (cols[iIndicador] === 'Codigo IBGE') {
                             const ano = parseInt(cols[iAno]);
                             if (ano >= 2020 && ano <= 2030) {
