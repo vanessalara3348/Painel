@@ -1207,6 +1207,17 @@
                                     </div>
                                 </div>
 
+                                <!-- Gráfico: Mortalidade Total -->
+                                <div class="bg-white border border-sistran-border rounded-md p-5">
+                                    <div class="mb-3">
+                                        <p class="text-xs font-bold text-sistran-heading">Mortalidade Total</p>
+                                        <p class="text-[10px] text-sistran-body">Taxa de mortes no trânsito por 100 mil habitantes</p>
+                                    </div>
+                                    <div class="h-80 w-full">
+                                        <canvas id="chartMortalidadeTotal"></canvas>
+                                    </div>
+                                </div>
+
                                 <div class="bg-gray-50 p-4 rounded-md border border-sistran-border">
                                     <p class="text-xs font-bold text-sistran-heading mb-3 flex items-center gap-2">
                                         <span class="material-symbols-outlined text-sistran-gold" style="font-size:18px;">filter_list</span>
@@ -1242,13 +1253,52 @@
                                     </div>
                                 </div>
 
-                                <div class="bg-white p-4 border border-sistran-border rounded-md">
-                                    <div class="flex items-center justify-between mb-2 font-semibold">
-                                        <p class="text-xs text-sistran-heading">Série Histórica e Trajetória de Metas até 2030</p>
-                                        <span class="text-[10px] text-sistran-muted">Fontes oficiais: Infosiga / IBGE / base consolidada</span>
+                                <!-- Gráfico: Mortalidade por Tipo de Via -->
+                                <div class="bg-white border border-sistran-border rounded-md p-5">
+                                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-3">
+                                        <div>
+                                            <p class="text-xs font-bold text-sistran-heading">Mortalidade por tipo de via</p>
+                                            <p class="text-[10px] text-sistran-body">Taxa de mortes no trânsito por 100 mil habitantes por ano no Estado São Paulo</p>
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-semibold text-sistran-body mb-1">Tipo de via</label>
+                                            <select id="filtro-tipo-via" onchange="renderChartTipoVia()" class="text-xs p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                <option value="all" selected>Todas</option>
+                                                <option value="ESTRADAS E RODOVIAS">Estradas e Rodovias</option>
+                                                <option value="VIAS URBANAS">Vias Urbanas</option>
+                                                <option value="NAO DISPONIVEL">Não Disponível</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div class="h-80 w-full">
-                                        <canvas id="impactLineChart"></canvas>
+                                        <canvas id="chartTipoVia"></canvas>
+                                    </div>
+                                </div>
+
+                                <!-- Gráfico: Mortalidade por Modo de Transporte -->
+                                <div class="bg-white border border-sistran-border rounded-md p-5">
+                                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-3">
+                                        <div>
+                                            <p class="text-xs font-bold text-sistran-heading">Mortalidade por modo de transporte</p>
+                                            <p class="text-[10px] text-sistran-body">Taxa de mortes no trânsito por 100 mil habitantes por ano no Estado São Paulo</p>
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-semibold text-sistran-body mb-1">Modo de transporte</label>
+                                            <select id="filtro-modo-transporte" onchange="renderChartModoTransporte()" class="text-xs p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                <option value="all" selected>Todos</option>
+                                                <option value="AUTOMOVEL">Automóvel</option>
+                                                <option value="BICICLETA">Bicicleta</option>
+                                                <option value="CAMINHAO">Caminhão</option>
+                                                <option value="MOTOCICLETA">Motocicleta</option>
+                                                <option value="NAO DISPONIVEL">Não Disponível</option>
+                                                <option value="ONIBUS">Ônibus</option>
+                                                <option value="OUTROS">Outros</option>
+                                                <option value="PEDESTRE">Pedestre</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="h-80 w-full">
+                                        <canvas id="chartModoTransporte"></canvas>
                                     </div>
                                 </div>
 
@@ -2546,7 +2596,7 @@
             xhr.onload = function() {
                 if (xhr.status === 200 || xhr.status === 0) {
                     const linhas = xhr.responseText.trim().split('\n');
-                    const header = linhas[0].split(',');
+                    const header = linhas[0].split(',').map(function(h) { return h.trim(); });
                     const iAno = header.indexOf('ano_sinistro');
                     const iIndicador = header.indexOf('indicador');
                     const iObitos = header.indexOf('obitos');
@@ -2554,7 +2604,7 @@
                     // Soma óbitos por ano, filtro: indicador = 'Codigo IBGE', anos 2020-2030
                     const totaisPorAno = {};
                     for (let i = 1; i < linhas.length; i++) {
-                        const cols = linhas[i].split(',');
+                        const cols = linhas[i].split(',').map(function(c) { return c.trim(); });
                         if (cols[iIndicador] === 'Codigo IBGE') {
                             const ano = parseInt(cols[iAno]);
                             if (ano >= 2020 && ano <= 2030) {
@@ -2722,6 +2772,371 @@
             xhr.send();
         }
 
+        // === GRÁFICO: Mortalidade Total (Taxa por 100 mil hab) ===
+        function renderChartMortalidadeTotal() {
+            const canvas = document.getElementById('chartMortalidadeTotal');
+            if (!canvas) return;
+
+            // População estimada por ano (IBGE - Estimativas para o TCU)
+            const populacao = {
+                2015: 44396484, 2016: 44749699, 2017: 45094866,
+                2018: 45538936, 2019: 45919049, 2020: 46289333,
+                2021: 46649132, 2022: 46024937, 2023: 46395946,
+                2024: 46767364, 2025: 47139780, 2026: 47500000,
+                2027: 47860000, 2028: 48220000, 2029: 48580000,
+                2030: 48940000
+            };
+
+            const xhr2 = new XMLHttpRequest();
+            xhr2.open('GET', 'Base_Infosiga_Resumo_obitos_2015_2026.csv', true);
+            xhr2.onload = function() {
+                if (xhr2.status === 200 || xhr2.status === 0) {
+                    const linhas = xhr2.responseText.trim().split('\n');
+                    const header = linhas[0].split(',').map(function(h) { return h.trim(); });
+                    const iAno = header.indexOf('ano_sinistro');
+                    const iIndicador = header.indexOf('indicador');
+                    const iObitos = header.indexOf('obitos');
+
+                    // Soma óbitos por ano, filtro: indicador = 'Codigo IBGE'
+                    const totaisPorAno = {};
+                    for (let i = 1; i < linhas.length; i++) {
+                        const cols = linhas[i].split(',').map(function(c) { return c.trim(); });
+                        if (cols[iIndicador] === 'Codigo IBGE') {
+                            const ano = parseInt(cols[iAno]);
+                            if (ano >= 2015 && ano <= 2030) {
+                                totaisPorAno[ano] = (totaisPorAno[ano] || 0) + parseInt(cols[iObitos] || 0);
+                            }
+                        }
+                    }
+
+                    // Calcula taxa por 100 mil habitantes
+                    const anos = [];
+                    const taxas = [];
+                    const ref2020 = totaisPorAno[2020] && populacao[2020] ? (totaisPorAno[2020] / populacao[2020]) * 100000 : 0;
+                    const metaTaxa2030 = ref2020 / 2;
+
+                    for (let a = 2015; a <= 2030; a++) {
+                        anos.push(a.toString());
+                        if (a === 2030) {
+                            taxas.push(parseFloat(metaTaxa2030.toFixed(1)));
+                        } else if (totaisPorAno[a] && populacao[a]) {
+                            // Verificar dados parciais (último ano pode ser incompleto)
+                            if (a === Math.max(...Object.keys(totaisPorAno).map(Number))) {
+                                const penultimo = totaisPorAno[a - 1];
+                                if (totaisPorAno[a] < penultimo * 0.6) {
+                                    taxas.push(null); // Dados parciais, não exibir
+                                    continue;
+                                }
+                            }
+                            const taxa = (totaisPorAno[a] / populacao[a]) * 100000;
+                            taxas.push(parseFloat(taxa.toFixed(1)));
+                        } else {
+                            taxas.push(null);
+                        }
+                    }
+
+                    // Renderiza gráfico
+                    if (charts.chartMortalidadeTotal) charts.chartMortalidadeTotal.destroy();
+
+                    charts.chartMortalidadeTotal = new Chart(canvas.getContext('2d'), {
+                        type: 'line',
+                        data: {
+                            labels: anos,
+                            datasets: [
+                                {
+                                    label: 'Taxa de mortalidade (por 100 mil hab.)',
+                                    data: taxas,
+                                    borderColor: '#C68B00',
+                                    backgroundColor: 'rgba(198, 139, 0, 0.08)',
+                                    borderWidth: 2.5,
+                                    fill: true,
+                                    tension: 0.2,
+                                    pointBackgroundColor: function(ctx) {
+                                        const idx = ctx.dataIndex;
+                                        if (idx === taxas.length - 1) return '#10B981'; // Meta 2030
+                                        return '#C68B00';
+                                    },
+                                    pointBorderColor: function(ctx) {
+                                        const idx = ctx.dataIndex;
+                                        if (idx === taxas.length - 1) return '#059669';
+                                        return '#C68B00';
+                                    },
+                                    pointRadius: function(ctx) {
+                                        const idx = ctx.dataIndex;
+                                        if (idx === taxas.length - 1) return 6;
+                                        return 3;
+                                    },
+                                    spanGaps: false
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: true,
+                                    position: 'bottom',
+                                    labels: {
+                                        font: { family: 'Open Sans', size: 11 },
+                                        color: '#57595A'
+                                    }
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(ctx) {
+                                            if (ctx.dataIndex === taxas.length - 1) {
+                                                return ' Meta 2030: ' + ctx.parsed.y.toFixed(1) + ' por 100 mil hab.';
+                                            }
+                                            return ' Taxa: ' + ctx.parsed.y.toFixed(1) + ' por 100 mil hab.';
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    grid: { color: '#F3F4F6' },
+                                    ticks: {
+                                        font: { family: 'Open Sans', size: 10 },
+                                        color: '#57595A'
+                                    }
+                                },
+                                y: {
+                                    min: 0,
+                                    max: 16,
+                                    grid: { color: '#E5E7EB' },
+                                    ticks: {
+                                        font: { family: 'Open Sans', size: 10 },
+                                        color: '#57595A',
+                                        callback: function(value) { return value.toFixed(0); }
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Óbitos por 100 mil hab.',
+                                        font: { family: 'Open Sans', size: 10 },
+                                        color: '#57595A'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            };
+            xhr2.send();
+        }
+
+        // === Dados compartilhados para gráficos de Tipo de Via e Modo de Transporte ===
+        var infosigaCSVData = null;
+
+        function loadInfosigaCSV(callback) {
+            if (infosigaCSVData) { callback(infosigaCSVData); return; }
+            var xhr3 = new XMLHttpRequest();
+            xhr3.open('GET', 'Base_Infosiga_Resumo_obitos_2015_2026.csv', true);
+            xhr3.onload = function() {
+                if (xhr3.status === 200 || xhr3.status === 0) {
+                    var linhas = xhr3.responseText.trim().split('\n');
+                    var header = linhas[0].split(',').map(function(h) { return h.trim(); });
+                    var rows = [];
+                    for (var i = 1; i < linhas.length; i++) {
+                        var cols = linhas[i].split(',').map(function(c) { return c.trim(); });
+                        rows.push({
+                            ano: parseInt(cols[header.indexOf('ano_sinistro')]),
+                            indicador: cols[header.indexOf('indicador')],
+                            categoria: cols[header.indexOf('categoria')],
+                            obitos: parseInt(cols[header.indexOf('obitos')] || 0)
+                        });
+                    }
+                    infosigaCSVData = rows;
+                    callback(rows);
+                }
+            };
+            xhr3.send();
+        }
+
+        // População por ano (IBGE)
+        var populacaoSP = {
+            2015: 44396484, 2016: 44749699, 2017: 45094866,
+            2018: 45538936, 2019: 45919049, 2020: 46289333,
+            2021: 46649132, 2022: 46024937, 2023: 46395946,
+            2024: 46767364, 2025: 47139780, 2026: 47500000,
+            2027: 47860000, 2028: 48220000, 2029: 48580000,
+            2030: 48940000
+        };
+
+        // Cores DS para categorias
+        var coresTipoVia = {
+            'ESTRADAS E RODOVIAS': '#C68B00',
+            'VIAS URBANAS': '#111414',
+            'NAO DISPONIVEL': '#B0B0B0'
+        };
+        var coresModoTransporte = {
+            'AUTOMOVEL': '#C68B00',
+            'BICICLETA': '#10B981',
+            'CAMINHAO': '#6366F1',
+            'MOTOCICLETA': '#EF4444',
+            'NAO DISPONIVEL': '#B0B0B0',
+            'ONIBUS': '#D97706',
+            'OUTROS': '#57595A',
+            'PEDESTRE': '#2563EB'
+        };
+
+        // === GRÁFICO: Mortalidade por Tipo de Via ===
+        function renderChartTipoVia() {
+            loadInfosigaCSV(function(rows) {
+                var canvas = document.getElementById('chartTipoVia');
+                if (!canvas) return;
+
+                var filtro = document.getElementById('filtro-tipo-via').value;
+
+                // Filtra dados
+                var dados = rows.filter(function(r) { return r.indicador === 'Tipo de via' && r.ano >= 2015 && r.ano <= 2030; });
+
+                // Categorias a exibir
+                var categorias = filtro === 'all' ? ['ESTRADAS E RODOVIAS', 'VIAS URBANAS', 'NAO DISPONIVEL'] : [filtro];
+
+                // Agrupa: {categoria: {ano: soma_obitos}}
+                var agrupado = {};
+                categorias.forEach(function(cat) { agrupado[cat] = {}; });
+                dados.forEach(function(r) {
+                    if (categorias.indexOf(r.categoria) >= 0) {
+                        if (!agrupado[r.categoria][r.ano]) agrupado[r.categoria][r.ano] = 0;
+                        agrupado[r.categoria][r.ano] += r.obitos;
+                    }
+                });
+
+                // Detecta último ano com dados parciais
+                var anosComDados = Object.keys(agrupado[categorias[0]] || {}).map(Number).sort();
+                var ultimoAno = anosComDados[anosComDados.length - 1];
+                var penultimoTotal = 0, ultimoTotal = 0;
+                categorias.forEach(function(cat) {
+                    penultimoTotal += (agrupado[cat][ultimoAno - 1] || 0);
+                    ultimoTotal += (agrupado[cat][ultimoAno] || 0);
+                });
+                var excluirUltimo = ultimoTotal < penultimoTotal * 0.6;
+
+                // Gera labels e datasets
+                var labels = [];
+                for (var a = 2015; a <= 2030; a++) labels.push(a.toString());
+
+                var datasets = categorias.map(function(cat) {
+                    var data = labels.map(function(anoStr) {
+                        var ano = parseInt(anoStr);
+                        var obitos = agrupado[cat][ano];
+                        if (!obitos || (excluirUltimo && ano === ultimoAno)) return null;
+                        var pop = populacaoSP[ano];
+                        if (!pop) return null;
+                        return parseFloat(((obitos / pop) * 100000).toFixed(2));
+                    });
+                    return {
+                        label: cat.charAt(0) + cat.slice(1).toLowerCase(),
+                        data: data,
+                        borderColor: coresTipoVia[cat] || '#C68B00',
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        tension: 0.2,
+                        pointRadius: 3,
+                        spanGaps: false
+                    };
+                });
+
+                if (charts.chartTipoVia) charts.chartTipoVia.destroy();
+                charts.chartTipoVia = new Chart(canvas.getContext('2d'), {
+                    type: 'line',
+                    data: { labels: labels, datasets: datasets },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: true, position: 'bottom', labels: { font: { family: 'Open Sans', size: 11 }, color: '#57595A' } },
+                            tooltip: { callbacks: { label: function(ctx) { return ' ' + ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(2) + ' por 100 mil hab.'; } } }
+                        },
+                        scales: {
+                            x: { grid: { color: '#F3F4F6' }, ticks: { font: { family: 'Open Sans', size: 10 }, color: '#57595A' } },
+                            y: { min: 0, max: 12, grid: { color: '#E5E7EB' }, ticks: { font: { family: 'Open Sans', size: 10 }, color: '#57595A' }, title: { display: true, text: 'Óbitos por 100 mil hab.', font: { family: 'Open Sans', size: 10 }, color: '#57595A' } }
+                        }
+                    }
+                });
+            });
+        }
+
+        // === GRÁFICO: Mortalidade por Modo de Transporte ===
+        function renderChartModoTransporte() {
+            loadInfosigaCSV(function(rows) {
+                var canvas = document.getElementById('chartModoTransporte');
+                if (!canvas) return;
+
+                var filtro = document.getElementById('filtro-modo-transporte').value;
+
+                // Filtra dados
+                var dados = rows.filter(function(r) { return r.indicador === 'Modo de transporte' && r.ano >= 2015 && r.ano <= 2030; });
+
+                // Categorias a exibir
+                var todasCategorias = ['AUTOMOVEL', 'BICICLETA', 'CAMINHAO', 'MOTOCICLETA', 'NAO DISPONIVEL', 'ONIBUS', 'OUTROS', 'PEDESTRE'];
+                var categorias = filtro === 'all' ? todasCategorias : [filtro];
+
+                // Agrupa: {categoria: {ano: soma_obitos}}
+                var agrupado = {};
+                categorias.forEach(function(cat) { agrupado[cat] = {}; });
+                dados.forEach(function(r) {
+                    if (categorias.indexOf(r.categoria) >= 0) {
+                        if (!agrupado[r.categoria][r.ano]) agrupado[r.categoria][r.ano] = 0;
+                        agrupado[r.categoria][r.ano] += r.obitos;
+                    }
+                });
+
+                // Detecta último ano com dados parciais
+                var anosComDados = Object.keys(agrupado[categorias[0]] || {}).map(Number).sort();
+                var ultimoAno = anosComDados[anosComDados.length - 1];
+                var penultimoTotal = 0, ultimoTotal = 0;
+                categorias.forEach(function(cat) {
+                    penultimoTotal += (agrupado[cat][ultimoAno - 1] || 0);
+                    ultimoTotal += (agrupado[cat][ultimoAno] || 0);
+                });
+                var excluirUltimo = ultimoTotal < penultimoTotal * 0.6;
+
+                // Gera labels e datasets
+                var labels = [];
+                for (var a = 2015; a <= 2030; a++) labels.push(a.toString());
+
+                var datasets = categorias.map(function(cat) {
+                    var data = labels.map(function(anoStr) {
+                        var ano = parseInt(anoStr);
+                        var obitos = agrupado[cat][ano];
+                        if (!obitos || (excluirUltimo && ano === ultimoAno)) return null;
+                        var pop = populacaoSP[ano];
+                        if (!pop) return null;
+                        return parseFloat(((obitos / pop) * 100000).toFixed(2));
+                    });
+                    return {
+                        label: cat.charAt(0) + cat.slice(1).toLowerCase(),
+                        data: data,
+                        borderColor: coresModoTransporte[cat] || '#57595A',
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        tension: 0.2,
+                        pointRadius: 3,
+                        spanGaps: false
+                    };
+                });
+
+                if (charts.chartModoTransporte) charts.chartModoTransporte.destroy();
+                charts.chartModoTransporte = new Chart(canvas.getContext('2d'), {
+                    type: 'line',
+                    data: { labels: labels, datasets: datasets },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: true, position: 'bottom', labels: { font: { family: 'Open Sans', size: 11 }, color: '#57595A' } },
+                            tooltip: { callbacks: { label: function(ctx) { return ' ' + ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(2) + ' por 100 mil hab.'; } } }
+                        },
+                        scales: {
+                            x: { grid: { color: '#F3F4F6' }, ticks: { font: { family: 'Open Sans', size: 10 }, color: '#57595A' } },
+                            y: { min: 0, max: 12, grid: { color: '#E5E7EB' }, ticks: { font: { family: 'Open Sans', size: 10 }, color: '#57595A' }, title: { display: true, text: 'Óbitos por 100 mil hab.', font: { family: 'Open Sans', size: 10 }, color: '#57595A' } }
+                        }
+                    }
+                });
+            });
+        }
+
         window.onload = function() {
             loadSpreadsheetData();
             loadMonitoramentoData();
@@ -2729,6 +3144,9 @@
             
             initCharts();
             renderMetaPrincipalBarra();
+            renderChartMortalidadeTotal();
+            renderChartTipoVia();
+            renderChartModoTransporte();
 
             renderValidationCards();
             updateUIStats();
@@ -3185,59 +3603,7 @@
                 }
             });
 
-            const ctxImpact = document.getElementById('impactLineChart').getContext('2d');
-            charts.impactLine = new Chart(ctxImpact, {
-                type: 'line',
-                data: {
-                    labels: ['2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024 (Base)', '2025 (Prev)', '2026 (Meta)', '2027 (Meta)', '2028 (Meta)', '2029 (Meta)', '2030 (Meta)'],
-                    datasets: [
-                        {
-                            label: 'Série Histórica Registrada',
-                            data: [6400, 6250, 6100, 5950, 5800, 5200, 5400, 5700, 6050, 6122, null, null, null, null, null, null],
-                            borderColor: '#C68B00',
-                            backgroundColor: 'rgba(198, 139, 0, 0.1)',
-                            borderWidth: 3,
-                            fill: true,
-                            tension: 0.1
-                        },
-                        {
-                            label: 'Consolidação Preliminar',
-                            data: [null, null, null, null, null, null, null, null, null, 6122, 5810, null, null, null, null, null],
-                            borderColor: '#FECF03',
-                            borderWidth: 3,
-                            pointStyle: 'circle',
-                            pointRadius: 6,
-                            pointHoverRadius: 8
-                        },
-                        {
-                            label: 'Trajetória Recomendada (-50%)',
-                            data: [null, null, null, null, null, null, null, null, null, 6122, 5612, 5102, 4592, 4082, 3572, 3061],
-                            borderColor: '#111414',
-                            borderWidth: 2,
-                            borderDash: [5, 5],
-                            pointStyle: 'rectRot',
-                            pointRadius: 5
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: { font: { family: 'Open Sans', size: 11 } }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            min: 2000,
-                            max: 7000,
-                            grid: { color: '#E5E7EB' }
-                        }
-                    }
-                }
-            });
+            // Gráfico impactLineChart removido - substituído por gráficos dinâmicos
 
             const ctxTendencia = document.getElementById('chartTendenciaObitos').getContext('2d');
 
