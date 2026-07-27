@@ -2591,9 +2591,11 @@
 
         // === META PRINCIPAL: Leitura dinâmica do CSV e renderização ===
         function renderMetaPrincipalBarra() {
+            console.log('[SIMO] renderMetaPrincipalBarra chamada');
             const xhr = new XMLHttpRequest();
             xhr.open('GET', 'Base_Infosiga_Resumo_obitos_2015_2026.csv', true);
             xhr.onload = function() {
+                console.log('[SIMO] CSV carregado, status:', xhr.status, 'length:', xhr.responseText.length);
                 if (xhr.status === 200 || xhr.status === 0) {
                     const linhas = xhr.responseText.trim().split('\n');
                     const header = linhas[0].split(',').map(function(h) { return h.trim(); });
@@ -3015,11 +3017,11 @@
             loadMonitoramentoData();
             loadDesempenhoSpreadsheetData();
             
-            initCharts();
-            renderMetaPrincipalBarra();
-            renderChartMortalidadeTotal();
-            renderChartTipoVia();
-            renderChartModoTransporte();
+            try { initCharts(); } catch(e) { console.warn('[SIMO] initCharts error:', e); }
+            try { renderMetaPrincipalBarra(); } catch(e) { console.warn('[SIMO] renderMetaPrincipalBarra error:', e); }
+            try { renderChartMortalidadeTotal(); } catch(e) { console.warn('[SIMO] renderChartMortalidadeTotal error:', e); }
+            try { renderChartTipoVia(); } catch(e) { console.warn('[SIMO] renderChartTipoVia error:', e); }
+            try { renderChartModoTransporte(); } catch(e) { console.warn('[SIMO] renderChartModoTransporte error:', e); }
 
             renderValidationCards();
             updateUIStats();
