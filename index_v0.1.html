@@ -1253,13 +1253,52 @@
                                     </div>
                                 </div>
 
-                                <div class="bg-white p-4 border border-sistran-border rounded-md">
-                                    <div class="flex items-center justify-between mb-2 font-semibold">
-                                        <p class="text-xs text-sistran-heading">Série Histórica e Trajetória de Metas até 2030</p>
-                                        <span class="text-[10px] text-sistran-muted">Fontes oficiais: Infosiga / IBGE / base consolidada</span>
+                                <!-- Gráfico: Mortalidade por Tipo de Via -->
+                                <div class="bg-white border border-sistran-border rounded-md p-5">
+                                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-3">
+                                        <div>
+                                            <p class="text-xs font-bold text-sistran-heading">Mortalidade por tipo de via</p>
+                                            <p class="text-[10px] text-sistran-body">Taxa de mortes no trânsito por 100 mil habitantes por ano no Estado São Paulo</p>
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-semibold text-sistran-body mb-1">Tipo de via</label>
+                                            <select id="filtro-tipo-via" onchange="renderChartTipoVia()" class="text-xs p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                <option value="all" selected>Todas</option>
+                                                <option value="ESTRADAS E RODOVIAS">Estradas e Rodovias</option>
+                                                <option value="VIAS URBANAS">Vias Urbanas</option>
+                                                <option value="NAO DISPONIVEL">Não Disponível</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div class="h-80 w-full">
-                                        <canvas id="impactLineChart"></canvas>
+                                        <canvas id="chartTipoVia"></canvas>
+                                    </div>
+                                </div>
+
+                                <!-- Gráfico: Mortalidade por Modo de Transporte -->
+                                <div class="bg-white border border-sistran-border rounded-md p-5">
+                                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-3">
+                                        <div>
+                                            <p class="text-xs font-bold text-sistran-heading">Mortalidade por modo de transporte</p>
+                                            <p class="text-[10px] text-sistran-body">Taxa de mortes no trânsito por 100 mil habitantes por ano no Estado São Paulo</p>
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-semibold text-sistran-body mb-1">Modo de transporte</label>
+                                            <select id="filtro-modo-transporte" onchange="renderChartModoTransporte()" class="text-xs p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                <option value="all" selected>Todos</option>
+                                                <option value="AUTOMOVEL">Automóvel</option>
+                                                <option value="BICICLETA">Bicicleta</option>
+                                                <option value="CAMINHAO">Caminhão</option>
+                                                <option value="MOTOCICLETA">Motocicleta</option>
+                                                <option value="NAO DISPONIVEL">Não Disponível</option>
+                                                <option value="ONIBUS">Ônibus</option>
+                                                <option value="OUTROS">Outros</option>
+                                                <option value="PEDESTRE">Pedestre</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="h-80 w-full">
+                                        <canvas id="chartModoTransporte"></canvas>
                                     </div>
                                 </div>
 
@@ -3350,59 +3389,7 @@
                 }
             });
 
-            const ctxImpact = document.getElementById('impactLineChart').getContext('2d');
-            charts.impactLine = new Chart(ctxImpact, {
-                type: 'line',
-                data: {
-                    labels: ['2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024 (Base)', '2025 (Prev)', '2026 (Meta)', '2027 (Meta)', '2028 (Meta)', '2029 (Meta)', '2030 (Meta)'],
-                    datasets: [
-                        {
-                            label: 'Série Histórica Registrada',
-                            data: [6400, 6250, 6100, 5950, 5800, 5200, 5400, 5700, 6050, 6122, null, null, null, null, null, null],
-                            borderColor: '#C68B00',
-                            backgroundColor: 'rgba(198, 139, 0, 0.1)',
-                            borderWidth: 3,
-                            fill: true,
-                            tension: 0.1
-                        },
-                        {
-                            label: 'Consolidação Preliminar',
-                            data: [null, null, null, null, null, null, null, null, null, 6122, 5810, null, null, null, null, null],
-                            borderColor: '#FECF03',
-                            borderWidth: 3,
-                            pointStyle: 'circle',
-                            pointRadius: 6,
-                            pointHoverRadius: 8
-                        },
-                        {
-                            label: 'Trajetória Recomendada (-50%)',
-                            data: [null, null, null, null, null, null, null, null, null, 6122, 5612, 5102, 4592, 4082, 3572, 3061],
-                            borderColor: '#111414',
-                            borderWidth: 2,
-                            borderDash: [5, 5],
-                            pointStyle: 'rectRot',
-                            pointRadius: 5
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: { font: { family: 'Open Sans', size: 11 } }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            min: 2000,
-                            max: 7000,
-                            grid: { color: '#E5E7EB' }
-                        }
-                    }
-                }
-            });
+            // Gráfico impactLineChart removido - substituído por gráficos dinâmicos
 
             const ctxTendencia = document.getElementById('chartTendenciaObitos').getContext('2d');
 
