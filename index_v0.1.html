@@ -1111,23 +1111,20 @@
                                 <!-- Cards + Barra Temporal numa caixa única -->
                                 <div class="bg-white border border-sistran-border rounded-md p-5 space-y-5">
 
-                                    <!-- 3 KPI Cards -->
+                                    <!-- 3 KPI Cards (dinâmicos) -->
                                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-semibold">
                                         <!-- Card Referência -->
                                         <div class="p-4 bg-gray-50 border border-gray-200 rounded-md text-center">
                                             <p class="text-[10px] font-bold text-sistran-muted uppercase">Referência (2020)</p>
-                                            <h4 class="text-2xl font-extrabold text-sistran-heading">4.842</h4>
+                                            <h4 id="kpi-referencia-valor" class="text-2xl font-extrabold text-sistran-heading">—</h4>
                                             <p class="text-xs text-sistran-body mt-3">Mortes no trânsito</p>
                                         </div>
                                         <!-- Card Atual -->
                                         <div class="p-4 bg-amber-50 border border-amber-200 rounded-md text-center">
-                                            <p class="text-[10px] font-bold text-amber-600 uppercase">Atual (2025)</p>
+                                            <p id="kpi-atual-titulo" class="text-[10px] font-bold text-amber-600 uppercase">Atual (—)</p>
                                             <div class="flex items-center justify-center gap-2 mt-1">
-                                                <p class="text-2xl font-bold text-rose-500 flex items-center gap-0.5">
-                                                    <span class="material-symbols-outlined" style="font-size:22px;">arrow_upward</span>
-                                                    +26,5%
-                                                </p>
-                                                <h4 class="text-xs font-extrabold text-sistran-heading">6.125</h4>
+                                                <p id="kpi-atual-variacao" class="text-2xl font-bold text-rose-500 flex items-center gap-0.5">—</p>
+                                                <h4 id="kpi-atual-valor" class="text-xs font-extrabold text-sistran-heading">—</h4>
                                             </div>
                                             <p class="text-xs text-sistran-body mt-1">Mortes no trânsito</p>
                                         </div>
@@ -1139,37 +1136,25 @@
                                                     <span class="material-symbols-outlined" style="font-size:22px;">arrow_downward</span>
                                                     -50%
                                                 </p>
-                                                <h4 class="text-xs font-extrabold text-sistran-gold">&le; 2.421</h4>
+                                                <h4 id="kpi-meta-valor" class="text-xs font-extrabold text-sistran-gold">—</h4>
                                             </div>
                                             <p class="text-xs text-sistran-body mt-1">Mortes no trânsito</p>
                                         </div>
                                     </div>
 
-                                    <!-- Barra de Progresso Temporal -->
+                                    <!-- Barra de Progresso Temporal (dinâmica) -->
                                     <div class="pt-2 pb-2">
                                         <p class="text-xs font-bold text-sistran-heading mb-4">Progresso da Meta Principal por Ano</p>
                                         
                                         <div class="px-4">
                                             <!-- Anos -->
-                                            <div class="relative" style="height: 16px;">
-                                                <span class="absolute text-[9px] text-sistran-muted font-medium" style="left: 0%;">2020</span>
-                                                <span class="absolute text-[9px] text-sistran-muted font-medium" style="left: 10%; transform: translateX(-50%);">2021</span>
-                                                <span class="absolute text-[9px] text-sistran-muted font-medium" style="left: 20%; transform: translateX(-50%);">2022</span>
-                                                <span class="absolute text-[9px] text-sistran-muted font-medium" style="left: 30%; transform: translateX(-50%);">2023</span>
-                                                <span class="absolute text-[9px] text-sistran-muted font-medium" style="left: 40%; transform: translateX(-50%);">2024</span>
-                                                <span class="absolute text-[9px] text-sistran-ink font-bold" style="left: 50%; transform: translateX(-50%);">2025</span>
-                                                <span class="absolute text-[9px] text-sistran-muted font-medium" style="left: 60%; transform: translateX(-50%);">2026</span>
-                                                <span class="absolute text-[9px] text-sistran-muted font-medium" style="left: 70%; transform: translateX(-50%);">2027</span>
-                                                <span class="absolute text-[9px] text-sistran-muted font-medium" style="left: 80%; transform: translateX(-50%);">2028</span>
-                                                <span class="absolute text-[9px] text-sistran-muted font-medium" style="left: 90%; transform: translateX(-50%);">2029</span>
-                                                <span class="absolute text-[9px] text-sistran-gold font-bold" style="right: 0%;">2030</span>
-                                            </div>
+                                            <div id="barra-anos" class="relative" style="height: 16px;"></div>
 
                                             <!-- Barra -->
                                             <div class="relative mt-1">
                                                 <div class="w-full h-3 bg-gray-100 rounded-pill overflow-hidden border border-sistran-border relative">
                                                     <div id="meta-temporal-bar" class="h-full rounded-pill transition-all duration-700 ease-out" style="width: 0%; background: linear-gradient(90deg, #EF4444 0%, #DC2626 100%);"></div>
-                                                    <div class="absolute top-0 h-full w-0.5 bg-sistran-ink" style="left: 50%;"></div>
+                                                    <div id="meta-temporal-marker" class="absolute top-0 h-full w-0.5 bg-sistran-ink" style="left: 50%;"></div>
                                                 </div>
                                             </div>
 
@@ -2570,20 +2555,187 @@
             buildCascadingDropdowns();
         }
 
-        // === META PRINCIPAL: Barra de Progresso Temporal ===
+        // === META PRINCIPAL: Leitura dinâmica do CSV e renderização ===
         function renderMetaPrincipalBarra() {
-            const bar = document.getElementById('meta-temporal-bar');
-            if (!bar) return;
-            // Progresso temporal: 2025 é o 5º ano de 10 (2020→2030), ou seja 50%
-            // Cor baseada na variação: vermelho se mortes > referência, verde se mortes < referência
-            const referencia = 4842;
-            const atual = 6125;
-            if (atual > referencia) {
-                bar.style.background = 'linear-gradient(90deg, #EF4444 0%, #DC2626 100%)';
-            } else {
-                bar.style.background = 'linear-gradient(90deg, #10B981 0%, #059669 100%)';
-            }
-            setTimeout(function() { bar.style.width = '50%'; }, 300);
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', 'Base_Infosiga_Resumo_obitos_2015_2026.csv', true);
+            xhr.onload = function() {
+                if (xhr.status === 200 || xhr.status === 0) {
+                    const linhas = xhr.responseText.trim().split('\n');
+                    const header = linhas[0].split(',');
+                    const iAno = header.indexOf('ano_sinistro');
+                    const iIndicador = header.indexOf('indicador');
+                    const iObitos = header.indexOf('obitos');
+
+                    // Soma óbitos por ano, filtro: indicador = 'Codigo IBGE', anos 2020-2030
+                    const totaisPorAno = {};
+                    for (let i = 1; i < linhas.length; i++) {
+                        const cols = linhas[i].split(',');
+                        if (cols[iIndicador] === 'Codigo IBGE') {
+                            const ano = parseInt(cols[iAno]);
+                            if (ano >= 2020 && ano <= 2030) {
+                                totaisPorAno[ano] = (totaisPorAno[ano] || 0) + parseInt(cols[iObitos] || 0);
+                            }
+                        }
+                    }
+
+                    const referencia = totaisPorAno[2020] || 0;
+                    const meta = Math.floor(referencia * 0.5);
+
+                    // Determinar ano mais recente com dados completos (ignorar parciais)
+                    const anosComDados = Object.keys(totaisPorAno).map(Number).sort();
+                    // Último ano com dados pode ser parcial - verificar se tem pelo menos 80% do anterior
+                    let anoAtual = anosComDados[anosComDados.length - 1];
+                    if (anosComDados.length > 1) {
+                        const penultimo = totaisPorAno[anosComDados[anosComDados.length - 2]];
+                        const ultimo = totaisPorAno[anoAtual];
+                        if (ultimo < penultimo * 0.6) {
+                            // Provavelmente dados parciais, usar o penúltimo como atual
+                            anoAtual = anosComDados[anosComDados.length - 2];
+                        }
+                    }
+
+                    const valorAtual = totaisPorAno[anoAtual] || 0;
+                    const varAtual = referencia > 0 ? ((valorAtual - referencia) / referencia * 100).toFixed(1) : 0;
+
+                    // === Atualizar KPI Cards ===
+                    const elRef = document.getElementById('kpi-referencia-valor');
+                    if (elRef) elRef.textContent = referencia.toLocaleString('pt-BR');
+
+                    const elAtualTitulo = document.getElementById('kpi-atual-titulo');
+                    if (elAtualTitulo) elAtualTitulo.textContent = 'Atual (' + anoAtual + ')';
+
+                    const elAtualValor = document.getElementById('kpi-atual-valor');
+                    if (elAtualValor) elAtualValor.textContent = valorAtual.toLocaleString('pt-BR');
+
+                    const elAtualVar = document.getElementById('kpi-atual-variacao');
+                    if (elAtualVar) {
+                        const seta = parseFloat(varAtual) > 0 ? 'arrow_upward' : 'arrow_downward';
+                        const cor = parseFloat(varAtual) > 0 ? 'text-rose-500' : 'text-emerald-600';
+                        elAtualVar.className = 'text-2xl font-bold ' + cor + ' flex items-center gap-0.5';
+                        elAtualVar.innerHTML = '<span class="material-symbols-outlined" style="font-size:22px;">' + seta + '</span>' + (parseFloat(varAtual) > 0 ? '+' : '') + varAtual.replace('.', ',') + '%';
+                    }
+
+                    const elMetaValor = document.getElementById('kpi-meta-valor');
+                    if (elMetaValor) elMetaValor.innerHTML = '&le; ' + meta.toLocaleString('pt-BR');
+
+                    // === Renderizar Barra Temporal ===
+                    const anos = [];
+                    for (let a = 2020; a <= 2030; a++) anos.push(a);
+
+                    // Anos
+                    const elAnos = document.getElementById('barra-anos');
+                    if (elAnos) {
+                        let html = '';
+                        anos.forEach(function(ano, idx) {
+                            const pct = (idx / (anos.length - 1)) * 100;
+                            const isAtual = (ano === anoAtual);
+                            const isMeta = (ano === 2030);
+                            let estilo = '', classe = '';
+                            if (idx === 0) { estilo = 'left: 0%;'; classe = 'text-[9px] text-sistran-muted font-medium'; }
+                            else if (idx === anos.length - 1) { estilo = 'right: 0%;'; classe = 'text-[9px] text-sistran-gold font-bold'; }
+                            else { estilo = 'left: ' + pct.toFixed(1) + '%; transform: translateX(-50%);'; classe = isAtual ? 'text-[9px] text-sistran-ink font-bold' : 'text-[9px] text-sistran-muted font-medium'; }
+                            html += '<span class="absolute ' + classe + '" style="' + estilo + '">' + ano + '</span>';
+                        });
+                        elAnos.innerHTML = html;
+                    }
+
+                    // Barra de progresso
+                    const bar = document.getElementById('meta-temporal-bar');
+                    const marker = document.getElementById('meta-temporal-marker');
+                    if (bar) {
+                        const idxAtual = anoAtual - 2020;
+                        const pctBarra = (idxAtual / (anos.length - 1)) * 100;
+                        if (valorAtual > referencia) {
+                            bar.style.background = 'linear-gradient(90deg, #EF4444 0%, #DC2626 100%)';
+                        } else {
+                            bar.style.background = 'linear-gradient(90deg, #10B981 0%, #059669 100%)';
+                        }
+                        setTimeout(function() { bar.style.width = pctBarra.toFixed(1) + '%'; }, 300);
+                        if (marker) marker.style.left = pctBarra.toFixed(1) + '%';
+                    }
+
+                    // Nº de Mortes
+                    const elMortes = document.getElementById('barra-mortes');
+                    if (elMortes) {
+                        let html = '';
+                        anos.forEach(function(ano, idx) {
+                            const pct = (idx / (anos.length - 1)) * 100;
+                            const valor = totaisPorAno[ano];
+                            const isAtual = (ano === anoAtual);
+                            const isMeta = (ano === 2030);
+                            let estilo = '', classe = '', texto = '';
+
+                            if (isMeta) {
+                                estilo = 'right: 0%;';
+                                classe = 'text-[9px] text-sistran-gold font-bold';
+                                texto = '&le;' + meta.toLocaleString('pt-BR');
+                            } else if (!valor) {
+                                return; // Sem dados, não mostrar
+                            } else if (idx === 0) {
+                                estilo = 'left: 0%;';
+                                classe = 'text-[9px] text-sistran-body font-medium opacity-70';
+                                texto = valor.toLocaleString('pt-BR');
+                            } else if (isAtual) {
+                                estilo = 'left: ' + pct.toFixed(1) + '%; transform: translateX(-50%);';
+                                classe = 'text-[10px] text-sistran-ink font-bold';
+                                texto = valor.toLocaleString('pt-BR');
+                            } else {
+                                estilo = 'left: ' + pct.toFixed(1) + '%; transform: translateX(-50%);';
+                                classe = 'text-[9px] text-sistran-body font-medium opacity-70';
+                                texto = valor.toLocaleString('pt-BR');
+                            }
+                            html += '<span class="absolute ' + classe + '" style="' + estilo + '">' + texto + '</span>';
+                        });
+                        elMortes.innerHTML = html;
+                    }
+
+                    // Variação em relação a 2020
+                    const elVariacao = document.getElementById('barra-variacao');
+                    if (elVariacao) {
+                        let html = '';
+                        anos.forEach(function(ano, idx) {
+                            const pct = (idx / (anos.length - 1)) * 100;
+                            const valor = totaisPorAno[ano];
+                            const isAtual = (ano === anoAtual);
+                            const isMeta = (ano === 2030);
+                            let estilo = '', texto = '';
+
+                            if (isMeta) {
+                                estilo = 'right: 0%;';
+                                texto = '<span class="absolute text-[9px] text-emerald-500 font-bold flex items-center gap-px" style="' + estilo + '"><span class="material-symbols-outlined" style="font-size:9px;">arrow_downward</span>-50%</span>';
+                            } else if (ano === 2020) {
+                                estilo = 'left: 0%;';
+                                texto = '<span class="absolute text-[9px] text-sistran-muted font-medium opacity-70" style="' + estilo + '">—</span>';
+                            } else if (!valor) {
+                                return; // Sem dados
+                            } else {
+                                const variacao = ((valor - referencia) / referencia * 100).toFixed(1);
+                                const seta = parseFloat(variacao) > 0 ? 'arrow_upward' : 'arrow_downward';
+                                const corTexto = parseFloat(variacao) > 0 ? 'text-rose-400' : 'text-emerald-400';
+                                const sinal = parseFloat(variacao) > 0 ? '+' : '';
+                                if (idx === 0) { estilo = 'left: 0%;'; }
+                                else { estilo = 'left: ' + pct.toFixed(1) + '%; transform: translateX(-50%);'; }
+
+                                if (isAtual) {
+                                    texto = '<span class="absolute text-[10px] text-rose-500 font-bold flex items-center gap-px" style="' + estilo + '"><span class="material-symbols-outlined" style="font-size:10px;">' + seta + '</span>' + sinal + variacao.replace('.', ',') + '%</span>';
+                                } else {
+                                    texto = '<span class="absolute text-[9px] ' + corTexto + ' font-medium opacity-70 flex items-center gap-px" style="' + estilo + '"><span class="material-symbols-outlined" style="font-size:9px;">' + seta + '</span>' + sinal + variacao.replace('.', ',') + '%</span>';
+                                }
+                            }
+                            html += texto;
+                        });
+                        elVariacao.innerHTML = html;
+                    }
+
+                } else {
+                    console.warn('[SIMO] Erro ao carregar Base_Infosiga_Resumo_obitos_2015_2026.csv');
+                }
+            };
+            xhr.onerror = function() {
+                console.warn('[SIMO] Erro de rede ao carregar CSV do Infosiga');
+            };
+            xhr.send();
         }
 
         window.onload = function() {
