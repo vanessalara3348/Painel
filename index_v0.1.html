@@ -3010,6 +3010,7 @@
         }
 
         window.onload = function() {
+            if (window.lucide) lucide.createIcons();
             loadSpreadsheetData();
             loadMonitoramentoData();
             loadDesempenhoSpreadsheetData();
