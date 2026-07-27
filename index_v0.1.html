@@ -2649,7 +2649,7 @@
                         const seta = parseFloat(varAtual) > 0 ? 'arrow_upward' : 'arrow_downward';
                         const cor = parseFloat(varAtual) > 0 ? 'text-rose-500' : 'text-emerald-600';
                         elAtualVar.className = 'text-2xl font-bold ' + cor + ' flex items-center gap-0.5';
-                        elAtualVar.innerHTML = '<span class="material-symbols-outlined" style="font-size:22px;">' + seta + '</span>' + (parseFloat(varAtual) > 0 ? '+' : '') + varAtual.replace('.', ',') + '%';
+                        elAtualVar.innerHTML = '<span class="material-symbols-outlined" style="font-size:22px;">' + seta + '</span>' + (parseFloat(varAtual) > 0 ? '+' : '') + String(varAtual).replace('.', ',') + '%';
                     }
 
                     const elMetaValor = document.getElementById('kpi-meta-valor');
