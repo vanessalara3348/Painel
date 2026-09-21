@@ -460,10 +460,31 @@
                 </div>
 
                 <!-- 3. Coordenação e Acompanhamento -->
-                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sistran-body hover:bg-zinc-100 transition duration-150 text-left">
-                    <i class="fa-solid fa-chart-line text-lg w-5 flex-shrink-0 text-sistran-body"></i>
-                    <span class="tab-title text-xs font-bold text-sistran-heading">Coordenação e Acompanhamento</span>
-                </button>
+                <div class="space-y-1">
+                    <button onclick="toggleDashboardSubmenu()" id="nav-dashboard" class="w-full flex items-center justify-between px-3 py-2.5 rounded-md text-sistran-body hover:bg-zinc-100 transition duration-150 text-left">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-chart-line text-lg w-5 flex-shrink-0 text-sistran-body"></i>
+                            <span class="tab-title text-xs font-bold text-sistran-heading">Coordenação e Acompanhamento</span>
+                        </div>
+                        <i id="chevron-dashboard" class="fa-solid fa-chevron-down text-xs transition-transform duration-200 text-sistran-muted"></i>
+                    </button>
+
+                    <!-- Submenu colapsável para Coordenação e Acompanhamento -->
+                    <div id="submenu-dashboard" class="hidden pl-6 space-y-1 overflow-hidden transition-all duration-300 border-l-2 border-sistran-border ml-5 mt-1">
+                        <button onclick="selectDashboardSubitem('implementacao')" id="subitem-dash-implementacao" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-medium text-sistran-body hover:bg-zinc-100 hover:text-sistran-heading transition-colors text-left">
+                            <i data-lucide="check-square" class="w-4 h-4 text-sistran-muted flex-shrink-0"></i>
+                            <span>Implementação</span>
+                        </button>
+                        <button onclick="selectDashboardSubitem('desempenho')" id="subitem-dash-desempenho" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-medium text-sistran-body hover:bg-zinc-100 hover:text-sistran-heading transition-colors text-left">
+                            <i data-lucide="activity" class="w-4 h-4 text-sistran-muted flex-shrink-0"></i>
+                            <span>Desempenho</span>
+                        </button>
+                        <button onclick="selectDashboardSubitem('impacto')" id="subitem-dash-impacto" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-medium text-sistran-body hover:bg-zinc-100 hover:text-sistran-heading transition-colors text-left">
+                            <i data-lucide="trending-down" class="w-4 h-4 text-sistran-muted flex-shrink-0"></i>
+                            <span>Impacto</span>
+                        </button>
+                    </div>
+                </div>
 
                 <!-- 4. Monitoramento e Validação (Ambiente Restrito) -->
                 <div class="space-y-1">
@@ -2202,103 +2223,366 @@
 
                     <!-- Conteúdo protegido -->
                     <div id="dashboard-content" class="hidden">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="w-full min-w-0 space-y-6">
 
-                        <!-- KPI 2: Sinistros Acumulados -->
-                        <div class="bg-white p-6 rounded-md shadow-card border border-sistran-border relative overflow-hidden">
-                            <div class="absolute right-0 bottom-0 opacity-5 translate-x-2 translate-y-2">
-                                <i class="fa-solid fa-triangle-exclamation text-[110px]"></i>
-                            </div>
-                            <div class="flex justify-between items-start">
-                                <span class="bg-red-50 text-sistran-error text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-pill border border-red-100">Óbitos Anuais (SP)</span>
-                                <span class="text-sistran-error font-bold text-xs"><i class="fa-solid fa-circle-down mr-1"></i>-4.2%</span>
-                            </div>
-                            <div class="mt-4">
-                                <h3 class="text-3xl font-extrabold text-sistran-heading" id="obitos-atuais">5.180</h3>
-                                <p class="text-sm font-semibold text-sistran-body">Média atual de mortes no trânsito/ano</p>
-                            </div>
-                        </div>
+                        <!-- ================= SUB-ABA DASHBOARD 1: IMPLEMENTAÇÃO ================= -->
+                        <div id="sub-tab-dash-implementacao" class="dashboard-sub-content space-y-6">
+                            <div class="bg-white border border-sistran-border rounded-md p-6 shadow-subtle space-y-6">
+                                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                    <div>
+                                        <h2 class="text-2xl font-bold text-sistran-heading flex items-center gap-2.5">
+                                            <span class="w-8 h-8 bg-sistran-ink rounded-full flex items-center justify-center flex-shrink-0">
+                                                <i data-lucide="check-square" class="w-5 h-5 text-sistran-yellow"></i>
+                                            </span>
+                                            Metas de Implementação
+                                        </h2>
+                                        <p class="text-sm text-sistran-body leading-relaxed mt-2">Monitoramento da implementação das ações e produtos do PSV-SP (2025-2035).</p>
+                                    </div>
+                                    <div class="flex gap-2 flex-shrink-0">
+                                        <button onclick="exportImplementacaoXLSXDash()" class="bg-white border-2 border-sistran-gold hover:bg-sistran-gold-surface text-sistran-ink font-bold py-2 px-4 rounded-pill text-xs flex items-center gap-1.5 transition">
+                                            <i data-lucide="download" class="w-4 h-4"></i> Exportar (.xlsx)
+                                        </button>
+                                        <button onclick="exportImplementacaoCSVDash()" class="bg-white border-2 border-sistran-gold hover:bg-sistran-gold-surface text-sistran-ink font-bold py-2 px-4 rounded-pill text-xs flex items-center gap-1.5 transition">
+                                            <i data-lucide="download" class="w-4 h-4"></i> Exportar (.csv)
+                                        </button>
+                                    </div>
+                                </div>
 
-                        <!-- KPI 3: Status de Entregas -->
-                        <div class="bg-white p-6 rounded-md shadow-card border border-sistran-border relative overflow-hidden">
-                            <div class="absolute right-0 bottom-0 opacity-5 translate-x-2 translate-y-2">
-                                <i class="fa-solid fa-list-check text-[110px]"></i>
-                            </div>
-                            <div class="flex justify-between items-start">
-                                <span class="bg-sistran-gold-surface text-sistran-gold text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-pill border border-sistran-yellow">Progresso de Ações</span>
-                                <span class="text-sistran-gold font-bold text-xs"><i class="fa-solid fa-circle-check mr-1"></i>Vias Seguras</span>
-                            </div>
-                            <div class="mt-4">
-                                <h3 class="text-3xl font-extrabold text-sistran-heading" id="percent-concluido">58.5%</h3>
-                                <p class="text-sm font-semibold text-sistran-body">Ações desenvolvidas ou em curso</p>
-                                <div class="w-full bg-sistran-border rounded-pill h-1.5 mt-3">
-                                    <div id="ui-progress-bar" class="bg-sistran-gold h-1.5 rounded-pill transition-all duration-500" style="width: 58.5%"></div>
+                                <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider" id="imp-period-label-dash">Resumo dos Quantitativos do Status das Metas por Fase de Implementação do Plano: Curto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)</p>
+                                <div class="bg-white border border-sistran-border rounded-md p-5 space-y-4">
+                                    <div class="flex items-center gap-3">
+                                        <label class="text-xs font-semibold text-sistran-body">Fase de Implementação:</label>
+                                        <select id="seletor-periodo-cards-dash" onchange="updateImplementacaoSummaryDash(); renderChartImplementacaoEixosDash();" class="text-xs p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                            <option value="curto" selected>Curto Prazo (2025–2027)</option>
+                                            <option value="medio">Médio Prazo (2028–2030)</option>
+                                            <option value="longo">Longo Prazo (2031–2035)</option>
+                                            <option value="final">Meta Final (2025–2035)</option>
+                                        </select>
+                                    </div>
+                                    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-center font-semibold text-xs">
+                                        <div class="p-3 bg-sistran-gold-surface border border-sistran-yellow rounded-md">
+                                            <span class="text-sistran-gold font-bold block">Produtos Previstos</span>
+                                            <strong class="text-xl font-bold text-sistran-heading" id="imp-total-previsto-dash">—</strong>
+                                        </div>
+                                        <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-md" id="card-imp-concluido-dash">
+                                            <span class="text-emerald-600 block">Concluído</span>
+                                            <strong class="text-xl font-bold text-emerald-600 card-percent">—</strong>
+                                            <span class="text-[10px] text-emerald-400 block card-count"></span>
+                                        </div>
+                                        <div class="p-3 bg-amber-50 border border-amber-200 rounded-md" id="card-imp-desenvolvimento-dash">
+                                            <span class="text-amber-600 block">Em Desenvolvimento</span>
+                                            <strong class="text-xl font-bold text-amber-600 card-percent">—</strong>
+                                            <span class="text-[10px] text-amber-400 block card-count"></span>
+                                        </div>
+                                        <div class="p-3 bg-blue-50 border border-blue-200 rounded-md" id="card-imp-iniciado-dash">
+                                            <span class="text-blue-600 block">Iniciado</span>
+                                            <strong class="text-xl font-bold text-blue-600 card-percent">—</strong>
+                                            <span class="text-[10px] text-blue-400 block card-count"></span>
+                                        </div>
+                                        <div class="p-3 bg-gray-50 border border-gray-200 rounded-md" id="card-imp-iniciar-dash">
+                                            <span class="text-gray-600 block">À Iniciar</span>
+                                            <strong class="text-xl font-bold text-gray-700 card-percent">—</strong>
+                                            <span class="text-[10px] text-gray-400 block card-count"></span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Legenda dos status -->
+                                    <div class="text-[10px] text-sistran-body leading-relaxed space-y-0.5">
+                                        <p><strong class="text-emerald-600">Concluído:</strong> percentual de produtos aprovados que atingiram 100% das metas da fase de implementação.</p>
+                                        <p><strong class="text-amber-600">Em Desenvolvimento:</strong> percentual de produtos aprovados que atingiram entre 50% e 99,9% das metas da fase de implementação.</p>
+                                        <p><strong class="text-blue-600">Iniciado:</strong> percentual de produtos aprovados que atingiram entre 1% e 49,9% das metas da fase de implementação.</p>
+                                        <p><strong class="text-gray-600">À Iniciar:</strong> percentual de produtos que ainda não possuem produtos aprovados para a fase de implementação.</p>
+                                    </div>
+
+                                    <!-- Gráfico de Barras Horizontais - Status por Eixo -->
+                                    <div class="h-[450px] w-full">
+                                        <canvas id="chartImplementacaoEixosDash"></canvas>
+                                    </div>
+                                </div>
+
+                                <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Resumo dos indicadores de implementação por Fase de Implementação do Plano</p>
+                                <p class="text-[10px] text-sistran-body leading-relaxed"><strong>Nota:</strong> O status <strong class="text-emerald-600">Concluído*</strong> indica que a meta do produto foi cumprido fora do prazo de implementação previsto, porém a Meta Final (2025-2035) foi atingida.</p>
+
+                                <div class="bg-gray-50 p-4 border border-sistran-border rounded-md space-y-4">
+                                    <p class="text-xs font-bold text-sistran-heading flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-sistran-gold" style="font-size:18px;">filter_list</span>
+                                        Filtros
+                                        <button onclick="limparFiltrosImplementacaoDash()" class="ml-auto bg-white border border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-semibold text-[10px] px-3 py-1 rounded-pill transition">Limpar Filtros</button>
+                                    </p>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+                                        <div>
+                                            <label class="block text-sistran-body font-semibold mb-1">Eixo</label>
+                                            <select id="filter-imp-eixo-dash" onchange="filterImplementacaoDash()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                <option value="all" selected>Todos os Eixos</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sistran-body font-semibold mb-1">Órgão</label>
+                                            <select id="filter-imp-orgao-dash" onchange="filterImplementacaoDash()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                <option value="all" selected>Todos os Órgãos</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sistran-body font-semibold mb-1">Status (Meta Final 2025-2035)</label>
+                                            <select id="filter-imp-status-final-dash" onchange="filterImplementacaoDash()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                <option value="all" selected>Todos os Status</option>
+                                                <option value="Concluído">Concluído</option>
+                                                <option value="Em Desenvolvimento">Em Desenvolvimento</option>
+                                                <option value="Iniciado">Iniciado</option>
+                                                <option value="À Iniciar">À Iniciar</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sistran-body font-semibold mb-1">Busca Textual</label>
+                                            <input type="text" id="search-imp-text-dash" onkeyup="filterImplementacaoDash()" placeholder="Código, ação, produto, indicador..." class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="table-container overflow-x-auto border border-sistran-border rounded-md">
+                                    <table class="w-full text-left border-collapse text-xs">
+                                        <thead>
+                                            <tr class="bg-sistran-surface-muted text-sistran-heading font-bold border-b border-sistran-border">
+                                                <th class="p-3">Eixo</th>
+                                                <th class="p-3">Produto</th>
+                                                <th class="p-3">Indicador</th>
+                                                <th class="p-3">Órgão</th>
+                                                <th class="p-3 text-center">Curto Prazo<br>(2025–2027)</th>
+                                                <th class="p-3 text-center">Médio Prazo<br>(2028–2030)</th>
+                                                <th class="p-3 text-center">Longo Prazo<br>(2031–2035)</th>
+                                                <th class="p-3 text-center">Meta Final<br>(2025-2035)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="table-implementacao-body-dash" class="divide-y divide-gray-100"></tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- KPI 4: Municípios Integrados -->
-                        <div class="bg-white p-6 rounded-md shadow-card border border-sistran-border relative overflow-hidden">
-                            <div class="absolute right-0 bottom-0 opacity-5 translate-x-2 translate-y-2">
-                                <i class="fa-solid fa-map-location-dot text-[110px]"></i>
-                            </div>
-                            <div class="flex justify-between items-start">
-                                <span class="bg-sistran-surface-muted text-sistran-body text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-pill border border-sistran-border">Pacto de Cooperação</span>
-                                <span class="text-sistran-gold font-bold text-xs">Pnatrans</span>
-                            </div>
-                            <div class="mt-4">
-                                <h3 class="text-3xl font-extrabold text-sistran-heading" id="municipios-ativos">218</h3>
-                                <p class="text-sm font-semibold text-sistran-body">Municípios integrados ao SISTRAN-SP</p>
+                        <!-- ================= SUB-ABA DASHBOARD 2: DESEMPENHO ================= -->
+                        <div id="sub-tab-dash-desempenho" class="dashboard-sub-content space-y-6 hidden">
+                            <div class="bg-white border border-sistran-border rounded-md p-6 shadow-subtle space-y-6">
+                                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                    <div>
+                                        <h2 class="text-2xl font-bold text-sistran-heading flex items-center gap-2.5">
+                                            <span class="w-8 h-8 bg-sistran-ink rounded-full flex items-center justify-center flex-shrink-0">
+                                                <i data-lucide="activity" class="w-5 h-5 text-sistran-yellow"></i>
+                                            </span>
+                                            Metas de Desempenho
+                                        </h2>
+                                        <p class="text-sm text-sistran-body leading-relaxed mt-2">Monitoramento das metas de desempenho do PSV-SP (2025-2035) por ano.</p>
+                                    </div>
+                                    <div class="flex gap-2 flex-shrink-0">
+                                        <button onclick="exportDesempenhoXLSXDash()" class="bg-white border-2 border-sistran-gold hover:bg-sistran-gold-surface text-sistran-ink font-bold py-2 px-4 rounded-pill text-xs flex items-center gap-1.5 transition">
+                                            <i data-lucide="download" class="w-4 h-4"></i> Exportar (.xlsx)
+                                        </button>
+                                        <button onclick="exportDesempenhoCSVDash()" class="bg-white border-2 border-sistran-gold hover:bg-sistran-gold-surface text-sistran-ink font-bold py-2 px-4 rounded-pill text-xs flex items-center gap-1.5 transition">
+                                            <i data-lucide="download" class="w-4 h-4"></i> Exportar (.csv)
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-3">
+                                    <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Resumo dos indicadores de desempenho por ano</p>
+
+                                    <div class="bg-gray-50 p-4 border border-sistran-border rounded-md space-y-4">
+                                        <p class="text-xs font-bold text-sistran-heading flex items-center gap-2">
+                                            <span class="material-symbols-outlined text-sistran-gold" style="font-size:18px;">filter_list</span>
+                                            Filtros
+                                            <button onclick="limparFiltrosDesempenhoDash()" class="ml-auto bg-white border border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-semibold text-[10px] px-3 py-1 rounded-pill transition">Limpar Filtros</button>
+                                        </p>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+                                            <div>
+                                                <label class="block text-sistran-body font-semibold mb-1">Eixo</label>
+                                                <select id="filter-desempenho-eixo-dash" onchange="filterDesempenhoTableDash()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                    <option value="all">Todos os Eixos</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sistran-body font-semibold mb-1">Objetivo Estratégico</label>
+                                                <select id="filter-desempenho-objetivo-dash" onchange="filterDesempenhoTableDash()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                    <option value="all">Todos os Objetivos</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sistran-body font-semibold mb-1">Ano de Referência</label>
+                                                <select id="filter-desempenho-ano-dash" onchange="filterDesempenhoTableDash()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                    <option value="2024" selected>2024 (Base)</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sistran-body font-semibold mb-1">Busca Textual</label>
+                                                <input type="text" id="search-desempenho-dash" onkeyup="filterDesempenhoTableDash()" placeholder="Código, indicador, objetivo..." class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="table-container overflow-x-auto border border-sistran-border rounded-md">
+                                        <table class="w-full text-left border-collapse text-xs min-w-[1100px]">
+                                            <thead>
+                                                <tr class="bg-sistran-surface-muted text-sistran-heading font-bold border-b border-sistran-border">
+                                                    <th class="p-3 w-[130px]">Eixo</th>
+                                                    <th class="p-3 w-[160px]">Objetivo Estratégico</th>
+                                                    <th class="p-3 w-[160px]">Indicador</th>
+                                                    <th class="p-3">O que Mede</th>
+                                                    <th class="p-3 w-[160px]">Fonte</th>
+                                                    <th class="p-3 w-[100px] text-center">Valor do Indicador</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="table-desempenho-body-dash" class="divide-y divide-gray-100"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                    </div>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <!-- Estimativa de Vidas Salvas -->
-                        <div class="bg-white p-6 rounded-md shadow-card border border-sistran-border lg:col-span-2">
-                            <div class="flex items-center justify-between mb-4">
-                                <div>
-                                    <h3 class="font-bold text-base text-sistran-heading">Estimativa de Vidas Salvas</h3>
-                                    <p class="text-xs text-sistran-body">Taxa de óbitos por 100 mil habitantes por ano – real, projetada a partir do cenário atual e da meta</p>
+                        <!-- ================= SUB-ABA DASHBOARD 3: IMPACTO ================= -->
+                        <div id="sub-tab-dash-impacto" class="dashboard-sub-content space-y-6 hidden">
+                            <div class="bg-white border border-sistran-border rounded-md p-6 shadow-subtle space-y-6">
+                                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                    <div>
+                                        <h2 class="text-2xl font-bold text-sistran-heading flex items-center gap-2.5">
+                                            <span class="w-8 h-8 bg-sistran-ink rounded-full flex items-center justify-center flex-shrink-0">
+                                                <span class="material-symbols-outlined text-sistran-yellow" style="font-size:20px;">trending_down</span>
+                                            </span>
+                                            Metas de Impacto
+                                        </h2>
+                                        <p class="text-sm text-sistran-body leading-relaxed mt-2">Monitoramento das metas de impacto do PSV-SP (2025-2035) por ano.</p>
+                                    </div>
                                 </div>
-                                <span class="bg-sistran-gold-surface text-sistran-gold px-3 py-1 rounded-pill text-xs font-semibold">Horizonte 2030</span>
+
+                                <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Meta principal</p>
+                                <p class="text-sm text-sistran-body leading-relaxed">O PSV-SP tem como meta principal reduzir em 50% as mortes no trânsito até 2030, tendo como referência os 4.842 óbitos registrados em 2020.</p>
+
+                                <!-- Cards + Barra Temporal numa caixa única -->
+                                <div class="bg-white border border-sistran-border rounded-md p-5 space-y-5">
+
+                                    <!-- 3 KPI Cards (dinâmicos) -->
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-semibold">
+                                        <!-- Card Referência -->
+                                        <div class="p-4 bg-gray-50 border border-gray-200 rounded-md text-center">
+                                            <p class="text-[10px] font-bold text-sistran-muted uppercase">Referência (2020)</p>
+                                            <h4 id="kpi-referencia-valor-dash" class="text-2xl font-extrabold text-sistran-heading">—</h4>
+                                            <p class="text-xs text-sistran-body mt-3">Mortes no trânsito</p>
+                                        </div>
+                                        <!-- Card Atual -->
+                                        <div class="p-4 bg-amber-50 border border-amber-200 rounded-md text-center">
+                                            <p id="kpi-atual-titulo-dash" class="text-[10px] font-bold text-amber-600 uppercase">Atual (—)</p>
+                                            <div class="flex items-center justify-center gap-2 mt-1">
+                                                <p id="kpi-atual-variacao-dash" class="text-2xl font-bold text-rose-500 flex items-center gap-0.5">—</p>
+                                                <h4 id="kpi-atual-valor-dash" class="text-xs font-extrabold text-sistran-heading">—</h4>
+                                            </div>
+                                            <p class="text-xs text-sistran-body mt-1">Mortes no trânsito</p>
+                                        </div>
+                                        <!-- Card Meta -->
+                                        <div class="p-4 bg-sistran-gold-surface border border-sistran-yellow rounded-md text-center">
+                                            <p class="text-[10px] font-bold text-sistran-gold uppercase">Meta Principal (2030)</p>
+                                            <div class="flex items-center justify-center gap-2 mt-1">
+                                                <p class="text-2xl font-bold text-emerald-600 flex items-center gap-0.5">
+                                                    <span class="material-symbols-outlined" style="font-size:22px;">arrow_downward</span>
+                                                    -50%
+                                                </p>
+                                                <h4 id="kpi-meta-valor-dash" class="text-xs font-extrabold text-sistran-gold">—</h4>
+                                            </div>
+                                            <p class="text-xs text-sistran-body mt-1">Mortes no trânsito</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Barra de Progresso Temporal (dinâmica) -->
+                                    <div class="pt-2 pb-2">
+                                        <p class="text-xs font-bold text-sistran-heading mb-4">Progresso da Meta Principal por Ano</p>
+
+                                        <div class="px-4">
+                                            <!-- Anos -->
+                                            <div id="barra-anos-dash" class="relative" style="height: 16px;"></div>
+
+                                            <!-- Barra -->
+                                            <div class="relative mt-1">
+                                                <div class="w-full h-3 bg-gray-100 rounded-pill overflow-hidden border border-sistran-border relative">
+                                                    <div id="meta-temporal-bar-dash" class="h-full rounded-pill transition-all duration-700 ease-out" style="width: 0%; background: linear-gradient(90deg, #EF4444 0%, #DC2626 100%);"></div>
+                                                    <div id="meta-temporal-marker-dash" class="absolute top-0 h-full w-0.5 bg-sistran-ink" style="left: 50%;"></div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Nº de Mortes -->
+                                            <div id="barra-mortes-dash" class="relative mt-1" style="height: 16px;"></div>
+
+                                            <!-- Variação em relação a 2020 -->
+                                            <div id="barra-variacao-dash" class="relative mt-1" style="height: 16px;"></div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Metas de consolidação</p>
+                                <p class="text-sm text-sistran-body leading-relaxed">Após alcançar a meta de redução de 50% das mortes no trânsito em 2030, o PSV-SP busca preservar os resultados conquistados, mantendo o número de óbitos em, no máximo, 2.421 por ano até 2035.</p>
+
+                                <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Metas específicas</p>
+                                <p class="text-sm text-sistran-body leading-relaxed">Além da meta principal de redução das mortes no trânsito, o PSV-SP acompanha metas específicas para diferentes situações, como a taxa de óbitos por 100 mil habitantes, o tipo de via e o modo de transporte das vítimas.</p>
+
+                                <!-- Gráfico: Mortalidade Total -->
+                                <div class="bg-white border border-sistran-border rounded-md p-5">
+                                    <div class="mb-3">
+                                        <p class="text-xs font-bold text-sistran-heading">Mortalidade Total</p>
+                                        <p class="text-[10px] text-sistran-body">Taxa de mortes no trânsito por 100 mil habitantes</p>
+                                    </div>
+                                    <div class="h-80 w-full">
+                                        <canvas id="chartMortalidadeTotalDash"></canvas>
+                                    </div>
+                                </div>
+
+                                <!-- Gráfico: Mortalidade por Tipo de Via -->
+                                <div class="bg-white border border-sistran-border rounded-md p-5">
+                                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-3">
+                                        <div>
+                                            <p class="text-xs font-bold text-sistran-heading">Mortalidade por tipo de via</p>
+                                            <p class="text-[10px] text-sistran-body">Taxa de mortes no trânsito por 100 mil habitantes por ano no Estado São Paulo</p>
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-semibold text-sistran-body mb-1">Tipo de via</label>
+                                            <select id="filtro-tipo-via-dash" onchange="renderChartTipoViaDash()" class="text-xs p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                <option value="all" selected>Todas</option>
+                                                <option value="ESTRADAS E RODOVIAS">Estradas e Rodovias</option>
+                                                <option value="VIAS URBANAS">Vias Urbanas</option>
+                                                <option value="NAO DISPONIVEL">Não Disponível</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="h-80 w-full">
+                                        <canvas id="chartTipoViaDash"></canvas>
+                                    </div>
+                                </div>
+
+                                <!-- Gráfico: Mortalidade por Modo de Transporte -->
+                                <div class="bg-white border border-sistran-border rounded-md p-5">
+                                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-3">
+                                        <div>
+                                            <p class="text-xs font-bold text-sistran-heading">Mortalidade por modo de transporte</p>
+                                            <p class="text-[10px] text-sistran-body">Taxa de mortes no trânsito por 100 mil habitantes por ano no Estado São Paulo</p>
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-semibold text-sistran-body mb-1">Modo de transporte</label>
+                                            <select id="filtro-modo-transporte-dash" onchange="renderChartModoTransporteDash()" class="text-xs p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                <option value="all" selected>Todos</option>
+                                                <option value="AUTOMOVEL">Automóvel</option>
+                                                <option value="BICICLETA">Bicicleta</option>
+                                                <option value="CAMINHAO">Caminhão</option>
+                                                <option value="MOTOCICLETA">Motocicleta</option>
+                                                <option value="NAO DISPONIVEL">Não Disponível</option>
+                                                <option value="ONIBUS">Ônibus</option>
+                                                <option value="OUTROS">Outros</option>
+                                                <option value="PEDESTRE">Pedestre</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="h-80 w-full">
+                                        <canvas id="chartModoTransporteDash"></canvas>
+                                    </div>
+                                </div>
+
                             </div>
-                            <div class="h-80 w-full">
-                                <canvas id="chartTendenciaObitos"></canvas>
-                            </div>
-                            <p class="text-[11px] text-sistran-body leading-relaxed mt-4 border-t border-sistran-border pt-3">
-                                <strong class="text-sistran-heading">Nota:</strong> Para a estimativa de vidas salvas, os valores anuais projetados foram obtidos multiplicando a diferença entre as duas taxas pela população estimada em cada ano, e dividindo esse valor por 100.000. Em 2030, por exemplo, a diferença entre as duas taxas (11,3) foi multiplicada pela população estimada para 2030 (49.315.046), e o resultado então foi dividido por 100 mil, obtendo o valor de 5.579.<br>
-                                <strong class="text-sistran-heading">Fonte:</strong> Óbitos do Infosiga (conforme publicação dos dados abertos de maio de 2025); População do IBGE – Estimativas para o TCU (2025).
-                            </p>
                         </div>
 
-                        <!-- Distribuição por Eixo -->
-                        <div class="bg-white p-6 rounded-md shadow-card border border-sistran-border">
-                            <div class="flex items-center justify-between mb-4">
-                                <div>
-                                    <h3 class="font-bold text-base text-sistran-heading">Status dos Produtos</h3>
-                                    <p class="text-xs text-sistran-body">Progresso acumulado das metas</p>
-                                </div>
-                            </div>
-                            <div class="h-64 flex items-center justify-center">
-                                <canvas id="chartProgressoFisico"></canvas>
-                            </div>
-                            <div class="mt-4 grid grid-cols-3 gap-2 text-center text-xs font-semibold">
-                                <div class="bg-emerald-50 text-emerald-700 p-2 rounded-sm border border-emerald-100">
-                                    <div class="font-bold text-lg" id="prod-desenvolvidos">1</div>
-                                    <div>Desenvolvido</div>
-                                </div>
-                                <div class="bg-amber-50 text-amber-700 p-2 rounded-sm border border-amber-100">
-                                    <div class="font-bold text-lg" id="prod-desenvolvimento">2</div>
-                                    <div>Em Curso</div>
-                                </div>
-                                <div class="bg-sistran-surface-muted text-sistran-body p-2 rounded-sm border border-sistran-border">
-                                    <div class="font-bold text-lg" id="prod-fazer">12</div>
-                                    <div>Pendente</div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     </div><!-- fecha dashboard-content -->
                 </section>
@@ -2393,6 +2677,7 @@
         // Controle de estados para trilha de navegação (Breadcrumbs)
         let activePublicSubTab = 'introducao';
         let activeColetaSubTab = 'formulario';
+        let activeDashboardSubTab = 'implementacao';
 
         // Base unificada que mapeia as colunas do Excel para as regras de cascata
         let psvSpreadsheetData = [];
@@ -3016,6 +3301,386 @@
             });
         }
 
+        // ============================================================================
+        // === CÓPIAS DASHBOARD (Coordenação e Acompanhamento) — targetam ids "-dash" ===
+        // Leem as MESMAS fontes de dados/globais dos originais.
+        // ============================================================================
+
+        // === IMPACTO (Dash): KPIs + Barra Temporal ===
+        function renderMetaPrincipalBarraDash() {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', 'Base_Infosiga_Resumo_obitos_2015_2026.csv', true);
+            xhr.onload = function() {
+                if (xhr.status === 200 || xhr.status === 0) {
+                    const linhas = xhr.responseText.trim().split('\n');
+                    var sep = linhas[0].indexOf(';') >= 0 ? ';' : ',';
+                    const header = linhas[0].split(sep).map(function(h) { return h.trim(); });
+                    const iAno = header.indexOf('ano_sinistro');
+                    const iIndicador = header.indexOf('indicador');
+                    const iObitos = header.indexOf('obitos');
+
+                    const totaisPorAno = {};
+                    for (let i = 1; i < linhas.length; i++) {
+                        const cols = linhas[i].split(sep).map(function(c) { return c.trim(); });
+                        if (cols[iIndicador] === 'Codigo IBGE') {
+                            const ano = parseInt(cols[iAno]);
+                            if (ano >= 2020 && ano <= 2030) {
+                                totaisPorAno[ano] = (totaisPorAno[ano] || 0) + parseInt(cols[iObitos] || 0);
+                            }
+                        }
+                    }
+
+                    const referencia = totaisPorAno[2020] || 0;
+                    const meta = Math.floor(referencia * 0.5);
+
+                    const anosComDados = Object.keys(totaisPorAno).map(Number).sort();
+                    let anoAtual = anosComDados[anosComDados.length - 1];
+                    if (anosComDados.length > 1) {
+                        const penultimo = totaisPorAno[anosComDados[anosComDados.length - 2]];
+                        const ultimo = totaisPorAno[anoAtual];
+                        if (ultimo < penultimo * 0.6) {
+                            anoAtual = anosComDados[anosComDados.length - 2];
+                        }
+                    }
+
+                    const valorAtual = totaisPorAno[anoAtual] || 0;
+                    const varAtual = referencia > 0 ? ((valorAtual - referencia) / referencia * 100).toFixed(1) : 0;
+
+                    const elRef = document.getElementById('kpi-referencia-valor-dash');
+                    if (elRef) elRef.textContent = referencia.toLocaleString('pt-BR');
+
+                    const elAtualTitulo = document.getElementById('kpi-atual-titulo-dash');
+                    if (elAtualTitulo) elAtualTitulo.textContent = 'Atual (' + anoAtual + ')';
+
+                    const elAtualValor = document.getElementById('kpi-atual-valor-dash');
+                    if (elAtualValor) elAtualValor.textContent = valorAtual.toLocaleString('pt-BR');
+
+                    const elAtualVar = document.getElementById('kpi-atual-variacao-dash');
+                    if (elAtualVar) {
+                        const seta = parseFloat(varAtual) > 0 ? 'arrow_upward' : 'arrow_downward';
+                        const cor = parseFloat(varAtual) > 0 ? 'text-rose-500' : 'text-emerald-600';
+                        elAtualVar.className = 'text-2xl font-bold ' + cor + ' flex items-center gap-0.5';
+                        elAtualVar.innerHTML = '<span class="material-symbols-outlined" style="font-size:22px;">' + seta + '</span>' + (parseFloat(varAtual) > 0 ? '+' : '') + String(varAtual).replace('.', ',') + '%';
+                    }
+
+                    const elMetaValor = document.getElementById('kpi-meta-valor-dash');
+                    if (elMetaValor) elMetaValor.innerHTML = '&le; ' + meta.toLocaleString('pt-BR');
+
+                    const anos = [];
+                    for (let a = 2020; a <= 2030; a++) anos.push(a);
+
+                    const elAnos = document.getElementById('barra-anos-dash');
+                    if (elAnos) {
+                        let html = '';
+                        anos.forEach(function(ano, idx) {
+                            const pct = (idx / (anos.length - 1)) * 100;
+                            const isAtual = (ano === anoAtual);
+                            let estilo = '', classe = '';
+                            if (idx === 0) { estilo = 'left: 0%;'; classe = 'text-[9px] text-sistran-muted font-medium'; }
+                            else if (idx === anos.length - 1) { estilo = 'right: 0%;'; classe = 'text-[9px] text-sistran-gold font-bold'; }
+                            else { estilo = 'left: ' + pct.toFixed(1) + '%; transform: translateX(-50%);'; classe = isAtual ? 'text-[9px] text-sistran-ink font-bold' : 'text-[9px] text-sistran-muted font-medium'; }
+                            html += '<span class="absolute ' + classe + '" style="' + estilo + '">' + ano + '</span>';
+                        });
+                        elAnos.innerHTML = html;
+                    }
+
+                    const bar = document.getElementById('meta-temporal-bar-dash');
+                    const marker = document.getElementById('meta-temporal-marker-dash');
+                    if (bar) {
+                        const idxAtual = anoAtual - 2020;
+                        const pctBarra = (idxAtual / (anos.length - 1)) * 100;
+                        if (valorAtual > referencia) {
+                            bar.style.background = 'linear-gradient(90deg, #EF4444 0%, #DC2626 100%)';
+                        } else {
+                            bar.style.background = 'linear-gradient(90deg, #10B981 0%, #059669 100%)';
+                        }
+                        setTimeout(function() { bar.style.width = pctBarra.toFixed(1) + '%'; }, 300);
+                        if (marker) marker.style.left = pctBarra.toFixed(1) + '%';
+                    }
+
+                    const elMortes = document.getElementById('barra-mortes-dash');
+                    if (elMortes) {
+                        let html = '';
+                        anos.forEach(function(ano, idx) {
+                            const pct = (idx / (anos.length - 1)) * 100;
+                            const valor = totaisPorAno[ano];
+                            const isAtual = (ano === anoAtual);
+                            const isMeta = (ano === 2030);
+                            let estilo = '', classe = '', texto = '';
+
+                            if (isMeta) {
+                                estilo = 'right: 0%;';
+                                classe = 'text-[9px] text-sistran-gold font-bold';
+                                texto = '&le;' + meta.toLocaleString('pt-BR');
+                            } else if (!valor) {
+                                return;
+                            } else if (idx === 0) {
+                                estilo = 'left: 0%;';
+                                classe = 'text-[9px] text-sistran-body font-medium opacity-70';
+                                texto = valor.toLocaleString('pt-BR');
+                            } else if (isAtual) {
+                                estilo = 'left: ' + pct.toFixed(1) + '%; transform: translateX(-50%);';
+                                classe = 'text-[10px] text-sistran-ink font-bold';
+                                texto = valor.toLocaleString('pt-BR');
+                            } else {
+                                estilo = 'left: ' + pct.toFixed(1) + '%; transform: translateX(-50%);';
+                                classe = 'text-[9px] text-sistran-body font-medium opacity-70';
+                                texto = valor.toLocaleString('pt-BR');
+                            }
+                            html += '<span class="absolute ' + classe + '" style="' + estilo + '">' + texto + '</span>';
+                        });
+                        elMortes.innerHTML = html;
+                    }
+
+                    const elVariacao = document.getElementById('barra-variacao-dash');
+                    if (elVariacao) {
+                        let html = '';
+                        anos.forEach(function(ano, idx) {
+                            const pct = (idx / (anos.length - 1)) * 100;
+                            const valor = totaisPorAno[ano];
+                            const isAtual = (ano === anoAtual);
+                            const isMeta = (ano === 2030);
+                            let estilo = '', texto = '';
+
+                            if (isMeta) {
+                                estilo = 'right: 0%;';
+                                texto = '<span class="absolute text-[9px] text-emerald-500 font-bold flex items-center gap-px" style="' + estilo + '"><span class="material-symbols-outlined" style="font-size:9px;">arrow_downward</span>-50%</span>';
+                            } else if (ano === 2020) {
+                                estilo = 'left: 0%;';
+                                texto = '<span class="absolute text-[9px] text-sistran-muted font-medium opacity-70" style="' + estilo + '">—</span>';
+                            } else if (!valor) {
+                                return;
+                            } else {
+                                const variacao = ((valor - referencia) / referencia * 100).toFixed(1);
+                                const seta = parseFloat(variacao) > 0 ? 'arrow_upward' : 'arrow_downward';
+                                const corTexto = parseFloat(variacao) > 0 ? 'text-rose-400' : 'text-emerald-400';
+                                const sinal = parseFloat(variacao) > 0 ? '+' : '';
+                                if (idx === 0) { estilo = 'left: 0%;'; }
+                                else { estilo = 'left: ' + pct.toFixed(1) + '%; transform: translateX(-50%);'; }
+
+                                if (isAtual) {
+                                    texto = '<span class="absolute text-[10px] text-rose-500 font-bold flex items-center gap-px" style="' + estilo + '"><span class="material-symbols-outlined" style="font-size:10px;">' + seta + '</span>' + sinal + variacao.replace('.', ',') + '%</span>';
+                                } else {
+                                    texto = '<span class="absolute text-[9px] ' + corTexto + ' font-medium opacity-70 flex items-center gap-px" style="' + estilo + '"><span class="material-symbols-outlined" style="font-size:9px;">' + seta + '</span>' + sinal + variacao.replace('.', ',') + '%</span>';
+                                }
+                            }
+                            html += texto;
+                        });
+                        elVariacao.innerHTML = html;
+                    }
+                }
+            };
+            xhr.onerror = function() { console.warn('[SIMO] Erro de rede ao carregar CSV do Infosiga (Dash)'); };
+            xhr.send();
+        }
+
+        // Agregador do ambiente Impacto (Dash)
+        function renderImpactoDash() {
+            try { renderMetaPrincipalBarraDash(); } catch(e) { console.warn('[SIMO] renderMetaPrincipalBarraDash error:', e); }
+        }
+
+        // === GRÁFICO: Mortalidade Total (Dash) ===
+        function renderChartMortalidadeTotalDash() {
+            const canvas = document.getElementById('chartMortalidadeTotalDash');
+            if (!canvas) return;
+
+            const populacao = {
+                2015: 44396484, 2016: 44749699, 2017: 45094866,
+                2018: 45538936, 2019: 45919049, 2020: 46289333,
+                2021: 46649132, 2022: 46024937, 2023: 46395946,
+                2024: 46767364, 2025: 47139780, 2026: 47500000,
+                2027: 47860000, 2028: 48220000, 2029: 48580000,
+                2030: 48940000
+            };
+
+            const xhr2 = new XMLHttpRequest();
+            xhr2.open('GET', 'Base_Infosiga_Resumo_obitos_2015_2026.csv', true);
+            xhr2.onload = function() {
+                if (xhr2.status === 200 || xhr2.status === 0) {
+                    const linhas = xhr2.responseText.trim().split('\n');
+                    var sep = linhas[0].indexOf(';') >= 0 ? ';' : ',';
+                    const header = linhas[0].split(sep).map(function(h) { return h.trim(); });
+                    const iAno = header.indexOf('ano_sinistro');
+                    const iIndicador = header.indexOf('indicador');
+                    const iObitos = header.indexOf('obitos');
+
+                    const totaisPorAno = {};
+                    for (let i = 1; i < linhas.length; i++) {
+                        const cols = linhas[i].split(sep).map(function(c) { return c.trim(); });
+                        if (cols[iIndicador] === 'Codigo IBGE') {
+                            const ano = parseInt(cols[iAno]);
+                            if (ano >= 2015 && ano <= 2030) {
+                                totaisPorAno[ano] = (totaisPorAno[ano] || 0) + parseInt(cols[iObitos] || 0);
+                            }
+                        }
+                    }
+
+                    const anos = [];
+                    const taxas = [];
+                    const ref2020 = totaisPorAno[2020] && populacao[2020] ? (totaisPorAno[2020] / populacao[2020]) * 100000 : 0;
+                    const metaTaxa2030 = ref2020 / 2;
+
+                    for (let a = 2015; a <= 2030; a++) {
+                        anos.push(a.toString());
+                        if (a === 2030) {
+                            taxas.push(parseFloat(metaTaxa2030.toFixed(1)));
+                        } else if (totaisPorAno[a] && populacao[a]) {
+                            if (a === Math.max(...Object.keys(totaisPorAno).map(Number))) {
+                                const penultimo = totaisPorAno[a - 1];
+                                if (totaisPorAno[a] < penultimo * 0.6) {
+                                    taxas.push(null);
+                                    continue;
+                                }
+                            }
+                            const taxa = (totaisPorAno[a] / populacao[a]) * 100000;
+                            taxas.push(parseFloat(taxa.toFixed(1)));
+                        } else {
+                            taxas.push(null);
+                        }
+                    }
+
+                    if (charts.chartMortalidadeTotalDash) charts.chartMortalidadeTotalDash.destroy();
+
+                    charts.chartMortalidadeTotalDash = new Chart(canvas.getContext('2d'), {
+                        type: 'line',
+                        data: {
+                            labels: anos,
+                            datasets: [
+                                {
+                                    label: 'Taxa de mortalidade (por 100 mil hab.)',
+                                    data: taxas,
+                                    borderColor: '#C68B00',
+                                    backgroundColor: 'rgba(198, 139, 0, 0.08)',
+                                    borderWidth: 2.5,
+                                    fill: true,
+                                    tension: 0.2,
+                                    pointBackgroundColor: function(ctx) {
+                                        const idx = ctx.dataIndex;
+                                        if (idx === taxas.length - 1) return '#10B981';
+                                        return '#C68B00';
+                                    },
+                                    pointBorderColor: function(ctx) {
+                                        const idx = ctx.dataIndex;
+                                        if (idx === taxas.length - 1) return '#059669';
+                                        return '#C68B00';
+                                    },
+                                    pointRadius: function(ctx) {
+                                        const idx = ctx.dataIndex;
+                                        if (idx === taxas.length - 1) return 6;
+                                        return 3;
+                                    },
+                                    spanGaps: false
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: true,
+                                    position: 'bottom',
+                                    labels: {
+                                        font: { family: 'Open Sans', size: 11 },
+                                        color: '#57595A'
+                                    }
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(ctx) {
+                                            if (ctx.dataIndex === taxas.length - 1) {
+                                                return ' Meta 2030: ' + ctx.parsed.y.toFixed(1) + ' por 100 mil hab.';
+                                            }
+                                            return ' Taxa: ' + ctx.parsed.y.toFixed(1) + ' por 100 mil hab.';
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    grid: { color: '#F3F4F6' },
+                                    ticks: {
+                                        font: { family: 'Open Sans', size: 10 },
+                                        color: '#57595A'
+                                    }
+                                },
+                                y: {
+                                    min: 0,
+                                    max: 16,
+                                    grid: { color: '#E5E7EB' },
+                                    ticks: {
+                                        font: { family: 'Open Sans', size: 10 },
+                                        color: '#57595A',
+                                        callback: function(value) { return value.toFixed(0); }
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Óbitos por 100 mil hab.',
+                                        font: { family: 'Open Sans', size: 10 },
+                                        color: '#57595A'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            };
+            xhr2.send();
+        }
+
+        // === GRÁFICO: Mortalidade por Tipo de Via (Dash) ===
+        function renderChartTipoViaDash() {
+            loadInfosigaCSV(function(rows) {
+                var canvas = document.getElementById('chartTipoViaDash');
+                if (!canvas) return;
+                var filtro = document.getElementById('filtro-tipo-via-dash').value;
+                var dados = rows.filter(function(r) { return r.indicador === 'Tipo de via' && r.ano >= 2015 && r.ano <= 2030; });
+                var categorias = filtro === 'all' ? ['ESTRADAS E RODOVIAS','VIAS URBANAS','NAO DISPONIVEL'] : [filtro];
+                var agrupado = {};
+                categorias.forEach(function(cat) { agrupado[cat] = {}; });
+                dados.forEach(function(r) { if (categorias.indexOf(r.categoria) >= 0) { agrupado[r.categoria][r.ano] = (agrupado[r.categoria][r.ano] || 0) + r.obitos; } });
+                var anosComDados = Object.keys(agrupado[categorias[0]] || {}).map(Number).sort();
+                var ultimoAno = anosComDados[anosComDados.length - 1];
+                var penultimoTotal = 0, ultimoTotal = 0;
+                categorias.forEach(function(cat) { penultimoTotal += (agrupado[cat][ultimoAno-1]||0); ultimoTotal += (agrupado[cat][ultimoAno]||0); });
+                var excluirUltimo = ultimoTotal < penultimoTotal * 0.6;
+                var labels = []; for (var a=2015;a<=2030;a++) labels.push(a.toString());
+                var datasets = categorias.map(function(cat) {
+                    var data = labels.map(function(anoStr) { var ano=parseInt(anoStr); var ob=agrupado[cat][ano]; if(!ob||(excluirUltimo&&ano===ultimoAno))return null; var pop=populacaoSP[ano]; if(!pop)return null; return parseFloat(((ob/pop)*100000).toFixed(2)); });
+                    return {label:cat.charAt(0)+cat.slice(1).toLowerCase(),data:data,borderColor:coresTipoVia[cat]||'#C68B00',backgroundColor:'transparent',borderWidth:2,tension:0.2,pointRadius:3,spanGaps:false};
+                });
+                if (charts.chartTipoViaDash) charts.chartTipoViaDash.destroy();
+                charts.chartTipoViaDash = new Chart(canvas.getContext('2d'),{type:'line',data:{labels:labels,datasets:datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'bottom',labels:{font:{family:'Open Sans',size:11},color:'#57595A'}},tooltip:{callbacks:{label:function(ctx){return ' '+ctx.dataset.label+': '+ctx.parsed.y.toFixed(2)+' por 100 mil hab.';}}}},scales:{x:{grid:{color:'#F3F4F6'},ticks:{font:{family:'Open Sans',size:10},color:'#57595A'}},y:{min:0,max:12,grid:{color:'#E5E7EB'},ticks:{font:{family:'Open Sans',size:10},color:'#57595A'},title:{display:true,text:'Óbitos por 100 mil hab.',font:{family:'Open Sans',size:10},color:'#57595A'}}}}});
+            });
+        }
+
+        // === GRÁFICO: Mortalidade por Modo de Transporte (Dash) ===
+        function renderChartModoTransporteDash() {
+            loadInfosigaCSV(function(rows) {
+                var canvas = document.getElementById('chartModoTransporteDash');
+                if (!canvas) return;
+                var filtro = document.getElementById('filtro-modo-transporte-dash').value;
+                var dados = rows.filter(function(r) { return r.indicador === 'Modo de transporte' && r.ano >= 2015 && r.ano <= 2030; });
+                var todasCat = ['AUTOMOVEL','BICICLETA','CAMINHAO','MOTOCICLETA','NAO DISPONIVEL','ONIBUS','OUTROS','PEDESTRE'];
+                var categorias = filtro === 'all' ? todasCat : [filtro];
+                var agrupado = {};
+                categorias.forEach(function(cat) { agrupado[cat] = {}; });
+                dados.forEach(function(r) { if (categorias.indexOf(r.categoria) >= 0) { agrupado[r.categoria][r.ano] = (agrupado[r.categoria][r.ano] || 0) + r.obitos; } });
+                var anosComDados = Object.keys(agrupado[categorias[0]] || {}).map(Number).sort();
+                var ultimoAno = anosComDados[anosComDados.length - 1];
+                var penultimoTotal = 0, ultimoTotal = 0;
+                categorias.forEach(function(cat) { penultimoTotal += (agrupado[cat][ultimoAno-1]||0); ultimoTotal += (agrupado[cat][ultimoAno]||0); });
+                var excluirUltimo = ultimoTotal < penultimoTotal * 0.6;
+                var labels = []; for (var a=2015;a<=2030;a++) labels.push(a.toString());
+                var datasets = categorias.map(function(cat) {
+                    var data = labels.map(function(anoStr) { var ano=parseInt(anoStr); var ob=agrupado[cat][ano]; if(!ob||(excluirUltimo&&ano===ultimoAno))return null; var pop=populacaoSP[ano]; if(!pop)return null; return parseFloat(((ob/pop)*100000).toFixed(2)); });
+                    return {label:cat.charAt(0)+cat.slice(1).toLowerCase(),data:data,borderColor:coresModoTransporte[cat]||'#57595A',backgroundColor:'transparent',borderWidth:2,tension:0.2,pointRadius:3,spanGaps:false};
+                });
+                if (charts.chartModoTransporteDash) charts.chartModoTransporteDash.destroy();
+                charts.chartModoTransporteDash = new Chart(canvas.getContext('2d'),{type:'line',data:{labels:labels,datasets:datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'bottom',labels:{font:{family:'Open Sans',size:11},color:'#57595A'}},tooltip:{callbacks:{label:function(ctx){return ' '+ctx.dataset.label+': '+ctx.parsed.y.toFixed(2)+' por 100 mil hab.';}}}},scales:{x:{grid:{color:'#F3F4F6'},ticks:{font:{family:'Open Sans',size:10},color:'#57595A'}},y:{min:0,max:12,grid:{color:'#E5E7EB'},ticks:{font:{family:'Open Sans',size:10},color:'#57595A'},title:{display:true,text:'Óbitos por 100 mil hab.',font:{family:'Open Sans',size:10},color:'#57595A'}}}}});
+            });
+        }
+
         window.onload = function() {
             if (window.lucide) lucide.createIcons();
             loadSpreadsheetData();
@@ -3138,6 +3803,10 @@
                 sessaoDashboard = null;
                 document.getElementById('dashboard-auth-container').classList.remove('hidden');
                 document.getElementById('dashboard-content').classList.add('hidden');
+                const submenuDash = document.getElementById('submenu-dashboard');
+                const chevronDash = document.getElementById('chevron-dashboard');
+                if (submenuDash) submenuDash.classList.add('hidden');
+                if (chevronDash) chevronDash.classList.remove('rotate-180');
             }
         }
 
@@ -3196,6 +3865,18 @@
                     if (icon) { icon.classList.remove('text-sistran-gold'); icon.classList.add('text-sistran-muted'); }
                 });
             }
+            const submenuDashboard = document.getElementById('submenu-dashboard');
+            const chevronDashboard = document.getElementById('chevron-dashboard');
+            if (tabId !== 'dashboard') {
+                if (submenuDashboard) submenuDashboard.classList.add('hidden');
+                if (chevronDashboard) chevronDashboard.classList.remove('rotate-180');
+                document.querySelectorAll('#submenu-dashboard button').forEach(btn => {
+                    btn.classList.remove('bg-sistran-gold-surface', 'text-sistran-gold', 'font-semibold');
+                    btn.classList.add('text-sistran-body');
+                    const icon = btn.querySelector('svg') || btn.querySelector('i');
+                    if (icon) { icon.classList.remove('text-sistran-gold'); icon.classList.add('text-sistran-muted'); }
+                });
+            }
             
             const targetSec = document.getElementById(`tab-${tabId}`);
             if (targetSec) {
@@ -3239,6 +3920,7 @@
             let activeSub = null;
             if (tabId === 'publico') activeSub = activePublicSubTab;
             else if (tabId === 'coleta' && currentPontoFocal) activeSub = activeColetaSubTab;
+            else if (tabId === 'dashboard' && sessaoDashboard) activeSub = activeDashboardSubTab;
             
             updateBreadcrumbs(tabId, activeSub);
 
@@ -3247,7 +3929,12 @@
             }
 
             setTimeout(() => {
-                if (tabId === 'dashboard' && charts.chartTendencia) charts.chartTendencia.resize();
+                if (tabId === 'dashboard') {
+                    if (charts.chartMortalidadeTotalDash) charts.chartMortalidadeTotalDash.resize();
+                    if (charts.chartTipoViaDash) charts.chartTipoViaDash.resize();
+                    if (charts.chartModoTransporteDash) charts.chartModoTransporteDash.resize();
+                    if (charts.chartImplementacaoEixosDash) charts.chartImplementacaoEixosDash.resize();
+                }
                 if (tabId === 'publico') {
                     if (charts.cardStatusDonut) charts.cardStatusDonut.resize();
                     if (charts.impactLine) charts.impactLine.resize();
@@ -3379,6 +4066,92 @@
             }
         }
 
+        // ===== NAVEGAÇÃO: Submenu Coordenação e Acompanhamento (Dashboard) =====
+        function toggleDashboardSubmenu() {
+            const submenu = document.getElementById('submenu-dashboard');
+            const chevron = document.getElementById('chevron-dashboard');
+
+            if (sessaoDashboard === null) {
+                switchTab('dashboard');
+                if (submenu) submenu.classList.add('hidden');
+                if (chevron) chevron.classList.remove('rotate-180');
+                showNotification("Identificação Necessária", "Autentique-se para acessar os subitens de Coordenação e Acompanhamento.", "warning");
+            } else {
+                if (submenu.classList.contains('hidden')) {
+                    submenu.classList.remove('hidden');
+                    if (chevron) chevron.classList.add('rotate-180');
+                    switchTab('dashboard');
+                    selectDashboardSubitem(activeDashboardSubTab);
+                } else {
+                    submenu.classList.add('hidden');
+                    if (chevron) chevron.classList.remove('rotate-180');
+                }
+            }
+        }
+
+        function selectDashboardSubitem(subTabId) {
+            switchTab('dashboard');
+            const submenu = document.getElementById('submenu-dashboard');
+            const chevron = document.getElementById('chevron-dashboard');
+            if (submenu) submenu.classList.remove('hidden');
+            if (chevron) chevron.classList.add('rotate-180');
+            switchDashboardSubTab(subTabId);
+        }
+
+        function switchDashboardSubTab(subTabId) {
+            document.querySelectorAll('.dashboard-sub-content').forEach(sub => sub.classList.add('hidden'));
+            const targetSub = document.getElementById(`sub-tab-dash-${subTabId}`);
+            if (targetSub) targetSub.classList.remove('hidden');
+
+            activeDashboardSubTab = subTabId;
+            updateBreadcrumbs('dashboard', subTabId);
+
+            document.querySelectorAll('#submenu-dashboard button').forEach(btn => {
+                btn.classList.remove('bg-sistran-gold-surface', 'text-sistran-gold', 'font-semibold');
+                btn.classList.add('text-sistran-body');
+                const icon = btn.querySelector('svg') || btn.querySelector('i');
+                if (icon) {
+                    icon.classList.remove('text-sistran-gold');
+                    icon.classList.add('text-sistran-muted');
+                }
+            });
+
+            const activeSubitem = document.getElementById(`subitem-dash-${subTabId}`);
+            if (activeSubitem) {
+                activeSubitem.classList.add('bg-sistran-gold-surface', 'text-sistran-gold', 'font-semibold');
+                activeSubitem.classList.remove('text-sistran-body');
+                const icon = activeSubitem.querySelector('svg') || activeSubitem.querySelector('i');
+                if (icon) {
+                    icon.classList.add('text-sistran-gold');
+                    icon.classList.remove('text-sistran-muted');
+                }
+            }
+
+            // (Re)renderiza o conteúdo do subitem ativo
+            if (subTabId === 'impacto') {
+                try { renderImpactoDash(); } catch(e) { console.warn('[SIMO] renderImpactoDash error:', e); }
+                try { renderChartMortalidadeTotalDash(); } catch(e) { console.warn('[SIMO] renderChartMortalidadeTotalDash error:', e); }
+                try { renderChartTipoViaDash(); } catch(e) { console.warn('[SIMO] renderChartTipoViaDash error:', e); }
+                try { renderChartModoTransporteDash(); } catch(e) { console.warn('[SIMO] renderChartModoTransporteDash error:', e); }
+                setTimeout(() => {
+                    if (charts.chartMortalidadeTotalDash) charts.chartMortalidadeTotalDash.resize();
+                    if (charts.chartTipoViaDash) charts.chartTipoViaDash.resize();
+                    if (charts.chartModoTransporteDash) charts.chartModoTransporteDash.resize();
+                }, 100);
+            } else if (subTabId === 'desempenho') {
+                try { buildDesempenhoTableDash(); } catch(e) { console.warn('[SIMO] buildDesempenhoTableDash error:', e); }
+            } else if (subTabId === 'implementacao') {
+                try { updateImplementacaoSummaryDash(); } catch(e) { console.warn('[SIMO] updateImplementacaoSummaryDash error:', e); }
+                try { renderChartImplementacaoEixosDash(); } catch(e) { console.warn('[SIMO] renderChartImplementacaoEixosDash error:', e); }
+                try { filterImplementacaoDash(); } catch(e) { console.warn('[SIMO] filterImplementacaoDash error:', e); }
+                setTimeout(() => {
+                    if (charts.chartImplementacaoEixosDash) charts.chartImplementacaoEixosDash.resize();
+                }, 100);
+            }
+
+            if (window.lucide) lucide.createIcons();
+        }
+
         function scrollToSection(id) {
             const element = document.getElementById(id);
             if (element) {
@@ -3485,7 +4258,9 @@
 
             // Gráfico impactLineChart removido - substituído por gráficos dinâmicos
 
-            const ctxTendencia = document.getElementById('chartTendenciaObitos').getContext('2d');
+            const canvasTendencia = document.getElementById('chartTendenciaObitos');
+            if (!canvasTendencia) return; // Conteúdo legado do dashboard removido; nada a renderizar
+            const ctxTendencia = canvasTendencia.getContext('2d');
 
             // Plugin para exibir texto "19 MIL VIDAS SALVAS" entre as linhas de projeção
             const vidasSalvasTextPlugin = {
@@ -3763,7 +4538,9 @@
                 });
             }
 
-            const ctxProgresso = document.getElementById('chartProgressoFisico').getContext('2d');
+            const canvasProgresso = document.getElementById('chartProgressoFisico');
+            if (!canvasProgresso) return; // Conteúdo legado do dashboard removido; nada a renderizar
+            const ctxProgresso = canvasProgresso.getContext('2d');
             charts.chartProgresso = new Chart(ctxProgresso, {
                 type: 'doughnut',
                 data: {
@@ -3968,6 +4745,98 @@
             if (filterAno) filterAno.value = '2024';
             if (search) search.value = '';
             buildDesempenhoTable();
+        }
+
+        // === DESEMPENHO (Dash): tabela + filtros (mesma fonte getDesempenhoDataComSubmissoes) ===
+        function buildDesempenhoTableDash() {
+            const tbody = document.getElementById('table-desempenho-body-dash');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const allData = getDesempenhoDataComSubmissoes();
+            if (allData.length === 0) return;
+
+            const filterEixo = document.getElementById('filter-desempenho-eixo-dash');
+            if (filterEixo) {
+                const eixosUnicos = [...new Set(allData.map(d => d.eixoKey).filter(Boolean))];
+                eixosUnicos.sort((a, b) => (parseInt(a.replace(/\D/g, '')) || 0) - (parseInt(b.replace(/\D/g, '')) || 0));
+                const eixoAtual = filterEixo.value;
+                filterEixo.innerHTML = '<option value="all">Todos os Eixos</option>';
+                eixosUnicos.forEach(e => { const o = document.createElement('option'); o.value = e; o.textContent = e; filterEixo.appendChild(o); });
+                filterEixo.value = eixoAtual || 'all';
+            }
+
+            const filterObj = document.getElementById('filter-desempenho-objetivo-dash');
+            if (filterObj) {
+                const valEixoForObj = filterEixo ? filterEixo.value : 'all';
+                let objsFiltrados = allData;
+                if (valEixoForObj !== 'all') objsFiltrados = objsFiltrados.filter(d => d.eixoKey === valEixoForObj);
+                const objsUnicos = [...new Set(objsFiltrados.map(d => d.objKey).filter(Boolean))];
+                const objAtual = filterObj.value;
+                filterObj.innerHTML = '<option value="all">Todos os Objetivos</option>';
+                objsUnicos.forEach(o => { const opt = document.createElement('option'); opt.value = o; opt.textContent = o; filterObj.appendChild(opt); });
+                filterObj.value = objAtual || 'all';
+            }
+
+            const filterAno = document.getElementById('filter-desempenho-ano-dash');
+            if (filterAno) {
+                const anosUnicos = [...new Set(allData.map(d => d.ano).filter(Boolean))].sort();
+                const anoAtual = filterAno.value;
+                filterAno.innerHTML = '';
+                anosUnicos.forEach(a => {
+                    const opt = document.createElement('option');
+                    opt.value = a;
+                    opt.textContent = a === 2024 ? a + ' (Base)' : a;
+                    filterAno.appendChild(opt);
+                });
+                filterAno.value = anoAtual && anosUnicos.includes(parseInt(anoAtual)) ? anoAtual : '2024';
+            }
+
+            const valEixo = filterEixo ? filterEixo.value : 'all';
+            const valObj = filterObj ? filterObj.value : 'all';
+            const valAno = filterAno ? filterAno.value : 'all';
+            const valSearch = (document.getElementById('search-desempenho-dash') ? document.getElementById('search-desempenho-dash').value : '').toLowerCase();
+
+            allData.forEach(item => {
+                if (valEixo !== 'all' && item.eixoKey !== valEixo) return;
+                if (valObj !== 'all' && item.objKey !== valObj) return;
+                if (valAno && String(item.ano) !== valAno) return;
+                if (valSearch) {
+                    const searchable = `${item.eixoKey} ${item.objKey} ${item.indicadorKey} ${item.codIndicador}`.toLowerCase();
+                    if (!searchable.includes(valSearch)) return;
+                }
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50 border-b border-gray-100 transition-colors';
+
+                const valor = item.valorIndicador != null ? item.valorIndicador : '—';
+
+                tr.innerHTML = `
+                    <td class="p-3 font-semibold text-sistran-heading text-[10px]">${item.eixoKey || '—'}</td>
+                    <td class="p-3 text-sistran-body text-[10px]">${item.objKey || '—'}</td>
+                    <td class="p-3 font-semibold text-sistran-heading text-[10px]">${item.indicadorKey || '—'}</td>
+                    <td class="p-3 text-sistran-body text-[10px]">${item.oqueMede || '—'}</td>
+                    <td class="p-3 text-sistran-muted text-[10px]">${item.fonte || '—'}</td>
+                    <td class="p-3 text-center text-xs font-semibold text-sistran-heading">${valor}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterDesempenhoTableDash() {
+            buildDesempenhoTableDash();
+        }
+
+        function limparFiltrosDesempenhoDash() {
+            const filterEixo = document.getElementById('filter-desempenho-eixo-dash');
+            const filterObj = document.getElementById('filter-desempenho-objetivo-dash');
+            const filterAno = document.getElementById('filter-desempenho-ano-dash');
+            const search = document.getElementById('search-desempenho-dash');
+            if (filterEixo) filterEixo.value = 'all';
+            if (filterObj) filterObj.value = 'all';
+            if (filterAno) filterAno.value = '2024';
+            if (search) search.value = '';
+            buildDesempenhoTableDash();
         }
 
         // === CARREGAMENTO DE MONITORAMENTO_INDICADORES.XLSX ===
@@ -4485,6 +5354,319 @@
             buildImplementacaoTable();
         }
 
+        // === IMPLEMENTAÇÃO (Dash): tabela + resumo + gráfico (mesma global monitoramentoData) ===
+        function buildImplementacaoTableDash() {
+            const tbody = document.getElementById('table-implementacao-body-dash');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const searchText = document.getElementById('search-imp-text-dash');
+            const filterEixo = document.getElementById('filter-imp-eixo-dash');
+            const filterOrgao = document.getElementById('filter-imp-orgao-dash');
+            const filterStatusFinal = document.getElementById('filter-imp-status-final-dash');
+            const textValue = searchText ? searchText.value.toLowerCase().trim() : '';
+            const eixoValue = filterEixo ? filterEixo.value : 'all';
+            const orgaoValue = filterOrgao ? filterOrgao.value : 'all';
+            const statusFinalValue = filterStatusFinal ? filterStatusFinal.value : 'all';
+
+            if (filterEixo) {
+                const eixosUnicos = [...new Set(monitoramentoData.map(i => i.eixo).filter(Boolean))];
+                const eixoAtual = filterEixo.value;
+                filterEixo.innerHTML = '<option value="all">Todos os Eixos</option>';
+                eixosUnicos.forEach(e => { const o = document.createElement('option'); o.value = e; o.textContent = e; filterEixo.appendChild(o); });
+                filterEixo.value = eixoAtual || 'all';
+            }
+
+            if (filterOrgao) {
+                const orgaosUnicos = [...new Set(mockDatabase.acoes.filter(a => a.status === 'Aprovado').map(a => a.orgao).filter(Boolean))];
+                const orgaoAtual = filterOrgao.value;
+                filterOrgao.innerHTML = '<option value="all">Todos os Órgãos</option>';
+                orgaosUnicos.forEach(o => { const opt = document.createElement('option'); opt.value = o; opt.textContent = o; filterOrgao.appendChild(opt); });
+                filterOrgao.value = orgaoAtual || 'all';
+            }
+
+            function statusBadgeClass(s) {
+                if (s === 'Concluído') return 'bg-emerald-50 text-emerald-600';
+                if (s === 'Concluído*') return 'bg-emerald-50 text-emerald-500 border border-emerald-300';
+                if (s === 'Em Desenvolvimento') return 'bg-amber-50 text-amber-600';
+                if (s === 'Iniciado') return 'bg-blue-50 text-blue-600';
+                if (s === 'Sem meta prevista') return 'bg-zinc-50 text-zinc-400 italic';
+                return 'bg-gray-100 text-sistran-body';
+            }
+
+            monitoramentoData.forEach((item, i) => {
+                if (eixoValue !== 'all' && item.eixo !== eixoValue) return;
+
+                if (orgaoValue !== 'all') {
+                    const temProdutoDoOrgao = mockDatabase.acoes.some(a => a.status === 'Aprovado' && a.codProd === item.cod && a.orgao === orgaoValue);
+                    if (!temProdutoDoOrgao) return;
+                }
+
+                if (statusFinalValue !== 'all') {
+                    const statusMetaFinal = calcularSituacaoMeta(item.cod, item.indicador, 'final');
+                    if (statusMetaFinal !== statusFinalValue) return;
+                }
+
+                if (textValue) {
+                    const searchable = `${item.cod} ${item.eixo} ${item.acao} ${item.produto} ${item.indicador}`.toLowerCase();
+                    if (!searchable.includes(textValue)) return;
+                }
+
+                const statusCurto = calcularSituacaoMeta(item.cod, item.indicador, 'curto');
+                const statusMedio = calcularSituacaoMeta(item.cod, item.indicador, 'medio');
+                const statusLongo = calcularSituacaoMeta(item.cod, item.indicador, 'longo');
+                const statusFinal = calcularSituacaoMeta(item.cod, item.indicador, 'final');
+
+                const produtoAprovado = mockDatabase.acoes.find(a => a.status === 'Aprovado' && a.codProd === item.cod);
+                const orgaoDisplay = produtoAprovado ? produtoAprovado.orgao : '—';
+
+                const rowId = 'dash-imp-detail-' + item.cod.replace(/\./g, '-') + '-' + i;
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50 border-b border-gray-100 transition-colors cursor-pointer';
+                tr.onclick = function() { toggleImplementacaoDetail(rowId); };
+
+                tr.innerHTML = `
+                    <td class="p-3 text-sistran-body text-[10px] max-w-[180px]">${item.eixo || '—'}</td>
+                    <td class="p-3 text-sistran-body font-semibold text-[10px] max-w-[200px]">${item.produto || '—'}</td>
+                    <td class="p-3 text-sistran-body text-[10px] max-w-[150px]">${item.indicador || '—'}</td>
+                    <td class="p-3 text-sistran-body text-[10px]">${orgaoDisplay}</td>
+                    <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${statusBadgeClass(statusCurto)}">${statusCurto}</span></td>
+                    <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${statusBadgeClass(statusMedio)}">${statusMedio}</span></td>
+                    <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${statusBadgeClass(statusLongo)}">${statusLongo}</span></td>
+                    <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${statusBadgeClass(statusFinal)}">${statusFinal}</span></td>
+                `;
+                tbody.appendChild(tr);
+
+                const aprovados = mockDatabase.acoes.filter(a => a.status === 'Aprovado' && a.codProd === item.cod && a.indicador === item.indicador);
+                let detalhesHtml = '';
+                if (aprovados.length === 0) {
+                    detalhesHtml = '<p class="text-[11px] text-sistran-muted uppercase font-bold tracking-wider mb-2">Histórico de Produtos Aprovados</p><p class="text-xs text-sistran-body mb-3"><strong class="text-sistran-heading">Ação:</strong> ' + (item.acao || '—') + '</p><p class="text-xs text-sistran-muted py-3">Nenhum produto aprovado encontrado para este indicador.</p>';
+                } else {
+                    detalhesHtml = `
+                        <p class="text-[11px] text-sistran-muted uppercase font-bold tracking-wider mb-2">Histórico de Produtos Aprovados</p>
+                        <p class="text-xs text-sistran-body mb-3"><strong class="text-sistran-heading">Ação:</strong> ${item.acao || '—'}</p>
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead><tr class="bg-sistran-surface-muted text-sistran-heading font-bold border-b border-sistran-border">
+                                <th class="p-2">ID</th><th class="p-2">Órgão</th><th class="p-2">Valor</th><th class="p-2">Ano Ref.</th><th class="p-2">Data</th>
+                            </tr></thead>
+                            <tbody class="divide-y divide-gray-100">
+                                ${aprovados.map(a => '<tr class="hover:bg-gray-50"><td class="p-2 font-bold text-sistran-gold">#' + a.id + '</td><td class="p-2 text-sistran-body">' + (a.orgao || '—') + '</td><td class="p-2 font-semibold text-sistran-heading">' + (a.valor || '—') + '</td><td class="p-2 text-sistran-heading">' + (a.horizonte || '—') + '</td><td class="p-2 text-sistran-body">' + (a.data || '—') + '</td></tr>').join('')}
+                            </tbody>
+                        </table>
+                    `;
+                }
+
+                const trDetail = document.createElement('tr');
+                trDetail.id = rowId;
+                trDetail.className = 'hidden';
+                trDetail.innerHTML = '<td colspan="8" class="p-4 bg-white border-t border-sistran-border">' + detalhesHtml + '</td>';
+                tbody.appendChild(trDetail);
+            });
+            updateImplementacaoSummaryDash();
+            renderChartImplementacaoEixosDash();
+        }
+
+        function updateImplementacaoSummaryDash() {
+            const counts = { 'À Iniciar': 0, 'Iniciado': 0, 'Em Desenvolvimento': 0, 'Concluído': 0 };
+            let totalComMeta = 0;
+
+            const seletorPeriodo = document.getElementById('seletor-periodo-cards-dash');
+            const periodo = seletorPeriodo ? seletorPeriodo.value : 'curto';
+
+            const periodLabel = 'Resumo dos Quantitativos do Status das Metas por Fase de Implementação do Plano: Curto Prazo (2025–2027), Médio Prazo (2028–2030) e Longo Prazo (2031–2035)';
+            monitoramentoData.forEach(item => {
+                const status = calcularSituacaoMeta(item.cod, item.indicador, periodo);
+                if (status !== 'Sem meta prevista') {
+                    totalComMeta++;
+                    if (status === 'Concluído' || status === 'Concluído*') counts['Concluído']++;
+                    else if (counts.hasOwnProperty(status)) counts[status]++;
+                }
+            });
+
+            const calcPercent = (c) => totalComMeta === 0 ? '0%' : Math.round((c / totalComMeta) * 100) + '%';
+
+            const impPrev = document.getElementById('imp-total-previsto-dash');
+            if (impPrev) impPrev.innerText = totalComMeta;
+
+            const periodEl = document.getElementById('imp-period-label-dash');
+            if (periodEl) periodEl.innerHTML = periodLabel;
+
+            const cardIniciar = document.getElementById('card-imp-iniciar-dash');
+            if (cardIniciar) {
+                const countEl = cardIniciar.querySelector('.card-count');
+                const percentEl = cardIniciar.querySelector('.card-percent');
+                if (countEl) countEl.textContent = counts['À Iniciar'];
+                if (percentEl) percentEl.textContent = calcPercent(counts['À Iniciar']);
+            }
+
+            const cardIniciado = document.getElementById('card-imp-iniciado-dash');
+            if (cardIniciado) {
+                const countEl = cardIniciado.querySelector('.card-count');
+                const percentEl = cardIniciado.querySelector('.card-percent');
+                if (countEl) countEl.textContent = counts['Iniciado'];
+                if (percentEl) percentEl.textContent = calcPercent(counts['Iniciado']);
+            }
+
+            const cardDev = document.getElementById('card-imp-desenvolvimento-dash');
+            if (cardDev) {
+                const countEl = cardDev.querySelector('.card-count');
+                const percentEl = cardDev.querySelector('.card-percent');
+                if (countEl) countEl.textContent = counts['Em Desenvolvimento'];
+                if (percentEl) percentEl.textContent = calcPercent(counts['Em Desenvolvimento']);
+            }
+
+            const cardConcluido = document.getElementById('card-imp-concluido-dash');
+            if (cardConcluido) {
+                const countEl = cardConcluido.querySelector('.card-count');
+                const percentEl = cardConcluido.querySelector('.card-percent');
+                if (countEl) countEl.textContent = counts['Concluído'];
+                if (percentEl) percentEl.textContent = calcPercent(counts['Concluído']);
+            }
+        }
+
+        function renderChartImplementacaoEixosDash() {
+            const canvas = document.getElementById('chartImplementacaoEixosDash');
+            if (!canvas) return;
+
+            const seletorPeriodo = document.getElementById('seletor-periodo-cards-dash');
+            const periodo = seletorPeriodo ? seletorPeriodo.value : 'curto';
+
+            const eixosMap = {};
+            monitoramentoData.forEach(item => {
+                if (!item.eixo) return;
+                if (!eixosMap[item.eixo]) eixosMap[item.eixo] = { concluido: 0, emDesenvolvimento: 0, iniciado: 0, aIniciar: 0, total: 0 };
+
+                const status = calcularSituacaoMeta(item.cod, item.indicador, periodo);
+                if (status === 'Sem meta prevista') return;
+
+                eixosMap[item.eixo].total++;
+                if (status === 'Concluído' || status === 'Concluído*') eixosMap[item.eixo].concluido++;
+                else if (status === 'Em Desenvolvimento') eixosMap[item.eixo].emDesenvolvimento++;
+                else if (status === 'Iniciado') eixosMap[item.eixo].iniciado++;
+                else eixosMap[item.eixo].aIniciar++;
+            });
+
+            const eixosOrdenados = Object.keys(eixosMap).sort((a, b) => {
+                const numA = parseInt(a.replace(/\D/g, '')) || 0;
+                const numB = parseInt(b.replace(/\D/g, '')) || 0;
+                return numA - numB;
+            });
+
+            const totalGeral = { concluido: 0, emDesenvolvimento: 0, iniciado: 0, aIniciar: 0, total: 0 };
+            eixosOrdenados.forEach(eixo => {
+                totalGeral.concluido += eixosMap[eixo].concluido;
+                totalGeral.emDesenvolvimento += eixosMap[eixo].emDesenvolvimento;
+                totalGeral.iniciado += eixosMap[eixo].iniciado;
+                totalGeral.aIniciar += eixosMap[eixo].aIniciar;
+                totalGeral.total += eixosMap[eixo].total;
+            });
+
+            const labels = eixosOrdenados.map(e => {
+                const parts = e.split(' - ');
+                if (parts.length > 1 && e.length > 25) {
+                    return [parts[0] + ' -', parts.slice(1).join(' - ')];
+                }
+                return e;
+            });
+            labels.push('Total');
+
+            const calcPct = (val, total) => total > 0 ? Math.round((val / total) * 100) : 0;
+
+            const dataConcluido = eixosOrdenados.map(e => calcPct(eixosMap[e].concluido, eixosMap[e].total));
+            dataConcluido.push(calcPct(totalGeral.concluido, totalGeral.total));
+
+            const dataEmDesenv = eixosOrdenados.map(e => calcPct(eixosMap[e].emDesenvolvimento, eixosMap[e].total));
+            dataEmDesenv.push(calcPct(totalGeral.emDesenvolvimento, totalGeral.total));
+
+            const dataIniciado = eixosOrdenados.map(e => calcPct(eixosMap[e].iniciado, eixosMap[e].total));
+            dataIniciado.push(calcPct(totalGeral.iniciado, totalGeral.total));
+
+            const dataAIniciar = eixosOrdenados.map(e => calcPct(eixosMap[e].aIniciar, eixosMap[e].total));
+            dataAIniciar.push(calcPct(totalGeral.aIniciar, totalGeral.total));
+
+            if (charts.chartImplementacaoEixosDash) {
+                charts.chartImplementacaoEixosDash.destroy();
+            }
+
+            charts.chartImplementacaoEixosDash = new Chart(canvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Concluído', data: dataConcluido, backgroundColor: '#10B981', borderRadius: 2 },
+                        { label: 'Em Desenvolvimento', data: dataEmDesenv, backgroundColor: '#D97706', borderRadius: 2 },
+                        { label: 'Iniciado', data: dataIniciado, backgroundColor: '#2563EB', borderRadius: 2 },
+                        { label: 'À Iniciar', data: dataAIniciar, backgroundColor: '#9CA3AF', borderRadius: 2 }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'rect',
+                                boxWidth: 12,
+                                boxHeight: 12,
+                                font: { size: 11, family: 'Open Sans' },
+                                padding: 15
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) {
+                                    return ' ' + ctx.dataset.label + ': ' + ctx.parsed.x + '%';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) { return value + '%'; },
+                                font: { size: 10, family: 'Open Sans' }
+                            },
+                            title: {
+                                display: true,
+                                text: '% do status do andamento dos produtos',
+                                font: { size: 11, family: 'Open Sans', weight: '600' }
+                            },
+                            grid: { color: 'rgba(0,0,0,0.05)' }
+                        },
+                        y: {
+                            stacked: true,
+                            ticks: { font: { size: 11, family: 'Open Sans' } },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        function filterImplementacaoDash() {
+            buildImplementacaoTableDash();
+        }
+
+        function limparFiltrosImplementacaoDash() {
+            const filterEixo = document.getElementById('filter-imp-eixo-dash');
+            const filterOrgao = document.getElementById('filter-imp-orgao-dash');
+            const filterStatus = document.getElementById('filter-imp-status-final-dash');
+            const searchText = document.getElementById('search-imp-text-dash');
+
+            if (filterEixo) filterEixo.value = 'all';
+            if (filterOrgao) filterOrgao.value = 'all';
+            if (filterStatus) filterStatus.value = 'all';
+            if (searchText) searchText.value = '';
+
+            buildImplementacaoTableDash();
+        }
+
         function limparFiltrosHistorico() {
             const filtroEixo = document.getElementById('filtro-historico-eixo');
             const filtroAno = document.getElementById('filtro-historico-ano');
@@ -4846,6 +6028,14 @@
                 if (sessaoDashboard) {
                     document.getElementById('dashboard-auth-container').classList.add('hidden');
                     document.getElementById('dashboard-content').classList.remove('hidden');
+
+                    // Abre submenu no sidebar e exibe o primeiro subitem
+                    const submenu = document.getElementById('submenu-dashboard');
+                    const chevron = document.getElementById('chevron-dashboard');
+                    if (submenu) submenu.classList.remove('hidden');
+                    if (chevron) chevron.classList.add('rotate-180');
+
+                    selectDashboardSubitem('implementacao');
                     showNotification("Acesso Autorizado", `Logado como ${sessaoDashboard.nome} (${sessaoDashboard.cargo}).`, "emerald");
                 }
             }
@@ -6258,6 +7448,13 @@
             document.body.removeChild(link);
             showToast("Matriz de Implementação exportada em CSV!");
         }
+
+        // === EXPORTAÇÕES (Dash) — operam sobre as mesmas globais (dbDesempenho / monitoramentoData) ===
+        function exportDesempenhoXLSXDash() { exportDesempenhoXLSX(); }
+        function exportDesempenhoCSVDash() { exportDesempenhoCSV(); }
+        function exportImplementacaoXLSXDash() { exportImplementacaoXLSX(); }
+        function exportImplementacaoCSVDash() { exportImplementacaoCSV(); }
+
         // === FORMULÁRIO DE DESEMPENHO: Dados e lógica em cascata ===
         let desempenhoSpreadsheetData = [];
         let desempFile = null;
