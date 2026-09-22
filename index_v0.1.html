@@ -471,10 +471,24 @@
 
                     <!-- Submenu colapsável para Coordenação e Acompanhamento -->
                     <div id="submenu-dashboard" class="hidden pl-6 space-y-1 overflow-hidden transition-all duration-300 border-l-2 border-sistran-border ml-5 mt-1">
-                        <button onclick="selectDashboardSubitem('implementacao')" id="subitem-dash-implementacao" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-medium text-sistran-body hover:bg-zinc-100 hover:text-sistran-heading transition-colors text-left">
-                            <i data-lucide="check-square" class="w-4 h-4 text-sistran-muted flex-shrink-0"></i>
-                            <span>Implementação</span>
+                        <button onclick="selectDashboardSubitem('implementacao')" id="subitem-dash-implementacao" class="w-full flex items-center justify-between px-3 py-2 rounded-sm text-xs font-medium text-sistran-body hover:bg-zinc-100 hover:text-sistran-heading transition-colors text-left">
+                            <div class="flex items-center gap-2.5">
+                                <i data-lucide="check-square" class="w-4 h-4 text-sistran-muted flex-shrink-0"></i>
+                                <span>Implementação</span>
+                            </div>
+                            <i id="chevron-dash-implementacao" class="fa-solid fa-chevron-down text-[10px] transition-transform duration-200 text-sistran-muted"></i>
                         </button>
+                        <!-- Sub-subitens de Implementação -->
+                        <div id="submenu-dash-implementacao" class="hidden pl-5 space-y-1 overflow-hidden transition-all duration-300 border-l-2 border-sistran-border ml-4 mt-1">
+                            <button onclick="selectImplementacaoInner('consolidados')" id="subitem-dash-imp-consolidados" class="w-full flex items-center gap-2.5 px-3 py-1.5 rounded-sm text-[11px] font-medium text-sistran-body hover:bg-zinc-100 hover:text-sistran-heading transition-colors text-left">
+                                <i data-lucide="layout-dashboard" class="w-3.5 h-3.5 text-sistran-muted flex-shrink-0"></i>
+                                <span>Resultados Consolidados</span>
+                            </button>
+                            <button onclick="selectImplementacaoInner('andamento')" id="subitem-dash-imp-andamento" class="w-full flex items-center gap-2.5 px-3 py-1.5 rounded-sm text-[11px] font-medium text-sistran-body hover:bg-zinc-100 hover:text-sistran-heading transition-colors text-left">
+                                <i data-lucide="clipboard-list" class="w-3.5 h-3.5 text-sistran-muted flex-shrink-0"></i>
+                                <span>Andamento do Produto</span>
+                            </button>
+                        </div>
                         <button onclick="selectDashboardSubitem('desempenho')" id="subitem-dash-desempenho" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-medium text-sistran-body hover:bg-zinc-100 hover:text-sistran-heading transition-colors text-left">
                             <i data-lucide="activity" class="w-4 h-4 text-sistran-muted flex-shrink-0"></i>
                             <span>Desempenho</span>
@@ -2227,6 +2241,9 @@
 
                         <!-- ================= SUB-ABA DASHBOARD 1: IMPLEMENTAÇÃO ================= -->
                         <div id="sub-tab-dash-implementacao" class="dashboard-sub-content space-y-6">
+
+                          <!-- ===== NÍVEL 3: Resultados Consolidados ===== -->
+                          <div id="imp-inner-consolidados" class="imp-inner-content space-y-6">
                             <div class="bg-white border border-sistran-border rounded-md p-6 shadow-subtle space-y-6">
                                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                                     <div>
@@ -2357,6 +2374,91 @@
                                     </table>
                                 </div>
                             </div>
+                          </div><!-- fecha imp-inner-consolidados -->
+
+                          <!-- ===== NÍVEL 3: Andamento do Produto ===== -->
+                          <div id="imp-inner-andamento" class="imp-inner-content space-y-6 hidden">
+                            <div class="bg-white border border-sistran-border rounded-md p-6 shadow-subtle space-y-6">
+                                <div>
+                                    <h2 class="text-2xl font-bold text-sistran-heading flex items-center gap-2.5">
+                                        <span class="w-8 h-8 bg-sistran-ink rounded-full flex items-center justify-center flex-shrink-0">
+                                            <i data-lucide="clipboard-list" class="w-5 h-5 text-sistran-yellow"></i>
+                                        </span>
+                                        Implementação - Andamento dos Produtos
+                                    </h2>
+                                    <p class="text-sm text-sistran-body leading-relaxed mt-3">O acompanhamento do andamento dos produtos complementa o monitoramento dos indicadores de implementação, permitindo compreender como as entregas estão sendo executadas ao longo do período previsto.</p>
+                                    <p class="text-sm text-sistran-body leading-relaxed mt-2">Esse acompanhamento permite identificar situações que demandem atenção e antecipar possíveis riscos de atraso, constituindo subsídios para as Câmaras Temáticas no acompanhamento da implementação e na definição de medidas de correção ou redirecionamento.</p>
+                                </div>
+
+                                <!-- Filtros -->
+                                <div class="bg-gray-50 p-4 border border-sistran-border rounded-md space-y-4">
+                                    <p class="text-xs font-bold text-sistran-heading flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-sistran-gold" style="font-size:18px;">filter_list</span>
+                                        Filtros
+                                    </p>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+                                        <div>
+                                            <label class="block text-sistran-body font-semibold mb-1">Eixo</label>
+                                            <select id="filter-and-eixo-dash" onchange="onAndamentoEixoChange()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                <option value="all" selected>Todos os Eixos</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sistran-body font-semibold mb-1">Objetivo Estratégico</label>
+                                            <select id="filter-and-objetivo-dash" onchange="onAndamentoObjetivoChange()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                <option value="all" selected>Todos os Objetivos</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sistran-body font-semibold mb-1">Ação</label>
+                                            <select id="filter-and-acao-dash" onchange="filterAndamentoTable()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                <option value="all" selected>Todas as Ações</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sistran-body font-semibold mb-1">Produto (código ou descrição)</label>
+                                            <div class="search-select-wrapper" id="ss-and-produto"></div>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sistran-body font-semibold mb-1">Busca Textual</label>
+                                            <input type="text" id="search-and-text-dash" onkeyup="filterAndamentoTable()" placeholder="Busca textual" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sistran-body font-semibold mb-1">Fase de Implementação</label>
+                                            <select id="filter-and-fase-dash" onchange="filterAndamentoTable()" class="w-full p-2 bg-white border border-sistran-border rounded-sm focus:outline-none focus:ring-1 focus:ring-sistran-gold">
+                                                <option value="all" selected>Todas as Fases</option>
+                                                <option value="curto">Curto Prazo (2025–2027)</option>
+                                                <option value="medio">Médio Prazo (2028–2030)</option>
+                                                <option value="longo">Longo Prazo (2031–2035)</option>
+                                                <option value="final">Meta Final (2025–2035)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <button onclick="limparFiltrosAndamento()" class="bg-white border border-sistran-border hover:bg-sistran-surface-muted text-sistran-body font-semibold text-[10px] px-3 py-1.5 rounded-pill transition">Limpar Filtros</button>
+                                    </div>
+                                </div>
+
+                                <!-- Tabela de Andamento -->
+                                <div class="table-container overflow-x-auto border border-sistran-border rounded-md">
+                                    <table class="w-full text-left border-collapse text-xs min-w-[1100px]">
+                                        <thead>
+                                            <tr class="bg-sistran-surface-muted text-sistran-heading font-bold border-b border-sistran-border">
+                                                <th class="p-3 w-[150px]">Eixo</th>
+                                                <th class="p-3 w-[110px]">Objetivo Estratégico</th>
+                                                <th class="p-3 w-[90px]">Ação</th>
+                                                <th class="p-3 w-[90px]">Produto</th>
+                                                <th class="p-3">Descrição do Produto</th>
+                                                <th class="p-3 w-[130px] text-center">Última Atualização</th>
+                                                <th class="p-3 w-[130px] text-center">Andamento do Produto</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="table-andamento-body-dash" class="divide-y divide-gray-100"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                          </div><!-- fecha imp-inner-andamento -->
+
                         </div>
 
                         <!-- ================= SUB-ABA DASHBOARD 2: DESEMPENHO ================= -->
@@ -3807,6 +3909,10 @@
                 const chevronDash = document.getElementById('chevron-dashboard');
                 if (submenuDash) submenuDash.classList.add('hidden');
                 if (chevronDash) chevronDash.classList.remove('rotate-180');
+                const innerImpMenu = document.getElementById('submenu-dash-implementacao');
+                const innerImpChevron = document.getElementById('chevron-dash-implementacao');
+                if (innerImpMenu) innerImpMenu.classList.add('hidden');
+                if (innerImpChevron) innerImpChevron.classList.remove('rotate-180');
             }
         }
 
@@ -3876,6 +3982,10 @@
                     const icon = btn.querySelector('svg') || btn.querySelector('i');
                     if (icon) { icon.classList.remove('text-sistran-gold'); icon.classList.add('text-sistran-muted'); }
                 });
+                const innerImpMenu = document.getElementById('submenu-dash-implementacao');
+                const innerImpChevron = document.getElementById('chevron-dash-implementacao');
+                if (innerImpMenu) innerImpMenu.classList.add('hidden');
+                if (innerImpChevron) innerImpChevron.classList.remove('rotate-180');
             }
             
             const targetSec = document.getElementById(`tab-${tabId}`);
@@ -4095,6 +4205,18 @@
             const chevron = document.getElementById('chevron-dashboard');
             if (submenu) submenu.classList.remove('hidden');
             if (chevron) chevron.classList.add('rotate-180');
+
+            // Expande/recolhe o sub-submenu de Implementação
+            const innerMenu = document.getElementById('submenu-dash-implementacao');
+            const innerChevron = document.getElementById('chevron-dash-implementacao');
+            if (subTabId === 'implementacao') {
+                if (innerMenu) innerMenu.classList.remove('hidden');
+                if (innerChevron) innerChevron.classList.add('rotate-180');
+            } else {
+                if (innerMenu) innerMenu.classList.add('hidden');
+                if (innerChevron) innerChevron.classList.remove('rotate-180');
+            }
+
             switchDashboardSubTab(subTabId);
         }
 
@@ -4141,6 +4263,78 @@
             } else if (subTabId === 'desempenho') {
                 try { buildDesempenhoTableDash(); } catch(e) { console.warn('[SIMO] buildDesempenhoTableDash error:', e); }
             } else if (subTabId === 'implementacao') {
+                // Renderiza o sub-nível ativo (Resultados Consolidados ou Andamento do Produto)
+                try { renderImplementacaoInner(activeImplementacaoInner); } catch(e) { console.warn('[SIMO] renderImplementacaoInner error:', e); }
+            }
+
+            if (window.lucide) lucide.createIcons();
+        }
+
+        // ===== NÍVEL 3 de Implementação: Resultados Consolidados / Andamento do Produto =====
+        let activeImplementacaoInner = 'consolidados';
+
+        function selectImplementacaoInner(innerId) {
+            activeImplementacaoInner = innerId;
+
+            // Garante que o subitem Implementação e o sub-submenu estão ativos/abertos
+            switchTab('dashboard');
+            const submenu = document.getElementById('submenu-dashboard');
+            const chevron = document.getElementById('chevron-dashboard');
+            if (submenu) submenu.classList.remove('hidden');
+            if (chevron) chevron.classList.add('rotate-180');
+            const innerMenu = document.getElementById('submenu-dash-implementacao');
+            const innerChevron = document.getElementById('chevron-dash-implementacao');
+            if (innerMenu) innerMenu.classList.remove('hidden');
+            if (innerChevron) innerChevron.classList.add('rotate-180');
+
+            // Mostra o painel do subitem Implementação (esconde os demais subitens dash)
+            document.querySelectorAll('.dashboard-sub-content').forEach(sub => sub.classList.add('hidden'));
+            const target = document.getElementById('sub-tab-dash-implementacao');
+            if (target) target.classList.remove('hidden');
+            activeDashboardSubTab = 'implementacao';
+            updateBreadcrumbs('dashboard', 'implementacao');
+
+            // Realce do subitem Implementação no submenu do dashboard
+            document.querySelectorAll('#submenu-dashboard > button').forEach(btn => {
+                btn.classList.remove('bg-sistran-gold-surface', 'text-sistran-gold', 'font-semibold');
+                btn.classList.add('text-sistran-body');
+                const icon = btn.querySelector('svg') || btn.querySelector('i');
+                if (icon) { icon.classList.remove('text-sistran-gold'); icon.classList.add('text-sistran-muted'); }
+            });
+            const implBtn = document.getElementById('subitem-dash-implementacao');
+            if (implBtn) {
+                implBtn.classList.add('text-sistran-gold', 'font-semibold');
+                implBtn.classList.remove('text-sistran-body');
+            }
+
+            renderImplementacaoInner(innerId);
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function renderImplementacaoInner(innerId) {
+            // Alterna a visibilidade dos dois painéis internos
+            document.querySelectorAll('#sub-tab-dash-implementacao .imp-inner-content').forEach(el => el.classList.add('hidden'));
+            const panel = document.getElementById(innerId === 'andamento' ? 'imp-inner-andamento' : 'imp-inner-consolidados');
+            if (panel) panel.classList.remove('hidden');
+
+            // Realce dos botões do sub-submenu
+            document.querySelectorAll('#submenu-dash-implementacao button').forEach(btn => {
+                btn.classList.remove('bg-sistran-gold-surface', 'text-sistran-gold', 'font-semibold');
+                btn.classList.add('text-sistran-body');
+                const icon = btn.querySelector('svg') || btn.querySelector('i');
+                if (icon) { icon.classList.remove('text-sistran-gold'); icon.classList.add('text-sistran-muted'); }
+            });
+            const activeBtn = document.getElementById(innerId === 'andamento' ? 'subitem-dash-imp-andamento' : 'subitem-dash-imp-consolidados');
+            if (activeBtn) {
+                activeBtn.classList.add('bg-sistran-gold-surface', 'text-sistran-gold', 'font-semibold');
+                activeBtn.classList.remove('text-sistran-body');
+                const icon = activeBtn.querySelector('svg') || activeBtn.querySelector('i');
+                if (icon) { icon.classList.add('text-sistran-gold'); icon.classList.remove('text-sistran-muted'); }
+            }
+
+            if (innerId === 'andamento') {
+                try { buildAndamentoTable(); } catch(e) { console.warn('[SIMO] buildAndamentoTable error:', e); }
+            } else {
                 try { updateImplementacaoSummaryDash(); } catch(e) { console.warn('[SIMO] updateImplementacaoSummaryDash error:', e); }
                 try { renderChartImplementacaoEixosDash(); } catch(e) { console.warn('[SIMO] renderChartImplementacaoEixosDash error:', e); }
                 try { filterImplementacaoDash(); } catch(e) { console.warn('[SIMO] filterImplementacaoDash error:', e); }
@@ -4148,8 +4342,265 @@
                     if (charts.chartImplementacaoEixosDash) charts.chartImplementacaoEixosDash.resize();
                 }, 100);
             }
+            if (window.lucide) lucide.createIcons();
+        }
+
+        // ===== Painel "Andamento do Produto" =====
+        let andamentoProdutoSearchInit = false;
+
+        function getUltimaAtualizacaoProduto(cod) {
+            // Retorna a data/hora da submissão mais recente do produto (por codProd), ou null
+            const subs = mockDatabase.acoes.filter(a => a.codProd === cod);
+            if (subs.length === 0) return null;
+            // O campo data é string "dd/mm/aaaa HH:MM" — converte para timestamp para comparar
+            const parseData = (d) => {
+                if (!d) return 0;
+                const m = d.match(/(\d{2})\/(\d{2})\/(\d{4})\s+(\d{2}):(\d{2})/);
+                if (!m) return 0;
+                return new Date(+m[3], +m[2] - 1, +m[1], +m[4], +m[5]).getTime();
+            };
+            let maisRecente = subs[0];
+            subs.forEach(s => { if (parseData(s.data) > parseData(maisRecente.data)) maisRecente = s; });
+            return maisRecente.data || null;
+        }
+
+        function populateAndamentoFiltros() {
+            const fEixo = document.getElementById('filter-and-eixo-dash');
+            const fObj = document.getElementById('filter-and-objetivo-dash');
+            const fAcao = document.getElementById('filter-and-acao-dash');
+
+            const eixoVal = fEixo ? fEixo.value : 'all';
+            const objVal = fObj ? fObj.value : 'all';
+            const acaoVal = fAcao ? fAcao.value : 'all';
+
+            // Eixo (todos)
+            if (fEixo) {
+                const eixos = [...new Set(monitoramentoData.map(i => i.eixo).filter(Boolean))]
+                    .sort((a, b) => (parseInt(a.replace(/\D/g, '')) || 0) - (parseInt(b.replace(/\D/g, '')) || 0));
+                fEixo.innerHTML = '<option value="all">Todos os Eixos</option>';
+                eixos.forEach(e => { const o = document.createElement('option'); o.value = e; o.textContent = e; fEixo.appendChild(o); });
+                fEixo.value = eixos.includes(eixoVal) ? eixoVal : 'all';
+            }
+
+            // Objetivo (dependente do eixo)
+            if (fObj) {
+                let base = monitoramentoData;
+                if (fEixo && fEixo.value !== 'all') base = base.filter(i => i.eixo === fEixo.value);
+                const objs = [...new Set(base.map(i => i.objetivo).filter(Boolean))];
+                fObj.innerHTML = '<option value="all">Todos os Objetivos</option>';
+                objs.forEach(o => { const opt = document.createElement('option'); opt.value = o; opt.textContent = o; fObj.appendChild(opt); });
+                fObj.value = objs.includes(objVal) ? objVal : 'all';
+            }
+
+            // Ação (dependente do eixo e objetivo)
+            if (fAcao) {
+                let base = monitoramentoData;
+                if (fEixo && fEixo.value !== 'all') base = base.filter(i => i.eixo === fEixo.value);
+                if (fObj && fObj.value !== 'all') base = base.filter(i => i.objetivo === fObj.value);
+                const acoes = [...new Set(base.map(i => i.acao).filter(Boolean))];
+                fAcao.innerHTML = '<option value="all">Todas as Ações</option>';
+                acoes.forEach(a => { const opt = document.createElement('option'); opt.value = a; opt.textContent = a; fAcao.appendChild(opt); });
+                fAcao.value = acoes.includes(acaoVal) ? acaoVal : 'all';
+            }
+
+            // Produto (searchable) — inicializa uma vez
+            if (!andamentoProdutoSearchInit) {
+                createSearchableSelect('ss-and-produto', 'Todos os Produtos (código ou descrição)', filterAndamentoTable, false);
+                andamentoProdutoSearchInit = true;
+            }
+            const wProd = document.getElementById('ss-and-produto');
+            if (wProd) {
+                let base = monitoramentoData;
+                if (fEixo && fEixo.value !== 'all') base = base.filter(i => i.eixo === fEixo.value);
+                if (fObj && fObj.value !== 'all') base = base.filter(i => i.objetivo === fObj.value);
+                if (fAcao && fAcao.value !== 'all') base = base.filter(i => i.acao === fAcao.value);
+                wProd._options = [...new Set(base.map(i => i.produto).filter(Boolean))];
+            }
+        }
+
+        function onAndamentoEixoChange() {
+            const fObj = document.getElementById('filter-and-objetivo-dash');
+            const fAcao = document.getElementById('filter-and-acao-dash');
+            if (fObj) fObj.value = 'all';
+            if (fAcao) fAcao.value = 'all';
+            buildAndamentoTable();
+        }
+
+        function onAndamentoObjetivoChange() {
+            const fAcao = document.getElementById('filter-and-acao-dash');
+            if (fAcao) fAcao.value = 'all';
+            buildAndamentoTable();
+        }
+
+        function filterAndamentoTable() {
+            buildAndamentoTable();
+        }
+
+        function limparFiltrosAndamento() {
+            const fEixo = document.getElementById('filter-and-eixo-dash');
+            const fObj = document.getElementById('filter-and-objetivo-dash');
+            const fAcao = document.getElementById('filter-and-acao-dash');
+            const fFase = document.getElementById('filter-and-fase-dash');
+            const search = document.getElementById('search-and-text-dash');
+            if (fEixo) fEixo.value = 'all';
+            if (fObj) fObj.value = 'all';
+            if (fAcao) fAcao.value = 'all';
+            if (fFase) fFase.value = 'all';
+            if (search) search.value = '';
+            const wProd = document.getElementById('ss-and-produto');
+            if (wProd) { wProd._value = ''; if (wProd._input) wProd._input.value = ''; }
+            buildAndamentoTable();
+        }
+
+        function buildAndamentoTable() {
+            populateAndamentoFiltros();
+
+            const tbody = document.getElementById('table-andamento-body-dash');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const fEixo = document.getElementById('filter-and-eixo-dash');
+            const fObj = document.getElementById('filter-and-objetivo-dash');
+            const fAcao = document.getElementById('filter-and-acao-dash');
+            const fFase = document.getElementById('filter-and-fase-dash');
+            const search = document.getElementById('search-and-text-dash');
+            const wProd = document.getElementById('ss-and-produto');
+
+            const eixoVal = fEixo ? fEixo.value : 'all';
+            const objVal = fObj ? fObj.value : 'all';
+            const acaoVal = fAcao ? fAcao.value : 'all';
+            const faseVal = fFase ? fFase.value : 'all';
+            const searchVal = search ? search.value.toLowerCase().trim() : '';
+            const prodVal = wProd ? (wProd._value || '') : '';
+
+            // Deduplica por produto (a matriz tem uma linha por indicador; aqui listamos por produto)
+            const vistos = new Set();
+            let linhas = 0;
+
+            monitoramentoData.forEach(item => {
+                if (eixoVal !== 'all' && item.eixo !== eixoVal) return;
+                if (objVal !== 'all' && item.objetivo !== objVal) return;
+                if (acaoVal !== 'all' && item.acao !== acaoVal) return;
+                if (prodVal && item.produto !== prodVal) return;
+
+                // Fase de Implementação: mantém produtos com meta prevista naquela fase
+                if (faseVal !== 'all') {
+                    const metaFase = faseVal === 'curto' ? item.metaCurto
+                        : faseVal === 'medio' ? item.metaMedio
+                        : faseVal === 'longo' ? item.metaLongo
+                        : item.metaFinal;
+                    if (!metaFase || metaFase === 0) return;
+                }
+
+                if (!item.cod || vistos.has(item.cod)) return;
+                vistos.add(item.cod);
+
+                if (searchVal) {
+                    const hay = `${item.cod} ${item.eixo} ${item.objetivo} ${item.acao} ${item.produto}`.toLowerCase();
+                    if (!hay.includes(searchVal)) return;
+                }
+
+                // Colunas derivadas
+                const eixoCod = item.eixo || '—';
+                const objCod = item.objetivo ? ('OE ' + item.objetivo.split(' - ')[0]) : '—';
+                const acaoCod = item.acao ? item.acao.split(' - ')[0] : '—';
+                const prodCod = item.cod || '—';
+                const prodDesc = item.produto ? item.produto.split(' - ').slice(1).join(' - ') || item.produto : '—';
+                const ultimaAtu = getUltimaAtualizacaoProduto(item.cod) || '—';
+
+                const temSubs = mockDatabase.acoes.some(a => a.codProd === item.cod);
+                const rowId = 'and-detail-' + item.cod.replace(/\./g, '-');
+
+                const btnHist = `<button onclick="event.stopPropagation(); toggleAndamentoDetail('${rowId}')" title="Histórico de submissões em andamento" class="inline-flex items-center justify-center w-8 h-8 rounded-full border border-sistran-border hover:bg-sistran-gold-surface text-sistran-body hover:text-sistran-gold transition"><i data-lucide="history" class="w-4 h-4"></i></button>`;
+                const btnDown = temSubs
+                    ? `<button onclick="event.stopPropagation(); downloadSubmissoesProduto('${item.cod}')" title="Baixar dados das submissões deste produto" class="inline-flex items-center justify-center w-8 h-8 rounded-full border border-sistran-border hover:bg-sistran-gold-surface text-sistran-body hover:text-sistran-gold transition"><i data-lucide="download" class="w-4 h-4"></i></button>`
+                    : `<button disabled title="Sem submissões para baixar" class="inline-flex items-center justify-center w-8 h-8 rounded-full border border-sistran-border text-gray-300 cursor-not-allowed opacity-60"><i data-lucide="download" class="w-4 h-4"></i></button>`;
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50 border-b border-gray-100 transition-colors';
+                tr.innerHTML = `
+                    <td class="p-3 text-sistran-body text-[10px] max-w-[160px]">${eixoCod}</td>
+                    <td class="p-3 text-sistran-body text-[10px]">${objCod}</td>
+                    <td class="p-3 text-sistran-body text-[10px]">${acaoCod}</td>
+                    <td class="p-3 font-semibold text-sistran-heading text-[10px]">${prodCod}</td>
+                    <td class="p-3 text-sistran-body text-[10px]">${prodDesc}</td>
+                    <td class="p-3 text-center text-sistran-body text-[10px]">${ultimaAtu}</td>
+                    <td class="p-3"><div class="flex items-center justify-center gap-2">${btnHist}${btnDown}</div></td>
+                `;
+                tbody.appendChild(tr);
+
+                // Linha de detalhe (histórico de submissões deste produto)
+                const subs = mockDatabase.acoes.filter(a => a.codProd === item.cod);
+                let detalhe = '';
+                if (subs.length === 0) {
+                    detalhe = '<p class="text-xs text-sistran-muted py-2">Nenhuma submissão em andamento registrada para este produto.</p>';
+                } else {
+                    const rows = subs.map(a => `<tr class="hover:bg-gray-50"><td class="p-2 font-bold text-sistran-gold">#${a.id}</td><td class="p-2 text-sistran-body">${a.orgao || '—'}</td><td class="p-2 text-sistran-body">${a.indicador || '—'}</td><td class="p-2 font-semibold text-sistran-heading">${a.valor || '—'}</td><td class="p-2 text-sistran-heading">${a.horizonte || '—'}</td><td class="p-2 text-sistran-body">${a.data || '—'}</td><td class="p-2 text-sistran-body">${a.status || '—'}</td></tr>`).join('');
+                    detalhe = `
+                        <p class="text-[11px] text-sistran-muted uppercase font-bold tracking-wider mb-2">Histórico de Submissões em Andamento — ${item.produto || item.cod}</p>
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead><tr class="bg-sistran-surface-muted text-sistran-heading font-bold border-b border-sistran-border">
+                                <th class="p-2">ID</th><th class="p-2">Órgão</th><th class="p-2">Indicador</th><th class="p-2">Valor</th><th class="p-2">Ano Ref.</th><th class="p-2">Data/Hora</th><th class="p-2">Status</th>
+                            </tr></thead>
+                            <tbody class="divide-y divide-gray-100">${rows}</tbody>
+                        </table>`;
+                }
+                const trDetail = document.createElement('tr');
+                trDetail.id = rowId;
+                trDetail.className = 'hidden';
+                trDetail.innerHTML = `<td colspan="7" class="p-4 bg-white border-t border-sistran-border">${detalhe}</td>`;
+                tbody.appendChild(trDetail);
+
+                linhas++;
+            });
+
+            if (linhas === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-sistran-muted font-medium">Nenhum produto encontrado com os filtros selecionados.</td></tr>';
+            }
 
             if (window.lucide) lucide.createIcons();
+        }
+
+        function toggleAndamentoDetail(rowId) {
+            const el = document.getElementById(rowId);
+            if (el) el.classList.toggle('hidden');
+        }
+
+        function downloadSubmissoesProduto(cod) {
+            const subs = mockDatabase.acoes.filter(a => a.codProd === cod);
+            if (subs.length === 0) {
+                showNotification("Sem dados", "Não há submissões registradas para este produto.", "warning");
+                return;
+            }
+            const item = monitoramentoData.find(m => m.cod === cod);
+            const linhas = subs.map(a => ({
+                'ID Submissão': a.id,
+                'Eixo': a.eixo || (item ? item.eixo : ''),
+                'Objetivo Estratégico': a.objetivo || (item ? item.objetivo : ''),
+                'Ação': a.acao || (item ? item.acao : ''),
+                'Código do Produto': a.codProd || cod,
+                'Produto': a.produto || (item ? item.produto : ''),
+                'Indicador': a.indicador || '',
+                'Valor': a.valor || '',
+                'Ano de Referência': a.horizonte || '',
+                'Órgão': a.orgao || '',
+                'Responsável': a.responsavel || '',
+                'Descrição': a.descricao || '',
+                'Anexo': a.anexos || '',
+                'Evidência (link)': a.evidencia || '',
+                'Data/Hora': a.data || '',
+                'Status': a.status || ''
+            }));
+            try {
+                const ws = XLSX.utils.json_to_sheet(linhas);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'Submissões');
+                XLSX.writeFile(wb, `submissoes_produto_${cod}.xlsx`);
+                showNotification("Download iniciado", `Dados das submissões do produto ${cod} exportados (.xlsx).`, "emerald");
+            } catch (e) {
+                console.warn('[SIMO] downloadSubmissoesProduto error:', e);
+                showNotification("Erro", "Não foi possível gerar o arquivo de submissões.", "rose");
+            }
         }
 
         function scrollToSection(id) {
