@@ -2556,64 +2556,37 @@
                                 <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Meta principal</p>
                                 <p class="text-sm text-sistran-body leading-relaxed">O PSV-SP tem como meta principal reduzir em 50% as mortes no trânsito até 2030, tendo como referência os 4.842 óbitos registrados em 2020.</p>
 
-                                <!-- Cards + Barra Temporal numa caixa única -->
-                                <div class="bg-white border border-sistran-border rounded-md p-5 space-y-5">
-
-                                    <!-- 3 KPI Cards (dinâmicos) -->
-                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-semibold">
-                                        <!-- Card Referência -->
-                                        <div class="p-4 bg-gray-50 border border-gray-200 rounded-md text-center">
-                                            <p class="text-[10px] font-bold text-sistran-muted uppercase">Referência (2020)</p>
-                                            <h4 id="kpi-referencia-valor-dash" class="text-2xl font-extrabold text-sistran-heading">—</h4>
-                                            <p class="text-xs text-sistran-body mt-3">Mortes no trânsito</p>
-                                        </div>
-                                        <!-- Card Atual -->
-                                        <div class="p-4 bg-amber-50 border border-amber-200 rounded-md text-center">
-                                            <p id="kpi-atual-titulo-dash" class="text-[10px] font-bold text-amber-600 uppercase">Atual (—)</p>
-                                            <div class="flex items-center justify-center gap-2 mt-1">
-                                                <p id="kpi-atual-variacao-dash" class="text-2xl font-bold text-rose-500 flex items-center gap-0.5">—</p>
-                                                <h4 id="kpi-atual-valor-dash" class="text-xs font-extrabold text-sistran-heading">—</h4>
-                                            </div>
-                                            <p class="text-xs text-sistran-body mt-1">Mortes no trânsito</p>
-                                        </div>
-                                        <!-- Card Meta -->
-                                        <div class="p-4 bg-sistran-gold-surface border border-sistran-yellow rounded-md text-center">
-                                            <p class="text-[10px] font-bold text-sistran-gold uppercase">Meta Principal (2030)</p>
-                                            <div class="flex items-center justify-center gap-2 mt-1">
-                                                <p class="text-2xl font-bold text-emerald-600 flex items-center gap-0.5">
-                                                    <span class="material-symbols-outlined" style="font-size:22px;">arrow_downward</span>
-                                                    -50%
-                                                </p>
-                                                <h4 id="kpi-meta-valor-dash" class="text-xs font-extrabold text-sistran-gold">—</h4>
-                                            </div>
-                                            <p class="text-xs text-sistran-body mt-1">Mortes no trânsito</p>
-                                        </div>
+                                <!-- Cards da Meta Principal — Taxa de óbitos por 100 mil habitantes (dados de protótipo) -->
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-semibold">
+                                    <!-- Card Referência -->
+                                    <div class="p-4 bg-sistran-gold-surface border border-sistran-yellow rounded-md">
+                                        <p class="text-[10px] font-bold text-sistran-gold uppercase tracking-wider">Referência (2020)</p>
+                                        <h4 class="text-2xl font-extrabold text-sistran-heading mt-1">10,46</h4>
+                                        <p class="text-xs text-sistran-body mt-2">Taxa de óbitos por 100 mil habitantes</p>
                                     </div>
-
-                                    <!-- Barra de Progresso Temporal (dinâmica) -->
-                                    <div class="pt-2 pb-2">
-                                        <p class="text-xs font-bold text-sistran-heading mb-4">Progresso da Meta Principal por Ano</p>
-
-                                        <div class="px-4">
-                                            <!-- Anos -->
-                                            <div id="barra-anos-dash" class="relative" style="height: 16px;"></div>
-
-                                            <!-- Barra -->
-                                            <div class="relative mt-1">
-                                                <div class="w-full h-3 bg-gray-100 rounded-pill overflow-hidden border border-sistran-border relative">
-                                                    <div id="meta-temporal-bar-dash" class="h-full rounded-pill transition-all duration-700 ease-out" style="width: 0%; background: linear-gradient(90deg, #EF4444 0%, #DC2626 100%);"></div>
-                                                    <div id="meta-temporal-marker-dash" class="absolute top-0 h-full w-0.5 bg-sistran-ink" style="left: 50%;"></div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Nº de Mortes -->
-                                            <div id="barra-mortes-dash" class="relative mt-1" style="height: 16px;"></div>
-
-                                            <!-- Variação em relação a 2020 -->
-                                            <div id="barra-variacao-dash" class="relative mt-1" style="height: 16px;"></div>
+                                    <!-- Card Atual -->
+                                    <div class="p-4 bg-sistran-gold-surface border border-sistran-yellow rounded-md">
+                                        <p class="text-[10px] font-bold text-sistran-gold uppercase tracking-wider">Atual (2025)</p>
+                                        <div class="flex items-baseline gap-2 mt-1">
+                                            <span class="text-base font-bold text-rose-500 flex items-center gap-0.5">
+                                                <span class="material-symbols-outlined" style="font-size:16px;">trending_up</span>+27,1%*
+                                            </span>
+                                            <h4 class="text-2xl font-extrabold text-sistran-heading">13,29</h4>
                                         </div>
+                                        <p class="text-xs text-sistran-body mt-2">Taxa de óbitos por 100 mil habitantes</p>
+                                        <p class="text-[10px] text-sistran-muted italic mt-1">* Variação em relação a 2020.</p>
                                     </div>
-
+                                    <!-- Card Meta Principal -->
+                                    <div class="p-4 bg-sistran-gold-surface border border-sistran-yellow rounded-md">
+                                        <p class="text-[10px] font-bold text-sistran-gold uppercase tracking-wider">Meta Principal (2030)</p>
+                                        <div class="flex items-baseline gap-2 mt-1">
+                                            <span class="text-base font-bold text-emerald-600 flex items-center gap-0.5">
+                                                <span class="material-symbols-outlined" style="font-size:16px;">trending_down</span>-50%
+                                            </span>
+                                            <h4 class="text-2xl font-extrabold text-sistran-heading">5,23</h4>
+                                        </div>
+                                        <p class="text-xs text-sistran-body mt-2">Taxa de óbitos por 100 mil habitantes</p>
+                                    </div>
                                 </div>
 
                                 <p class="text-xs font-bold text-sistran-gold uppercase tracking-wider">Metas de consolidação</p>
@@ -3577,8 +3550,9 @@
         }
 
         // Agregador do ambiente Impacto (Dash)
+        // Os cards da Meta Principal agora são estáticos (protótipo); a barra temporal foi removida.
         function renderImpactoDash() {
-            try { renderMetaPrincipalBarraDash(); } catch(e) { console.warn('[SIMO] renderMetaPrincipalBarraDash error:', e); }
+            // Sem renderização dinâmica de KPIs/barra temporal nesta subseção.
         }
 
         // === GRÁFICO: Mortalidade Total (Dash) ===
