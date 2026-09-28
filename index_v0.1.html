@@ -3615,6 +3615,29 @@
                         }
                     }
 
+                    // === Trajetória Recomendada (-50%) e Margem de Tolerância (+10%) ===
+                    // A trajetória recomendada é uma reta que parte da taxa observada em 2024
+                    // e chega, em 2030, à meta (metade da referência de 2020). A margem de
+                    // tolerância corresponde à trajetória acrescida de 10%.
+                    const idx2024 = anos.indexOf('2024');
+                    const idx2030 = anos.indexOf('2030');
+                    const taxa2024 = idx2024 >= 0 ? taxas[idx2024] : null;
+                    const trajetoriaRecomendada = [];
+                    const margemTolerancia = [];
+                    for (let i = 0; i < anos.length; i++) {
+                        const ano = parseInt(anos[i]);
+                        if (taxa2024 == null || ano < 2024 || ano > 2030) {
+                            trajetoriaRecomendada.push(null);
+                            margemTolerancia.push(null);
+                            continue;
+                        }
+                        // Interpolação linear entre (2024, taxa2024) e (2030, metaTaxa2030)
+                        const frac = (ano - 2024) / (2030 - 2024);
+                        const valorProjetado = taxa2024 + (metaTaxa2030 - taxa2024) * frac;
+                        trajetoriaRecomendada.push(parseFloat(valorProjetado.toFixed(1)));
+                        margemTolerancia.push(parseFloat((valorProjetado * 1.10).toFixed(1)));
+                    }
+
                     if (charts.chartMortalidadeTotalDash) charts.chartMortalidadeTotalDash.destroy();
 
                     charts.chartMortalidadeTotalDash = new Chart(canvas.getContext('2d'), {
@@ -3628,8 +3651,9 @@
                                     borderColor: '#C68B00',
                                     backgroundColor: 'rgba(198, 139, 0, 0.08)',
                                     borderWidth: 2.5,
-                                    fill: true,
+                                    fill: false,
                                     tension: 0.2,
+                                    order: 1,
                                     pointBackgroundColor: function(ctx) {
                                         const idx = ctx.dataIndex;
                                         if (idx === taxas.length - 1) return '#10B981';
@@ -3645,6 +3669,34 @@
                                         if (idx === taxas.length - 1) return 6;
                                         return 3;
                                     },
+                                    spanGaps: false
+                                },
+                                {
+                                    label: 'Trajetória Recomendada (-50%)',
+                                    data: trajetoriaRecomendada,
+                                    borderColor: '#2563EB',
+                                    backgroundColor: 'transparent',
+                                    borderWidth: 2,
+                                    borderDash: [6, 4],
+                                    fill: false,
+                                    tension: 0,
+                                    order: 3,
+                                    pointRadius: 2,
+                                    pointBackgroundColor: '#2563EB',
+                                    spanGaps: false
+                                },
+                                {
+                                    label: 'Margem de tolerância (+10%)',
+                                    data: margemTolerancia,
+                                    borderColor: '#10B981',
+                                    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                                    borderWidth: 1.5,
+                                    borderDash: [3, 3],
+                                    fill: '-1',
+                                    tension: 0,
+                                    order: 2,
+                                    pointRadius: 2,
+                                    pointBackgroundColor: '#10B981',
                                     spanGaps: false
                                 }
                             ]
@@ -3664,6 +3716,14 @@
                                 tooltip: {
                                     callbacks: {
                                         label: function(ctx) {
+                                            if (ctx.parsed.y == null) return null;
+                                            const dsLabel = ctx.dataset.label || '';
+                                            if (dsLabel.indexOf('Trajetória') === 0) {
+                                                return ' Trajetória recomendada: ' + ctx.parsed.y.toFixed(1) + ' por 100 mil hab.';
+                                            }
+                                            if (dsLabel.indexOf('Margem') === 0) {
+                                                return ' Margem de tolerância (+10%): ' + ctx.parsed.y.toFixed(1) + ' por 100 mil hab.';
+                                            }
                                             if (ctx.dataIndex === taxas.length - 1) {
                                                 return ' Meta 2030: ' + ctx.parsed.y.toFixed(1) + ' por 100 mil hab.';
                                             }
