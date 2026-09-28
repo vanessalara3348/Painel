@@ -2652,6 +2652,70 @@
                                     </div>
                                 </div>
 
+                                <!-- Cards: Taxa de mortalidade por modo de transporte (ano vigente vs. ano anterior) -->
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 font-semibold">
+                                    <!-- Card Automóvel -->
+                                    <div class="p-4 bg-sistran-gold-surface border border-sistran-yellow rounded-md">
+                                        <p class="text-[10px] font-bold text-sistran-gold uppercase tracking-wider" id="card-modo-automovel-titulo">Automóvel (—)</p>
+                                        <div class="flex items-baseline gap-2 mt-1">
+                                            <span id="card-modo-automovel-variacao" class="text-base font-bold text-rose-500 flex items-center gap-0.5">—</span>
+                                            <h4 id="card-modo-automovel-valor" class="text-2xl font-extrabold text-sistran-heading">—</h4>
+                                        </div>
+                                        <p class="text-xs text-sistran-body mt-2">Taxa de óbitos por 100 mil habitantes</p>
+                                        <p class="text-[10px] text-sistran-muted italic mt-1">* Variação em relação ao ano anterior.</p>
+                                    </div>
+                                    <!-- Card Motocicleta -->
+                                    <div class="p-4 bg-sistran-gold-surface border border-sistran-yellow rounded-md">
+                                        <p class="text-[10px] font-bold text-sistran-gold uppercase tracking-wider" id="card-modo-motocicleta-titulo">Motocicleta (—)</p>
+                                        <div class="flex items-baseline gap-2 mt-1">
+                                            <span id="card-modo-motocicleta-variacao" class="text-base font-bold text-rose-500 flex items-center gap-0.5">—</span>
+                                            <h4 id="card-modo-motocicleta-valor" class="text-2xl font-extrabold text-sistran-heading">—</h4>
+                                        </div>
+                                        <p class="text-xs text-sistran-body mt-2">Taxa de óbitos por 100 mil habitantes</p>
+                                        <p class="text-[10px] text-sistran-muted italic mt-1">* Variação em relação ao ano anterior.</p>
+                                    </div>
+                                    <!-- Card Pedestre -->
+                                    <div class="p-4 bg-sistran-gold-surface border border-sistran-yellow rounded-md">
+                                        <p class="text-[10px] font-bold text-sistran-gold uppercase tracking-wider" id="card-modo-pedestre-titulo">Pedestre (—)</p>
+                                        <div class="flex items-baseline gap-2 mt-1">
+                                            <span id="card-modo-pedestre-variacao" class="text-base font-bold text-rose-500 flex items-center gap-0.5">—</span>
+                                            <h4 id="card-modo-pedestre-valor" class="text-2xl font-extrabold text-sistran-heading">—</h4>
+                                        </div>
+                                        <p class="text-xs text-sistran-body mt-2">Taxa de óbitos por 100 mil habitantes</p>
+                                        <p class="text-[10px] text-sistran-muted italic mt-1">* Variação em relação ao ano anterior.</p>
+                                    </div>
+                                    <!-- Card Bicicleta -->
+                                    <div class="p-4 bg-sistran-gold-surface border border-sistran-yellow rounded-md">
+                                        <p class="text-[10px] font-bold text-sistran-gold uppercase tracking-wider" id="card-modo-bicicleta-titulo">Bicicleta (—)</p>
+                                        <div class="flex items-baseline gap-2 mt-1">
+                                            <span id="card-modo-bicicleta-variacao" class="text-base font-bold text-rose-500 flex items-center gap-0.5">—</span>
+                                            <h4 id="card-modo-bicicleta-valor" class="text-2xl font-extrabold text-sistran-heading">—</h4>
+                                        </div>
+                                        <p class="text-xs text-sistran-body mt-2">Taxa de óbitos por 100 mil habitantes</p>
+                                        <p class="text-[10px] text-sistran-muted italic mt-1">* Variação em relação ao ano anterior.</p>
+                                    </div>
+                                    <!-- Card Caminhão -->
+                                    <div class="p-4 bg-sistran-gold-surface border border-sistran-yellow rounded-md">
+                                        <p class="text-[10px] font-bold text-sistran-gold uppercase tracking-wider" id="card-modo-caminhao-titulo">Caminhão (—)</p>
+                                        <div class="flex items-baseline gap-2 mt-1">
+                                            <span id="card-modo-caminhao-variacao" class="text-base font-bold text-rose-500 flex items-center gap-0.5">—</span>
+                                            <h4 id="card-modo-caminhao-valor" class="text-2xl font-extrabold text-sistran-heading">—</h4>
+                                        </div>
+                                        <p class="text-xs text-sistran-body mt-2">Taxa de óbitos por 100 mil habitantes</p>
+                                        <p class="text-[10px] text-sistran-muted italic mt-1">* Variação em relação ao ano anterior.</p>
+                                    </div>
+                                    <!-- Card Ônibus -->
+                                    <div class="p-4 bg-sistran-gold-surface border border-sistran-yellow rounded-md">
+                                        <p class="text-[10px] font-bold text-sistran-gold uppercase tracking-wider" id="card-modo-onibus-titulo">Ônibus (—)</p>
+                                        <div class="flex items-baseline gap-2 mt-1">
+                                            <span id="card-modo-onibus-variacao" class="text-base font-bold text-rose-500 flex items-center gap-0.5">—</span>
+                                            <h4 id="card-modo-onibus-valor" class="text-2xl font-extrabold text-sistran-heading">—</h4>
+                                        </div>
+                                        <p class="text-xs text-sistran-body mt-2">Taxa de óbitos por 100 mil habitantes</p>
+                                        <p class="text-[10px] text-sistran-muted italic mt-1">* Variação em relação ao ano anterior.</p>
+                                    </div>
+                                </div>
+
                                 <!-- Gráfico: Mortalidade por Modo de Transporte -->
                                 <div class="bg-white border border-sistran-border rounded-md p-5">
                                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-3">
@@ -3901,6 +3965,73 @@
                 });
                 if (charts.chartModoTransporteDash) charts.chartModoTransporteDash.destroy();
                 charts.chartModoTransporteDash = new Chart(canvas.getContext('2d'),{type:'line',data:{labels:labels,datasets:datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'bottom',labels:{font:{family:'Open Sans',size:11},color:'#57595A'}},tooltip:{callbacks:{label:function(ctx){return ' '+ctx.dataset.label+': '+ctx.parsed.y.toFixed(2)+' por 100 mil hab.';}}}},scales:{x:{grid:{color:'#F3F4F6'},ticks:{font:{family:'Open Sans',size:10},color:'#57595A'}},y:{min:0,max:12,grid:{color:'#E5E7EB'},ticks:{font:{family:'Open Sans',size:10},color:'#57595A'},title:{display:true,text:'Óbitos por 100 mil hab.',font:{family:'Open Sans',size:10},color:'#57595A'}}}}});
+            });
+            renderCardsModoTransporteDash();
+        }
+
+        // === CARDS: Taxa de mortalidade por modo de transporte — ano vigente vs. anterior (Dash) ===
+        function renderCardsModoTransporteDash() {
+            loadInfosigaCSV(function(rows) {
+                var dados = rows.filter(function(r) { return r.indicador === 'Modo de transporte' && r.ano >= 2015 && r.ano <= 2030; });
+                // Modos exibidos em cards (exclui "Não Disponível" e "Outros")
+                var cats = ['AUTOMOVEL', 'MOTOCICLETA', 'PEDESTRE', 'BICICLETA', 'CAMINHAO', 'ONIBUS'];
+                var agrupado = {};
+                cats.forEach(function(c) { agrupado[c] = {}; });
+                dados.forEach(function(r) {
+                    if (cats.indexOf(r.categoria) >= 0) {
+                        agrupado[r.categoria][r.ano] = (agrupado[r.categoria][r.ano] || 0) + r.obitos;
+                    }
+                });
+
+                // Determina o "ano vigente": maior ano com dados; se o último for parcial (< 60% do anterior), usa o anterior
+                var anosTodos = [];
+                dados.forEach(function(r) { if (anosTodos.indexOf(r.ano) < 0) anosTodos.push(r.ano); });
+                anosTodos.sort(function(a, b) { return a - b; });
+                var anoVigente = anosTodos[anosTodos.length - 1];
+                if (anosTodos.length >= 2) {
+                    var totUlt = 0, totPen = 0;
+                    cats.forEach(function(c) { totUlt += (agrupado[c][anoVigente] || 0); totPen += (agrupado[c][anoVigente - 1] || 0); });
+                    if (totPen > 0 && totUlt < totPen * 0.6) anoVigente = anosTodos[anosTodos.length - 2];
+                }
+                var anoAnterior = anoVigente - 1;
+
+                function taxa(cat, ano) {
+                    var ob = agrupado[cat][ano];
+                    var pop = populacaoSP[ano];
+                    if (!ob || !pop) return null;
+                    return (ob / pop) * 100000;
+                }
+
+                function preencheCard(cat, prefixo, rotulo) {
+                    var tVig = taxa(cat, anoVigente);
+                    var tAnt = taxa(cat, anoAnterior);
+                    var elTitulo = document.getElementById(prefixo + '-titulo');
+                    var elValor = document.getElementById(prefixo + '-valor');
+                    var elVar = document.getElementById(prefixo + '-variacao');
+                    if (elTitulo) elTitulo.textContent = rotulo + ' (' + anoVigente + ')';
+                    if (elValor) elValor.textContent = (tVig != null) ? tVig.toFixed(2).replace('.', ',') : '—';
+                    if (elVar) {
+                        if (tVig == null || tAnt == null || tAnt === 0) {
+                            elVar.className = 'text-base font-bold text-sistran-muted flex items-center gap-0.5';
+                            elVar.textContent = '—';
+                        } else {
+                            var variacao = ((tVig - tAnt) / tAnt) * 100;
+                            var aumentou = variacao > 0;
+                            var seta = aumentou ? 'trending_up' : 'trending_down';
+                            var cor = aumentou ? 'text-rose-500' : 'text-emerald-600';
+                            var sinal = aumentou ? '+' : '';
+                            elVar.className = 'text-base font-bold ' + cor + ' flex items-center gap-0.5';
+                            elVar.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;">' + seta + '</span>' + sinal + variacao.toFixed(1).replace('.', ',') + '%*';
+                        }
+                    }
+                }
+
+                preencheCard('AUTOMOVEL', 'card-modo-automovel', 'Automóvel');
+                preencheCard('MOTOCICLETA', 'card-modo-motocicleta', 'Motocicleta');
+                preencheCard('PEDESTRE', 'card-modo-pedestre', 'Pedestre');
+                preencheCard('BICICLETA', 'card-modo-bicicleta', 'Bicicleta');
+                preencheCard('CAMINHAO', 'card-modo-caminhao', 'Caminhão');
+                preencheCard('ONIBUS', 'card-modo-onibus', 'Ônibus');
             });
         }
 
